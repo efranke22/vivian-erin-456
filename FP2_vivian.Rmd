@@ -5,6 +5,31 @@ date: "2023-02-09"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r}
+library(readr)
+library(dplyr)
+library(tidyverse)
 ```
+
+
+
+```{r}
+read_csv("https://services.pca.state.mn.us/api/v1/groundwater/monitoring-stations?stationType=Well&format=csv") %>%
+  filter(stationPurpose %in% c("Domestic Drinking", "Public Drinking"), sampleCount>0)
+```
+
+```{r}
+river_lake_stream_data = read_csv("2010-2023_river_lake_stream.csv")
+
+river_lake_stream_data <- river_lake_stream_data[-c(1:4),]
+
+colnames(river_lake_stream_data) <- river_lake_stream_data[1,]
+  
+river_lake_stream_data <- river_lake_stream_data[-c(1),]
+
+nms <- names(river_lake_stream_data)
+names(river_lake_stream_data)[nms == 'NA'] <- paste0('Poop',1:4)
+
+```
+
+
