@@ -30,6 +30,14 @@ river_lake_stream_data <- river_lake_stream_data[-c(1),]
 nms <- names(river_lake_stream_data)
 names(river_lake_stream_data)[nms == 'NA'] <- paste0('Poop',1:4)
 
+small <- river_lake_stream_data %>%
+  group_by(STATION_ID) %>%
+  slice_head()
+
+
+ggplot(small, aes(x = Poop3, y= Poop4)) +
+  geom_point()
+  
 ```
 
 
