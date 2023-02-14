@@ -5,39 +5,94 @@ date: "2023-02-09"
 output: html_document
 ---
 
-```{r}
+```{r libraries}
 library(readr)
 library(dplyr)
 library(tidyverse)
+library(sf)
+library(rlang)
+library(janitor)
+library(ggsflabel)
+library(ggspatial)
+library(USAboundaries) 
 ```
 
+```{r base map things}
+counties <- us_counties(resolution = "high", states = c("Minnesota", "Wisconsin")) %>%
+  st_transform(crs = 6783)
 
+mn_wi_states <- us_states(resolution = "high", states = c("Minnesota", "Wisconsin")) %>%
+  st_transform(crs = 6783) 
 
-```{r}
-read_csv("https://services.pca.state.mn.us/api/v1/groundwater/monitoring-stations?stationType=Well&format=csv") %>%
-  filter(stationPurpose %in% c("Domestic Drinking", "Public Drinking"), sampleCount>0)
 ```
 
-```{r}
-river_lake_stream_data = read_csv("2010-2023_river_lake_stream.csv")
+```{r water quality data}
+miss_river_main_contaminants <- read_csv("miss_river_main_contaminants.csv")
 
-river_lake_stream_data <- river_lake_stream_data[-c(1:4),]
+m_river <- miss_river_main_contaminants[-c(1:4),]
 
-colnames(river_lake_stream_data) <- river_lake_stream_data[1,]
+colnames(m_river) <- m_river[1,]
   
-river_lake_stream_data <- river_lake_stream_data[-c(1),]
+m_river <- m_river[-c(1),]
 
-nms <- names(river_lake_stream_data)
-names(river_lake_stream_data)[nms == 'NA'] <- paste0('Poop',1:4)
+nms2 <- names(m_river)
+names(m_river)[nms2 == 'NA'] <- c("NA1", "NA2", "UTM_long", "UTM_lat")
 
-small <- river_lake_stream_data %>%
+df_sf2 <- st_as_sf(x = m_river,                         
+                  coords = c("UTM_long", "UTM_lat"),
+                  crs = "+proj=utm +zone=15")
+
+sfc2 = st_transform(df_sf2, crs = "+proj=longlat +datum=NAD83")
+
+mississippi_fcb <- sfc2 %>%
+  mutate(START_DATE = str_extract(sfc2$START_DATE_TIME, "[:digit:]{2}/[:digit:]{2}/[:digit:]{4}")) %>%
+  mutate(START_DATE = as.Date(START_DATE, "%m/%d/%y")) %>%
+  filter(PARAMETER == "Fecal Coliform Bacteria Count") %>%
   group_by(STATION_ID) %>%
-  slice_head()
+  arrange(desc(START_DATE), .by_group = TRUE) %>%
+  slice_head() %>%
+  mutate(NA2Cat = cut(NA2, breaks =c(0,300, 2000, 20000, 90001), labels = c("0-300", "301-2,000", "2,001-20,000", "20,001-90,000")))
 
+rivers <- read_sf('shp_water_lakes_rivers')
 
-ggplot(small, aes(x = Poop3, y= Poop4)) +
-  geom_point()
-  
+mn_cities1 <- read_sf('shp_loc_pop_centers') %>%
+  filter(Name %in% c("Minneapolis", "St. Paul"))
+
+states_new <- st_crop(mn_wi_states, st_bbox(counties))
+
+legend_title <- "FCB per 100 mL"
 ```
 
+```{r fig.alt="Map of Southeastern Minnesota and Northwestern Wisconsin showing 34 water quality monitoring stations on the Mississippi River. The stations are represented as points that are colored based on the station's Fecal Coliform Bacteria level in 2019 or 2020. The stations with the highest Fecal Coliform Bacteria levels are clustered near and just downstream of the Twin Cities. Data from https://eims.metc.state.mn.us/."}
+ggplot() +
+  geom_sf(data = counties, color = "navajowhite", fill = "ivory", size = 0.5) +
+  geom_sf(data = states_new, color = "tan3", fill = "NA") +
+  geom_sf(data = mn_cities1, color = "black", size = 3, shape= 15) +
+  geom_sf(data = rivers %>% filter(NAME_DNR == "Mississippi"),color = "NA", fill = 'cornflowerblue') + 
+  geom_sf_label_repel(data = mn_cities1, aes(label = Name), nudge_y=0.05) +
+  geom_sf(data = mississippi_fcb, mapping = aes(color = NA2Cat), size = 2.5)+ 
+  scale_color_manual(legend_title, values = c("mediumseagreen", "gold", "orange1","red2"))+
+  coord_sf(xlim = c(-93.41, -92.1), ylim= c(44.4, 45.2)) +
+  annotate(geom="text", x=-93.21, y=44.65, label="Minnesota",
+              size = 5, color = "tan3")+
+  annotate(geom="text", x=-92.3, y=44.7, label="Wisconsin",
+              size = 5, color = "tan3")+
+  labs(x = "", y = "", title = "Fecal Coliform Bacteria (FCB) Levels in the Mississippi River", subtitle = "Data from 2019 and 2020 at 34 monitoring stations in Southeastern Minnesota", caption = "Plot by Vivian Powell | Data from Metropolitan Council EIMS") +
+  annotation_scale(location = "bl")+
+  theme_classic() +
+  theme(legend.position = c(.95, .95),
+    legend.justification = c("right", "top"),
+    legend.box.just = "right",
+    legend.box.background = element_rect(color="black", size=1),
+    legend.text = element_text(size = 7),legend.title = element_text(size = 8, face = "bold"),
+    plot.title = element_text(face = "bold", hjust = 0.5), plot.subtitle = element_text(hjust = 0.5),plot.caption = element_text(hjust = 0.5),axis.line=element_blank(),axis.text.x=element_blank(),
+      axis.ticks.x=element_blank(),
+      axis.text.y=element_blank(),
+      axis.ticks.y=element_blank())
 
+ggsave(filename = "fp2_vivian.png")
+```
+
+## Explanation
+
+Water quality is an important environmental indicator, especially for areas like the Twin Cities which are home to a major river -- the Mississippi. The region relies on the Mississippi for drinking water, recreation, fishing, and other ecosystem services.  Contaminated water poses a major health risk, especially to vulnerable populations, and an environmental risk to the areas that lie downstream of pollution sources. This visualization examines the most recent Fecal Coliform Bacteria levels at 34 water monitoring stations on the Mississippi River in Southeastern Minnesota, all of which were sampled during 2019 or 2020. Stations are represented by round points, with the Twin Cities and state and county boundaries included for reference. Green points are stations with readings that are within the generally accepted "safe" level of 300 colonies of fecal coliform bacteria per 100mL of water. Stations colored in yellow, orange, and red have readings above 300 colonies per 100mL, and some as high as 90,000. Unsuprisingly, the yellow, orange, and red stations are clustered in the Twin Cities urban area, and especially just downstream of Saint Paul. The extremely high levels of FCB seen at several stations are a certainly a cause for concern. However, most stations outside of the Cities have "acceptable" readings, which indicates that the issue is largely contained to urban areas.
