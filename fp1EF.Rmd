@@ -1,0 +1,114 @@
+---
+title: "FP1 - Part 2"
+author: "Erin Franke"
+date: "2023-02-04"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Question 1: Research Questions
+
+- How does climate contribute to social injustices/environmental injustices in the Twin Cities area, including urban heat, air and water quality, and redlining? \
+- What are current public perceptions of climate change and renewable energy use in the United States? Are there geographic patterns that relate to beliefs about climate change? \
+- How safe is Minnesota’s groundwater and can we understand how contaminants vary across the state? Can we understand if agricultural techniques (e.g. fertilizer runoff) are contributing to unsafe groundwater? 
+- Have we seen patterns of climate change reflected in the Great Lakes? If so, how have surrounding communities been impacted?
+
+# Question 2 &3: Load datasets and information
+
+```{r, message=FALSE}
+library(tidyverse)
+```
+
+## Daily station readings
+
+a) [This site](https://www.ncei.noaa.gov/access/crn/qcdatasets.html) has daily readings from weather stations around the United States. Each state has at least one station, with most states in the Midwest having 1-2. The source is the National Center for Environmental Information. 
+
+b) Data description: variables include air temperature, precipitation, global solar radiation, relative humidity, surface infrared temperature, soil moisture and soil temperature data. Each state in the Midwest has 1-2 stations. Data is loaded by station and year, with data available dating back to 2000. The data below is just loaded for the MN "Sandstone" station for 2022.
+
+c) Data limitations: The data is fairly clean and recorded at regularly intervals. However, it would be nice if there was data dating back prior to 2000 and if there were more stations in the Midwest and/or Minnesota specifically so we could better understand climate change patterns related to urban areas and/or the Great Lakes. The two MN stations are both far north of the Twin Cities.
+
+d) Potential useful/interesting variables include temperature daily average, soil moisture 50 daily, station latitude and longitude, and precipitation daily calculation.
+
+```{r}
+# 2022 daily readings from sandstone (MN) station
+sandstone2022 <- read.table("sandstone_2022")
+headers <- c("WBANNO", "LST_DATE", "CRX_VN", "LONGITUDE", "LATITUDE", "T_DAILY_MAX", "T_DAILY_MIN", "T_DAILY_MEAN", "T_DAILY_AVG", "P_DAILY_CALC", "SOLARAD_DAILY", "SUR_TEMP_DAILY_TYPE", "SUR_TEMP_DAILY_MAX", "SUR_TEMP_DAILY_MIN", "SUR_TEMP_DAILY_AVG", "RH_DAILY_MAX", "RH_DAILY_MIN", "RH_DAILY_AVG", "SOIL_MOISTURE_5_DAILY", "SOIL_MOISTURE_10_DAILY", "SOIL_MOISTURE_20_DAILY", "SOIL_MOISTURE_50_DAILY", "SOIL_MOISTURE_100_DAILY", "SOIL_TEMP_5_DAILY", "SOIL_TEMP_10_DAILY", "SOIL_TEMP_20_DAILY", "SOIL_TEMP_50_DAILY", "SOIL_TEMP_100_DAILY")
+
+sandstone2022 <- rbind(headers, sandstone2022)
+colnames(sandstone2022) <- sandstone2022[1, ]
+sandstone2022 <- sandstone2022[-1,]
+
+names(sandstone2022)
+```
+
+e) Visualization of monthly precipitation in 2022. 
+
+```{r}
+sandstone2022 <- sandstone2022 %>%
+  mutate(year = str_sub(LST_DATE, 1, 4), 
+         month = str_sub(LST_DATE, 5, 6),
+         day = str_sub(LST_DATE, 7,8), 
+         date = as.Date(paste(year,month,day,sep="-"),"%Y-%m-%d"))
+
+sandstone2022 %>%
+  mutate(P_DAILY_CALC = as.numeric(P_DAILY_CALC), 
+         P_DAILY_CALC = case_when(P_DAILY_CALC < 0 ~ 0, 
+                                  TRUE ~ P_DAILY_CALC)) %>%
+  group_by(month) %>%
+  summarize(total_precipitation = sum(P_DAILY_CALC, na.rm=TRUE)) %>%
+  ggplot(aes(x=month, y=total_precipitation))+
+  geom_col(fill = "cadetblue4")+
+  theme_classic()+
+  labs(title = "Total precipitation in Sandstone, MN by month in 2022", y = "Precipitation (mm)", x = "Month")+
+  theme(plot.title.position = "plot")
+```
+
+## Ice coverage
+
+a) [This site](https://www.glerl.noaa.gov/data/dashboard/data/) has multiple data sources on the Great Lakes. The ice coverage data are from the Canadian Ice Service and National Ice Center and are based on various imagery sources with resolutions down to 50 meters per pixel. 
+
+b) While data can be downloaded for each of the Great Lakes, this specific dataset below just looks at Lake Superior percent ice coverage dating back to 1972 (through 2016). There appears to be one entry per month. This website has other data available on the Great Lakes, which includes water level data, hydrological input/output data, water temperature and cloud coverage.
+
+c) Data limitations: While the data goes pretty far back, we do not know exactly *what* part of Lake Superior is covered in ice. We just have one reading per month for the lake as a whole. 
+
+d) This data on ice coverage just has two variables: date and ice coverage. If we choose to use this data later on, we look at the coverage for each lake. 
+
+```{r, warning=FALSE, message=FALSE}
+# max ice coverage for lake superior
+superior_ice <- read_csv("GLDData/data/ice/superiorMaxIcePerMonth.csv") %>%
+  select(1:2)
+colnames(superior_ice) <- c("Date", "PercentIce")
+
+names(superior_ice)
+```
+
+e) Visualization of maximum ice coverage by year of Lake Superior
+
+```{r}
+superior_ice %>%
+  mutate(Date= as.Date(Date, format = "%m/%d/%Y"), 
+         year = as.numeric(format(Date, "%Y"))) %>%
+  group_by(year) %>%
+  summarize(max_coverage = max(PercentIce)) %>%
+  ggplot(aes(x=year, y=max_coverage))+
+  geom_point()+
+  geom_smooth(se=FALSE)+
+  theme_classic()+
+  labs(title = "Maximum Ice Coverage of Lake Superior by Year", y = "Percent Ice Coverage (%)", x = "Year")+
+  theme(plot.title.position = "plot")
+```
+
+## MN Groundwater Data 
+
+I am also interested in investigating MN groundwater data, which I found through the [Minnesota Pollution Control Agency](https://www.pca.state.mn.us/air-water-land-climate/groundwater-monitoring). This data is available to download through a map or a queried search, however I did not figure out how to easily download it. I am guessing the website could be scraped but I will have to look more into that.
+
+This site includes the geographic location (latitude and longitude) of each water station, station type, station ID, sample date(s), and measurements done on the water (for example, value of Perfluorobutanoic acid).
+
+Limitations with that data may include that many stations only have one sample date, and comparing values of that chemical across different stations at different dates may not be a fair analysis.
+
+# Question 4: Joining data
+
+I didn't really narrow in on one research question and so the data I looked at is kind of all over the place. However, I think it would be feasible to join together the ice coverage data with the temperature recordings for the Sandstone station. This could be done on date, taking the monthly average temperature from the Sandstone data and the monthly recorded ice coverage from the `superior_ice` data. I would download all available years of the Sandstone data before doing this.
