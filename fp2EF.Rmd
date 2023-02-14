@@ -20,6 +20,7 @@ library(ggalt)
 font_add_google("Architects Daughter")
 showtext_auto()
 county_boundaries <- st_read("data/shp_bdry_counties_in_minnesota/mn_county_boundaries_500.shp")
+roads <- st_read("data/tl_2019_27_prisecroads")
 ```
 
 # Station Information
@@ -80,7 +81,10 @@ joined <- county_boundaries %>%
   left_join(stations_per_county, by = "CTY_NAME")
 ```
 
+This chloropleth map displays the number of public/domestic drinking wells by Minnesota county with at least one MPCA sample since 1988. The majority of counties have fewer than 50 wells sampled, however there are several counties (the majority of which are clustered near the center of the state) that have over 100 different sampled wells. Washington County, which is a fairly small county located just to the east of the Twin Cities, has over 1000 individually sampled wells since 1988.
+
 ```{r fig.alt="This chloropleth map displays the number of public/domestic drinking wells by Minnesota county with at least one MPCA sample since 1988. The majority of counties have fewer than 50 wells sampled, however there are several counties (the majority of which are clustered near the center of the state) that have over 100 different sampled wells. Washington County, which is a fairly small county located just to the east of the Twin Cities, has over 1000 individually sampled wells since 1988."}
+
 chloropleth_map <- ggplot() +
   geom_sf(data= subset(joined, n<1000), aes(fill=n)) + 
   scale_fill_gradientn(colours = c("lightcyan", "lightcyan2", "lightskyblue3", "lightskyblue4"))+
@@ -102,10 +106,13 @@ chloropleth_map
 Next, visualize when and where domestic and public drinking stations were added in the MN seven county metropolitan region.
 
 ```{r, eval=FALSE}
+roads_sub <- st_crop(roads,st_bbox(boundaries_7county))
+
 boundaries_7county <- county_boundaries %>% filter(CTY_NAME %in% c("Anoka", "Hennepin", "Ramsey", "Dakota", "Carver", "Washington", "Scott"))
 map <- ggplot()+
-  geom_sf(data = boundaries_7county,fill = "white") +
-  geom_sf(data = stations7county, aes(group = startYear), color = "forestgreen", alpha = 0.5) +
+  geom_sf(data = boundaries_7county,fill = "lavenderblush") +
+    geom_sf(data = roads_sub, fill = "white",color = "white", lwd= 0.2)+
+  geom_sf(data = stations7county, aes(group = startYear), color = "navy", alpha = 0.5) +
   theme_minimal()+
   labs(title = "First MPCA sample year for drinking wells in the 7-county metro area", x="", y="", color = "Num Samples", subtitle = "{frame_time}")+
   theme(axis.text = element_blank(), 
