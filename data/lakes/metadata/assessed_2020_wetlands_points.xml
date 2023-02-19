@@ -1,0 +1,60 @@
+<?xml version="1.0"?><metadata><eainfo><overview><eaover>All wetlands contained in this shapefile are included in the 2020 surface water quality assessments prepared by the Minnesota Pollution Control Agency.
+
+AUID: Assessment Unit ID, the DNR DOWLKNUM with hypens between 2 digit county, 4 digit lake number and 2 digit bay id.
+
+NAME: Name of the waterbody associated with the AUID.
+
+LOC_DESC: A description of the waterbody's location.
+
+USE_CLASS: The use class of the waterbody according to MN statute 7050.0470.
+
+WATER_SIZE: The surface area of the waterbody, in acres according to the National Hydrography Dataset.
+
+AQR: Aquatic Recreation Assessment
+FS: Fully Supporting aquatic recreation use
+IF: Insufficient Information for an assessment
+NA: Not Assessed
+NS: Not Supporting aquatic recreation use
+
+AQR_CAT: The CALM category for the Aquatic Recreation use class.
+
+AQR_LAST_AY: The year of the last Aquatic Recreation assessment.
+
+AQL: Aquatic Life Assessment
+FS: Fully Supporting aquatic life use
+IF: Insufficient Information for an assessment
+NA: Not Assessed
+NS: Not Supporting aquatic life use
+
+AQL_CAT: The CALM category for the Aquatic Life use class.
+
+AQL_LAST_AY: The year of the last Aquatic Life assessment.
+
+Minnesota's adaptation of the EPA's Consolidation Assessment and Listing Methodology (CALM) categories and subcategories:
+
+1: All designated uses are met and no use threatened.
+2: Some uses are met; none are threatened and insufficient data to assess other uses.
+3A: No data or information to determine if any designated use is attained.
+3B: Data are available for a review and generally indicate non-support, but insufficient data and
+information to determine TMDL impairment. (Example: single lake data point showing non-support)
+3C: Data available that currently has no assessment tools to allow its use in assessing.
+(Example: data with only eco-region expectation standards)
+3D: Data are available for a review and generally indicate full support, but insufficient data and
+information to assess for category 1 or 2.
+3E: Data are available for a review, but insufficient data and information to determine full support or
+TMDL impairment. (Example: lake data just below the threshold showing non-support)
+4A: Impaired or threatened but all needed TMDLs have been completed*
+4B: Impaired or threatened but does not require a TMDL because it is expected to attain standards in
+the near future*
+4C: Impaired or threatened but does not require a TMDL because impairment not caused by a pollutant*
+4D: Impaired or threatened but does not require a TMDL because impairment is solely a result of natural
+sources*
+5A: Impaired or threatened by multiple pollutants and no TMDL plans approved.
+5B: Impaired or threatened by multiple pollutants and either some TMDL plans approved but not all or at
+least one impairment is the result of natural conditions.
+5C: Impaired or threatened by one pollutant.
+* Assessment units falling into category 4 are impaired waters, but are not part of the 303(d) list because of the
+reasons given above in the category descriptions. EPA has identified subcategories 4A, 4B, and 4C for classifying a segment, where available data and/or information indicate that at least one designated use is not being supported or is threatened, but a TMDL is not needed. Minnesota has chosen to further subdivide Category 4C into subcategories 4C and 4D to differentiate between cases of impairment due to non-pollutants (4C) and natural background (4D). All category 4 waters appear with the category 5 waters on an impaired waters inventory, which is a comprehensive list of all the current impaired assessment unit/pollutant combinations.</eaover></overview></eainfo><idinfo><citation><citeinfo><origin>Minnesota Pollution Control Agency</origin><title>Assessed Wetlands Points, Minnesota, 2020</title><pubinfo><publish>Minnesota Pollution Control Agency</publish></pubinfo><pubdate>20211115</pubdate><onlink>None available</onlink></citeinfo></citation><descript><abstract>This is a set of the centroids of the wetlands assessed by MPCA's surface water quality assessment process for the 2020 303(d)/305(b) integrated report to EPA. 
+
+These wetlands are a subset and enhancement of the 1:24,000 scale National Hydrography Dataset (NHD). In cases where the NHD does not include wetlands that MPCA has assessed, additional wetlands from the MN Department of Natural Resources (DNR) Division of Waters lakes database are added. Since the assessed wetlands are a small subset of the NHD and DNR lakes, only that subset is included in the dataset. This dataset includes impaired wetlands which have not yet had a TMDL plan approved by the US EPA as well as wetlands that support aquatic recreation and those that had insufficient information to render a support judgment.</abstract><purpose>These data are intended to be used for planning, informational, and cartographic purposes related to surface water quality in Minnesota.</purpose><supplinf>Minnesota</supplinf></descript><crossref><citeinfo><title>More information on surface water assessments, including the impaired waters list, can be found on the Minnesota Pollution Control Agency's website here: https://www.pca.state.mn.us/water/minnesotas-impaired-waters-list</title></citeinfo></crossref><status><progress>Complete</progress><update>None Planned</update></status><spdom><bounding><westbc>-97.23</westbc><eastbc>-89.53</eastbc><northbc>49.37</northbc><southbc>43.5</southbc></bounding></spdom><keywords><place><placekey>Minnesota</placekey></place><theme><themekt>ISO 19115</themekt><themekey>inlandWaters, surface water, water chemistry, water quality</themekey></theme></keywords><accconst>None</accconst><timeperd><timeinfo><sngdate><caldate>20211115</caldate></sngdate></timeinfo></timeperd><ptcontac><cntinfo><cntperp><cntorg>Minnesota Pollution Control Agency</cntorg><cntper>Kristofor Parson</cntper></cntperp><cntpos>Data Specialist</cntpos><cntaddr><addrtype>Mailing and Physical</addrtype><address>525 S. Lake Ave.</address><city>Duluth</city><state>MN</state><postal>55802</postal></cntaddr><cntvoice>218-302-6622</cntvoice><cntemail>kristofor.parson@state.mn.us</cntemail></cntinfo></ptcontac></idinfo><dataqual><logic>These data have been audited to ensure every wetland included in the 305(b) submission to EPA has a corresponding feature in this dataset, and that the use judgments are consistent between this spatial dataset and the assessment database as of the publication date. Date of test: 4/9/2019</logic><complete>	These data contain a feature for every beach in the 305(b) inventory of assessed waters. High-resolution NHD is the primary dataset from which these features are drawn. If no feature exists in the NHD, MPCA staff will digitize a feature.</complete><posacc><horizpa><horizpar>	Statements of horizontal positional accuracy are based on accuracy statements made for U.S. Geological Survey topographic quadrangle maps. These maps were compiled to meet National Map Accuracy Standards. For horizontal accuracy, this standard is met if at least 90 percent of points tested are within 0.02 inch (at map scale) of the true position. Additional offsets to positions may have been introduced where feature density is high to improve the legibility of map symbols. In addition, the digitizing of maps is estimated to contain a horizontal positional error of less than or equal to 0.003 inch standard error (at map scale) in the two component directions relative to the source maps. Visual comparison between the map graphic (including digital scans of the graphic) and plots or digital displays of points, lines, and areas, is used as control to assess the positional accuracy of digital data. Digital map elements along the adjoining edges of data sets are aligned if they are within a 0.02 inch tolerance (at map scale). Features with like dimensionality (for example, features that all are delineated with lines), with or without like characteristics, that are within the tolerance are aligned by moving the features equally to a common point. Features outside the tolerance are not moved; instead, a feature of type connector is added to join the features.
+This statement is generally true for the most common sources of NHD data. Other sources and methods may have been used to create or update NHD data. In some cases, additional information may be available from the data provider upon request.</horizpar></horizpa></posacc></dataqual><distinfo><resdesc>Assessed Wetlands Points, Minnesota, 2020</resdesc><distliab>NOTICE: The Geographic Information System (GIS) Data to which this notice is attached are made available pursuant to the Minnesota Government Data Practices Act (Minnesota Statutes Chapter 13). THE GIS DATA ARE PROVIDED TO YOU AS IS AND WITHOUT ANY WARRANTY AS TO THEIR PERFORMANCE, MERCHANTABILITY, OR FITNESS FOR ANY PARTICULAR PURPOSE. The GIS Data were developed by the Minnesota Pollution Control Agnecy for its own internal business purposes. The Minnesota Pollution Control Agency does not represent or warrant that the GIS Data or the data documentation are error-free, complete, current, or accurate. You are responsible for any consequences resulting from your use of the GIS Data or your reliance on the GIS Data. You should consult the data documentation for this particular GIS Data to determine the limitations of the GIS Data and the precision with which the GIS Data may depict distance, direction, location, or other geographic features. If you transmit or provide the GIS Data (or any portion of it) to another user, the GIS Data must include a copy of this disclaimer.</distliab><stdorder><ordering>These data may be requested from Kristofor Parson, Minnesota Pollution Control Agency.</ordering></stdorder><distrib><cntinfo><cntperp><cntorg>Minnesota Pollution Control Agency</cntorg><cntper>Kristofor Parson</cntper></cntperp><cntpos>Data Specialist</cntpos><cntaddr><addrtype>mailing and physical</addrtype><address>525 S. Lake Ave.</address><city>Duluth</city><state>MN</state><postal>55802</postal></cntaddr><cntvoice>218-302-6622</cntvoice><cntemail>kristofor.parson@state.mn.us</cntemail></cntinfo></distrib></distinfo><metainfo><metd>20211115</metd><metstdn>Minnesota Geographic Metadata Guidelines</metstdn><metstdv>1.2</metstdv><metextns><onlink>http://www.mngeo.state.mn.us/committee/standards/mgmg/metadata.htm</onlink></metextns><metc><cntinfo><cntperp><cntorg>Minnesota Pollution Control Agency</cntorg><cntper>Kristofor Parson</cntper></cntperp><cntpos>Data Specialist</cntpos><cntaddr><addrtype>mailing and physical</addrtype><address>525 S. Lake Ave.</address><city>Duluth</city><state>MN</state><postal>55802</postal></cntaddr><cntvoice>218-302-6622</cntvoice><cntemail>kristofor.parson@state.mn.us</cntemail></cntinfo></metc></metainfo><spref><horizsys><planar><gridsys><gridsysn>Universal Transverse Mercator</gridsysn><utm><utmzone>15</utmzone></utm></gridsys><planci><plandu>meters</plandu></planci></planar><geodetic><horizdn>NAD83</horizdn><ellips>GRS80</ellips></geodetic></horizsys></spref></metadata>

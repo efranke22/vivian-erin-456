@@ -1,0 +1,651 @@
+<metadata xml:lang="en">
+	<Esri>
+		<CreaDate>20211115</CreaDate>
+		<CreaTime>15440300</CreaTime>
+		<ArcGISFormat>1.0</ArcGISFormat>
+		<ArcGISstyle>FGDC CSDGM Metadata</ArcGISstyle>
+		<SyncOnce>FALSE</SyncOnce>
+		<DataProperties>
+			<lineage>
+				<Process ToolSource="c:\program files (x86)\arcgis\desktop10.7\ArcToolbox\Toolboxes\Data Management Tools.tbx\Append" Date="20211115" Time="091137">Append C:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 C:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020_2 NO_TEST "AUID "AUID" true true false 16 Text 0 0 ,First,#,C:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020,AUID,-1,-1;SHAPE_Length "SHAPE_Length" false true true 8 Double 0 0 ,First,#,C:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020,SHAPE_Length,-1,-1;SHAPE_Area "SHAPE_Area" false true true 8 Double 0 0 ,First,#,C:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020,SHAPE_Area,-1,-1" #</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\JoinField" Date="20211115" Time="091507">JoinField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 AUID c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\calm_cats AUID #</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\JoinField" Date="20211115" Time="091523">JoinField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 AUID c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\impairments_table WID #</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091903">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 AUID_1</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091904">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 CAT</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091906">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 CAT_DESC</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091907">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 DATASET_NAME</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091909">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 TYPE</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091910">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 WID</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091912">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 NAME</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091913">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 REACH_DESC</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091914">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 USE_CLASS</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091916">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 LENGTH_AREA</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091917">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 AFFECTED_U</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091919">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 AFFECT_U_D</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091920">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 LIKE_MEET</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091921">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 LIKE_MT_D</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091923">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 NON_POLL</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091924">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 NON_POLL_D</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091926">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 NAT_BACK</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091927">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 NAT_BACK_D</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091928">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 ADD_MON</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091929">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 ADD_MON_D</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091931">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 APPROVED</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091932">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 APPROVED_D</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091934">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 NEEDS_PLN</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091935">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 NEEDS_PL_D</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091936">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 IMP_PARAM</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091938">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 IMP_PARA_D</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091939">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 NEW_IMPAIR</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091940">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 NEW_IMP_D</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091941">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 HUC_8</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091943">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 HUC_8_NAME</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091944">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 HUC_4</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091946">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 BASIN</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091947">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 COUNTY</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091948">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 TRIBAL_INTERSECT_EXTENT</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091950">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 INDIAN_RESERVATION</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091951">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 ACE</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091952">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 ACE_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091954">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 AL</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091955">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 AL_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091956">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 AMMONIA</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091958">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 AMM_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="091959">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 ARSENIC</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092000">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 ARSENIC_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092001">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 CHLORIDE</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092003">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 CHLOR_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092004">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 CLPYR</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092005">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 CLPYR_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092007">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 DDT</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092008">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 DDT_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092009">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 DO</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092010">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 DO_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092012">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 DIELDRIN</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092013">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 DIELDR_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092014">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 DIOXIN</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092016">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 DIOXIN_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092017">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 E_COLI</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092018">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 E_COLI_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092020">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 FC</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092021">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 FC_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092022">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 FISHESBIO</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092023">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 FISHES_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092025">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 HG_F</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092026">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 HG_F_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092028">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 HG_W</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092029">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 HG_W_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092030">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 INVERTBIO</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092032">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 INVERT_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092033">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 LCWA</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092034">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 LCWA_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092035">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 NITRATES</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092037">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 NITRATE_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092038">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 NUTRIENTS</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092039">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 NUTRI_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092041">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 PCB_F</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092042">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 PCB_F_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092043">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 PCB_W</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092045">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 PCB_W_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092046">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 PFOS_F</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092048">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 PFOS_F_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092049">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 PFOS_W</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092051">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 PFOS_W_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092052">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 PH</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092053">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 PH_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092054">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 PLANTBIO</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092056">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 PLANT_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092057">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 SULFATE</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092059">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 SULFATE_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092100">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 TURBIDITY</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092101">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 TURBID_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092102">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 TSS</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092104">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 TSS_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092105">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 TEMP</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092106">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 TEMP_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092108">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 TOXAPHENE</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092109">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 TOXAPH_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="092110">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 PROG_STAT</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\JoinField" Date="20211115" Time="110857">JoinField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 AUID c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\calm_cats AUID #</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\JoinField" Date="20211115" Time="110913">JoinField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 AUID c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\impairments_table WID #</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111254">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 AUID_1</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111255">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 CAT</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111257">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 CAT_DESC</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111258">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 DATASET_NAME</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111259">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 TYPE</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111300">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 WID</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111302">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 NAME</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111303">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 REACH_DESC</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111304">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 USE_CLASS</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111306">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 LENGTH_AREA</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111307">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 AFFECTED_U</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111308">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 AFFECT_U_D</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111309">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 LIKE_MEET</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111311">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 LIKE_MT_D</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111312">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 NON_POLL</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111313">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 NON_POLL_D</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111315">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 NAT_BACK</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111316">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 NAT_BACK_D</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111318">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 ADD_MON</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111319">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 ADD_MON_D</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111321">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 APPROVED</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111322">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 APPROVED_D</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111323">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 NEEDS_PLN</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111325">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 NEEDS_PL_D</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111326">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 IMP_PARAM</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111328">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 IMP_PARA_D</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111329">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 NEW_IMPAIR</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111330">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 NEW_IMP_D</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111332">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 HUC_8</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111333">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 HUC_8_NAME</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111334">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 HUC_4</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111336">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 BASIN</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111337">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 COUNTY</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111338">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 TRIBAL_INTERSECT_EXTENT</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111339">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 INDIAN_RESERVATION</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111341">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 ACE</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111342">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 ACE_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111343">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 AL</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111345">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 AL_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111346">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 AMMONIA</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111347">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 AMM_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111348">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 ARSENIC</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111350">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 ARSENIC_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111351">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 CHLORIDE</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111352">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 CHLOR_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111354">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 CLPYR</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111355">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 CLPYR_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111356">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 DDT</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111358">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 DDT_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111359">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 DO</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111400">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 DO_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111402">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 DIELDRIN</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111403">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 DIELDR_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111405">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 DIOXIN</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111406">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 DIOXIN_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111407">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 E_COLI</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111408">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 E_COLI_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111410">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 FC</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111411">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 FC_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111412">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 FISHESBIO</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111414">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 FISHES_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111415">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 HG_F</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111416">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 HG_F_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111418">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 HG_W</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111419">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 HG_W_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111420">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 INVERTBIO</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111422">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 INVERT_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111423">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 LCWA</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111424">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 LCWA_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111426">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 NITRATES</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111427">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 NITRATE_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111428">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 NUTRIENTS</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111429">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 NUTRI_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111431">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 PCB_F</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111432">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 PCB_F_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111433">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 PCB_W</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111435">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 PCB_W_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111436">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 PFOS_F</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111437">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 PFOS_F_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111439">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 PFOS_W</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111440">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 PFOS_W_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111441">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 PH</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111443">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 PH_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111444">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 PLANTBIO</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111445">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 PLANT_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111447">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 SULFATE</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111448">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 SULFATE_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111449">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 TURBIDITY</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111451">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 TURBID_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111452">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 TSS</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111453">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 TSS_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111455">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 TEMP</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111456">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 TEMP_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111458">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 TOXAPHENE</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111459">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 TOXAPH_DU</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="111500">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 PROG_STAT</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\JoinField" Date="20211115" Time="152652">JoinField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 AUID c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\tblAssessments AUID #</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\JoinField" Date="20211115" Time="153205">JoinField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 AUID c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\tblAssessments AUID #</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\JoinField" Date="20211115" Time="154042">JoinField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 AUID c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\tblAssessments AUID #</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\JoinField" Date="20211115" Time="154350">JoinField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\base_lakes_2020 AUID c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\tblAssessments AUID #</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\CopyFeatures" Date="20211115" Time="154358">CopyFeatures wetlands c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\assessed_2020_final_wetlands_tmp # # # #</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="154358">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\assessed_2020_final_wetlands_tmp AUID_1</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="154359">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\assessed_2020_final_wetlands_tmp OVERALL_CAT</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="154359">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\assessed_2020_final_wetlands_tmp AQC</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="154359">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\assessed_2020_final_wetlands_tmp AQC_CAT</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="154359">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\assessed_2020_final_wetlands_tmp AQC_LAST_AY</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="154400">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\assessed_2020_final_wetlands_tmp WR</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="154400">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\assessed_2020_final_wetlands_tmp WR_CAT</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="154400">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\assessed_2020_final_wetlands_tmp WR_LAST_AY</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="154400">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\assessed_2020_final_wetlands_tmp DW</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="154401">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\assessed_2020_final_wetlands_tmp DW_CAT</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="154401">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\assessed_2020_final_wetlands_tmp DW_LAST_AY</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="154401">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\assessed_2020_final_wetlands_tmp LRV</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="154401">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\assessed_2020_final_wetlands_tmp LRV_CAT</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="154402">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\assessed_2020_final_wetlands_tmp LRV_LAST_AY</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="154402">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\assessed_2020_final_wetlands_tmp WATER_TYPE</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="154402">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\assessed_2020_final_wetlands_tmp TRIBAL_INTERSECT_EXTENT</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\DeleteField" Date="20211115" Time="154402">DeleteField c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\assessed_2020_final_wetlands_tmp TRIBAL_DESIGNATION</Process>
+				<Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\Project" Date="20211115" Time="154403">Project c:\workspace\impairedWaters\report_year_2020\final\impairedWaters_final_2020.gdb\assessed_2020_final_wetlands_tmp c:\workspace\impairedWaters\report_year_2020\final\data\env_assessed_final_2020\fgdb\env_assessed_final_water_2020.gdb\assessed_2020_final_wetlands PROJCS["NAD_1983_UTM_Zone_15N",GEOGCS["GCS_North_American_1983",DATUM["D_North_American_1983",SPHEROID["GRS_1980",6378137.0,298.257222101]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["False_Easting",500000.0],PARAMETER["False_Northing",0.0],PARAMETER["Central_Meridian",-93.0],PARAMETER["Scale_Factor",0.9996],PARAMETER["Latitude_Of_Origin",0.0],UNIT["Meter",1.0]] # PROJCS["NAD_1983_UTM_Zone_15N",GEOGCS["GCS_North_American_1983",DATUM["D_North_American_1983",SPHEROID["GRS_1980",6378137.0,298.257222101]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["False_Easting",500000.0],PARAMETER["False_Northing",0.0],PARAMETER["Central_Meridian",-93.0],PARAMETER["Scale_Factor",0.9996],PARAMETER["Latitude_Of_Origin",0.0],UNIT["Meter",1.0]] NO_PRESERVE_SHAPE # NO_VERTICAL</Process>
+				<Process ToolSource="C:\program files\arcgis\server\ArcToolbox\Toolboxes\Conversion Tools.tbx\FeatureClassToFeatureClass" Date="20211116" Time="234227">FeatureClassToFeatureClass /var/ftp/gdrs_temp/update\us_mn_state_pca\env_assessed_water_2020\fgdb\env_assessed_water_2020.gdb\assessed_2020_wetlands /var/ftp/gdrs_temp/update\us_mn_state_pca\env_assessed_water_2020\shp assessed_2020_wetlands.shp # "AUID "AUID" true true false 16 Text 0 0 ,First,#,/var/ftp/gdrs_temp/update\us_mn_state_pca\env_assessed_water_2020\fgdb\env_assessed_water_2020.gdb\assessed_2020_wetlands,AUID,-1,-1;NAME "NAME" true true false 100 Text 0 0 ,First,#,/var/ftp/gdrs_temp/update\us_mn_state_pca\env_assessed_water_2020\fgdb\env_assessed_water_2020.gdb\assessed_2020_wetlands,NAME,-1,-1;LOC_DESC "LOC_DESC" true true false 120 Text 0 0 ,First,#,/var/ftp/gdrs_temp/update\us_mn_state_pca\env_assessed_water_2020\fgdb\env_assessed_water_2020.gdb\assessed_2020_wetlands,LOC_DESC,-1,-1;USE_CLASS "USE_CLASS" true true false 15 Text 0 0 ,First,#,/var/ftp/gdrs_temp/update\us_mn_state_pca\env_assessed_water_2020\fgdb\env_assessed_water_2020.gdb\assessed_2020_wetlands,USE_CLASS,-1,-1;WATER_SIZE "WATER_SIZE" true true false 4 Float 0 0 ,First,#,/var/ftp/gdrs_temp/update\us_mn_state_pca\env_assessed_water_2020\fgdb\env_assessed_water_2020.gdb\assessed_2020_wetlands,WATER_SIZE,-1,-1;AQR "AQR" true true false 4 Text 0 0 ,First,#,/var/ftp/gdrs_temp/update\us_mn_state_pca\env_assessed_water_2020\fgdb\env_assessed_water_2020.gdb\assessed_2020_wetlands,AQR,-1,-1;AQR_CAT "AQR_CAT" true true false 4 Text 0 0 ,First,#,/var/ftp/gdrs_temp/update\us_mn_state_pca\env_assessed_water_2020\fgdb\env_assessed_water_2020.gdb\assessed_2020_wetlands,AQR_CAT,-1,-1;AQR_LAST_A "AQR_LAST_AY" true true false 4 Text 0 0 ,First,#,/var/ftp/gdrs_temp/update\us_mn_state_pca\env_assessed_water_2020\fgdb\env_assessed_water_2020.gdb\assessed_2020_wetlands,AQR_LAST_AY,-1,-1;AQL "AQL" true true false 4 Text 0 0 ,First,#,/var/ftp/gdrs_temp/update\us_mn_state_pca\env_assessed_water_2020\fgdb\env_assessed_water_2020.gdb\assessed_2020_wetlands,AQL,-1,-1;AQL_CAT "AQL_CAT" true true false 4 Text 0 0 ,First,#,/var/ftp/gdrs_temp/update\us_mn_state_pca\env_assessed_water_2020\fgdb\env_assessed_water_2020.gdb\assessed_2020_wetlands,AQL_CAT,-1,-1;AQL_LAST_A "AQL_LAST_AY" true true false 4 Text 0 0 ,First,#,/var/ftp/gdrs_temp/update\us_mn_state_pca\env_assessed_water_2020\fgdb\env_assessed_water_2020.gdb\assessed_2020_wetlands,AQL_LAST_AY,-1,-1;HUC_8 "HUC_8" true true false 8 Text 0 0 ,First,#,/var/ftp/gdrs_temp/update\us_mn_state_pca\env_assessed_water_2020\fgdb\env_assessed_water_2020.gdb\assessed_2020_wetlands,HUC_8,-1,-1;SHAPE_Leng "SHAPE_Length" false true true 8 Double 0 0 ,First,#,/var/ftp/gdrs_temp/update\us_mn_state_pca\env_assessed_water_2020\fgdb\env_assessed_water_2020.gdb\assessed_2020_wetlands,SHAPE_Length,-1,-1;SHAPE_Area "SHAPE_Area" false true true 8 Double 0 0 ,First,#,/var/ftp/gdrs_temp/update\us_mn_state_pca\env_assessed_water_2020\fgdb\env_assessed_water_2020.gdb\assessed_2020_wetlands,SHAPE_Area,-1,-1" #</Process>
+			</lineage>
+			<itemProps>
+				<itemName Sync="TRUE">assessed_2020_wetlands</itemName>
+				<itemLocation>
+					<linkage Sync="TRUE">file://\\g46palgdrftp001\Z\var\ftp\gdrs_temp\update\us_mn_state_pca\env_assessed_water_2020\shp\assessed_2020_wetlands.shp</linkage>
+					<protocol Sync="TRUE">Local Area Network</protocol>
+				</itemLocation>
+				<nativeExtBox>
+					<westBL Sync="TRUE">227609.503500</westBL>
+					<eastBL Sync="TRUE">513265.710700</eastBL>
+					<southBL Sync="TRUE">4893396.138700</southBL>
+					<northBL Sync="TRUE">5178497.683100</northBL>
+					<exTypeCode Sync="TRUE">1</exTypeCode>
+				</nativeExtBox>
+				<imsContentType Sync="TRUE">002</imsContentType>
+				<itemSize Sync="TRUE">0.000</itemSize>
+			</itemProps>
+			<coordRef>
+				<type Sync="TRUE">Projected</type>
+				<geogcsn Sync="TRUE">GCS_North_American_1983</geogcsn>
+				<csUnits Sync="TRUE">Linear Unit: Meter (1.000000)</csUnits>
+				<projcsn Sync="TRUE">NAD_1983_UTM_Zone_15N</projcsn>
+				<peXml Sync="TRUE">&lt;ProjectedCoordinateSystem xsi:type='typens:ProjectedCoordinateSystem' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:xs='http://www.w3.org/2001/XMLSchema' xmlns:typens='http://www.esri.com/schemas/ArcGIS/10.4'&gt;&lt;WKT&gt;PROJCS[&amp;quot;NAD_1983_UTM_Zone_15N&amp;quot;,GEOGCS[&amp;quot;GCS_North_American_1983&amp;quot;,DATUM[&amp;quot;D_North_American_1983&amp;quot;,SPHEROID[&amp;quot;GRS_1980&amp;quot;,6378137.0,298.257222101]],PRIMEM[&amp;quot;Greenwich&amp;quot;,0.0],UNIT[&amp;quot;Degree&amp;quot;,0.0174532925199433]],PROJECTION[&amp;quot;Transverse_Mercator&amp;quot;],PARAMETER[&amp;quot;False_Easting&amp;quot;,500000.0],PARAMETER[&amp;quot;False_Northing&amp;quot;,0.0],PARAMETER[&amp;quot;Central_Meridian&amp;quot;,-93.0],PARAMETER[&amp;quot;Scale_Factor&amp;quot;,0.9996],PARAMETER[&amp;quot;Latitude_Of_Origin&amp;quot;,0.0],UNIT[&amp;quot;Meter&amp;quot;,1.0],AUTHORITY[&amp;quot;EPSG&amp;quot;,26915]]&lt;/WKT&gt;&lt;XOrigin&gt;-5120900&lt;/XOrigin&gt;&lt;YOrigin&gt;-9998100&lt;/YOrigin&gt;&lt;XYScale&gt;450445547.3910538&lt;/XYScale&gt;&lt;ZOrigin&gt;-100000&lt;/ZOrigin&gt;&lt;ZScale&gt;10000&lt;/ZScale&gt;&lt;MOrigin&gt;-100000&lt;/MOrigin&gt;&lt;MScale&gt;10000&lt;/MScale&gt;&lt;XYTolerance&gt;0.001&lt;/XYTolerance&gt;&lt;ZTolerance&gt;0.001&lt;/ZTolerance&gt;&lt;MTolerance&gt;0.001&lt;/MTolerance&gt;&lt;HighPrecision&gt;true&lt;/HighPrecision&gt;&lt;WKID&gt;26915&lt;/WKID&gt;&lt;LatestWKID&gt;26915&lt;/LatestWKID&gt;&lt;/ProjectedCoordinateSystem&gt;</peXml>
+			</coordRef>
+		</DataProperties>
+		<SyncDate>20211116</SyncDate>
+		<SyncTime>23422700</SyncTime>
+		<ModDate>20211116</ModDate>
+		<ModTime>23422700</ModTime>
+	</Esri>
+	<mdChar>
+		<CharSetCd value="004"/>
+	</mdChar>
+	<mdHrLv>
+		<ScopeCd value="005"/>
+	</mdHrLv>
+	<mdContact>
+		<rpIndName>Kristofor Parson</rpIndName>
+		<rpOrgName>Minnesota Pollution Control Agency</rpOrgName>
+		<rpPosName>Data Specialist</rpPosName>
+		<rpCntInfo>
+			<cntPhone>
+				<voiceNum>218-302-6622</voiceNum>
+			</cntPhone>
+			<cntAddress addressType="both">
+				<delPoint>525 S. Lake Ave.</delPoint>
+				<city>Duluth</city>
+				<adminArea>MN</adminArea>
+				<postCode>55802</postCode>
+				<eMailAdd>kristofor.parson@state.mn.us</eMailAdd>
+			</cntAddress>
+		</rpCntInfo>
+		<role>
+			<RoleCd value="007"/>
+		</role>
+	</mdContact>
+	<mdDateSt>20211115</mdDateSt>
+	<mdStanName>ArcGIS Metadata</mdStanName>
+	<mdStanVer>1.0</mdStanVer>
+	<distInfo>
+		<distFormat>
+			<formatName Sync="TRUE">Shapefile</formatName>
+		</distFormat>
+		<distTranOps>
+			<transSize Sync="TRUE">0.000</transSize>
+		</distTranOps>
+	</distInfo>
+	<dataIdInfo>
+		<idCitation>
+			<resTitle>Assessed Wetlands, Minnesota, 2020</resTitle>
+			<date>
+				<pubDate>2021-11-15</pubDate>
+			</date>
+			<citRespParty>
+				<rpOrgName>Minnesota Pollution Control Agency</rpOrgName>
+				<role>
+					<RoleCd value="006"/>
+				</role>
+			</citRespParty>
+			<citRespParty>
+				<rpOrgName>Minnesota Pollution Control Agency</rpOrgName>
+				<role>
+					<RoleCd value="010"/>
+				</role>
+			</citRespParty>
+			<presForm>
+				<PresFormCd value="005" Sync="TRUE"/>
+			</presForm>
+		</idCitation>
+		<idAbs>This is a set of the wetlands assessed by MPCA's surface water quality assessment process for the 2020 303(d)/305(b) integrated report to EPA. These wetlands are a subset of the 1:24,000 scale National Hydrography Dataset (NHD). This dataset includes impaired streams which may or may not yet have a TMDL plan approved by the US EPA as well as streams that support their designated uses, and those that had insufficient information to render a support judgment.</idAbs>
+		<idPurp>These data are intended to be used for planning, informational, and cartographic purposes related to surface water quality in Minnesota.</idPurp>
+		<idStatus>
+			<ProgCd value="001"/>
+		</idStatus>
+		<idPoC>
+			<rpIndName>Kristofor Parson</rpIndName>
+			<rpOrgName>Minnesota Pollution Control Agency</rpOrgName>
+			<rpPosName>Data Specialist</rpPosName>
+			<rpCntInfo>
+				<cntPhone>
+					<voiceNum>218-302-6622</voiceNum>
+				</cntPhone>
+				<cntAddress addressType="both">
+					<delPoint>525 S. Lake Ave.</delPoint>
+					<city>Duluth</city>
+					<adminArea>MN</adminArea>
+					<postCode>55802</postCode>
+					<eMailAdd>kristofor.parson@state.mn.us</eMailAdd>
+				</cntAddress>
+			</rpCntInfo>
+			<role>
+				<RoleCd value="007"/>
+			</role>
+		</idPoC>
+		<resMaint>
+			<maintFreq>
+				<MaintFreqCd value="011"/>
+			</maintFreq>
+		</resMaint>
+		<themeKeys>
+			<keyword>inlandWaters, surface water, water chemistry, water quality</keyword>
+			<thesaName>
+				<resTitle>ISO 19115</resTitle>
+			</thesaName>
+		</themeKeys>
+		<searchKeys>
+			<keyword>inlandWaters, surface water, water chemistry, water quality</keyword>
+		</searchKeys>
+		<resConst>
+			<LegConsts>
+				<useLimit>NOTICE: The Geographic Information System (GIS) Data to which this notice is attached are made available pursuant to the Minnesota Government Data Practices Act (Minnesota Statutes Chapter 13). THE GIS DATA ARE PROVIDED TO YOU AS IS AND WITHOUT ANY WARRANTY AS TO THEIR PERFORMANCE, MERCHANTABILITY, OR FITNESS FOR ANY PARTICULAR PURPOSE. The GIS Data were developed by the Minnesota Pollution Control Agnecy for its own internal business purposes. The Minnesota Pollution Control Agency does not represent or warrant that the GIS Data or the data documentation are error-free, complete, current, or accurate. You are responsible for any consequences resulting from your use of the GIS Data or your reliance on the GIS Data. You should consult the data documentation for this particular GIS Data to determine the limitations of the GIS Data and the precision with which the GIS Data may depict distance, direction, location, or other geographic features. If you transmit or provide the GIS Data (or any portion of it) to another user, the GIS Data must include a copy of this disclaimer.</useLimit>
+			</LegConsts>
+		</resConst>
+		<dataExt>
+			<geoEle>
+				<GeoBndBox>
+					<exTypeCode>true</exTypeCode>
+					<westBL>-97.23</westBL>
+					<eastBL>-89.53</eastBL>
+					<northBL>49.37</northBL>
+					<southBL>43.5</southBL>
+				</GeoBndBox>
+			</geoEle>
+		</dataExt>
+		<dataExt>
+			<tempEle>
+				<TempExtent>
+					<exTemp>
+						<TM_Instant>
+							<tmPosition>2021-11-15</tmPosition>
+						</TM_Instant>
+					</exTemp>
+				</TempExtent>
+			</tempEle>
+		</dataExt>
+		<suppInfo>Minnesota</suppInfo>
+		<envirDesc Sync="TRUE">Microsoft Windows XP Professional x64 Edition Version 5.2 (Build 3790) Service Pack 2; Esri ArcGIS 10.4.1.5686</envirDesc>
+		<dataLang>
+			<languageCode value="en" Sync="TRUE"/>
+			<countryCode value="US" Sync="TRUE"/>
+		</dataLang>
+		<spatRpType>
+			<SpatRepTypCd value="001" Sync="TRUE"/>
+		</spatRpType>
+	</dataIdInfo>
+	<dqInfo>
+		<dqScope>
+			<scpLvl>
+				<ScopeCd value="005"/>
+			</scpLvl>
+		</dqScope>
+		<report type="DQConcConsis">
+			<measDesc>These data have been audited to ensure every waterbody included in the 305(b) submission to EPA has a corresponding feature in this dataset, and that the use judgments are consistent between this spatial dataset and the assessment database as of the publication date.</measDesc>
+		</report>
+		<report type="DQCompOm">
+			<measDesc>These data contain a feature for every wetland in the 305(b) inventory of assessed waters. High-resolution NHD is the primary dataset from which these features are drawn. If no feature exists in the NHD, MPCA staff will digitize a feature.</measDesc>
+		</report>
+	</dqInfo>
+	<spatRepInfo>
+		<VectSpatRep>
+			<geometObjs Name="assessed_2020_wetlands">
+				<geoObjTyp>
+					<GeoObjTypCd value="002" Sync="TRUE"/>
+				</geoObjTyp>
+				<geoObjCnt Sync="TRUE">0</geoObjCnt>
+			</geometObjs>
+			<topLvl>
+				<TopoLevCd value="001" Sync="TRUE"/>
+			</topLvl>
+		</VectSpatRep>
+	</spatRepInfo>
+	<mdExtInfo>
+		<extOnRes>
+			<linkage>http://www.mngeo.state.mn.us/committee/standards/mgmg/metadata.htm</linkage>
+		</extOnRes>
+	</mdExtInfo>
+	<eainfo>
+		<detailed Name="assessed_2020_wetlands">
+			<enttyp>
+				<enttypl>assessed_2020_draft_wetlands</enttypl>
+				<enttypt Sync="TRUE">Feature Class</enttypt>
+				<enttypc Sync="TRUE">0</enttypc>
+			</enttyp>
+			<attr>
+				<attrlabl>FID</attrlabl>
+				<attrdef>Internal feature number.</attrdef>
+				<attrdefs>Esri</attrdefs>
+				<attrdomv>
+					<udom>Sequential unique whole numbers that are automatically generated.</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">FID</attalias>
+				<attrtype Sync="TRUE">OID</attrtype>
+				<attwidth Sync="TRUE">4</attwidth>
+				<atprecis Sync="TRUE">0</atprecis>
+				<attscale Sync="TRUE">0</attscale>
+			</attr>
+			<attr>
+				<attrlabl>Shape</attrlabl>
+				<attrdef>Feature geometry.</attrdef>
+				<attrdefs>Esri</attrdefs>
+				<attrdomv>
+					<udom>Coordinates defining the features.</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">Shape</attalias>
+				<attrtype Sync="TRUE">Geometry</attrtype>
+				<attwidth Sync="TRUE">0</attwidth>
+				<atprecis Sync="TRUE">0</atprecis>
+				<attscale Sync="TRUE">0</attscale>
+			</attr>
+			<attr>
+				<attrlabl>AUID</attrlabl>
+				<attalias Sync="TRUE">AUID</attalias>
+				<attrtype Sync="TRUE">String</attrtype>
+				<attwidth Sync="TRUE">16</attwidth>
+				<atprecis Sync="TRUE">0</atprecis>
+				<attscale Sync="TRUE">0</attscale>
+			</attr>
+			<attr>
+				<attrlabl>NAME</attrlabl>
+				<attalias Sync="TRUE">NAME</attalias>
+				<attrtype Sync="TRUE">String</attrtype>
+				<attwidth Sync="TRUE">100</attwidth>
+				<atprecis Sync="TRUE">0</atprecis>
+				<attscale Sync="TRUE">0</attscale>
+			</attr>
+			<attr>
+				<attrlabl>LOC_DESC</attrlabl>
+				<attalias Sync="TRUE">LOC_DESC</attalias>
+				<attrtype Sync="TRUE">String</attrtype>
+				<attwidth Sync="TRUE">120</attwidth>
+				<atprecis Sync="TRUE">0</atprecis>
+				<attscale Sync="TRUE">0</attscale>
+			</attr>
+			<attr>
+				<attrlabl>USE_CLASS</attrlabl>
+				<attalias Sync="TRUE">USE_CLASS</attalias>
+				<attrtype Sync="TRUE">String</attrtype>
+				<attwidth Sync="TRUE">15</attwidth>
+				<atprecis Sync="TRUE">0</atprecis>
+				<attscale Sync="TRUE">0</attscale>
+			</attr>
+			<attr>
+				<attrlabl>WATER_SIZE</attrlabl>
+				<attalias Sync="TRUE">WATER_SIZE</attalias>
+				<attrtype Sync="TRUE">Single</attrtype>
+				<attwidth Sync="TRUE">13</attwidth>
+				<atprecis Sync="TRUE">0</atprecis>
+				<attscale Sync="TRUE">0</attscale>
+			</attr>
+			<attr>
+				<attrlabl>AQR</attrlabl>
+				<attalias Sync="TRUE">AQR</attalias>
+				<attrtype Sync="TRUE">String</attrtype>
+				<attwidth Sync="TRUE">4</attwidth>
+				<atprecis Sync="TRUE">0</atprecis>
+				<attscale Sync="TRUE">0</attscale>
+			</attr>
+			<attr>
+				<attrlabl>AQR_CAT</attrlabl>
+				<attalias Sync="TRUE">AQR_CAT</attalias>
+				<attrtype Sync="TRUE">String</attrtype>
+				<attwidth Sync="TRUE">4</attwidth>
+				<atprecis Sync="TRUE">0</atprecis>
+				<attscale Sync="TRUE">0</attscale>
+			</attr>
+			<attr>
+				<attrlabl Sync="TRUE">AQR_LAST_A</attrlabl>
+				<attalias Sync="TRUE">AQR_LAST_A</attalias>
+				<attrtype Sync="TRUE">String</attrtype>
+				<attwidth Sync="TRUE">4</attwidth>
+				<atprecis Sync="TRUE">0</atprecis>
+				<attscale Sync="TRUE">0</attscale>
+			</attr>
+			<attr>
+				<attrlabl>AQL</attrlabl>
+				<attalias Sync="TRUE">AQL</attalias>
+				<attrtype Sync="TRUE">String</attrtype>
+				<attwidth Sync="TRUE">4</attwidth>
+				<atprecis Sync="TRUE">0</atprecis>
+				<attscale Sync="TRUE">0</attscale>
+			</attr>
+			<attr>
+				<attrlabl>AQL_CAT</attrlabl>
+				<attalias Sync="TRUE">AQL_CAT</attalias>
+				<attrtype Sync="TRUE">String</attrtype>
+				<attwidth Sync="TRUE">4</attwidth>
+				<atprecis Sync="TRUE">0</atprecis>
+				<attscale Sync="TRUE">0</attscale>
+			</attr>
+			<attr>
+				<attrlabl Sync="TRUE">AQL_LAST_A</attrlabl>
+				<attalias Sync="TRUE">AQL_LAST_A</attalias>
+				<attrtype Sync="TRUE">String</attrtype>
+				<attwidth Sync="TRUE">4</attwidth>
+				<atprecis Sync="TRUE">0</atprecis>
+				<attscale Sync="TRUE">0</attscale>
+			</attr>
+			<attr>
+				<attrlabl>HUC_8</attrlabl>
+				<attalias Sync="TRUE">HUC_8</attalias>
+				<attrtype Sync="TRUE">String</attrtype>
+				<attwidth Sync="TRUE">8</attwidth>
+				<atprecis Sync="TRUE">0</atprecis>
+				<attscale Sync="TRUE">0</attscale>
+			</attr>
+			<attr>
+				<attrlabl>Shape_Leng</attrlabl>
+				<attalias Sync="TRUE">SHAPE_Leng</attalias>
+				<attrtype Sync="TRUE">Double</attrtype>
+				<attwidth Sync="TRUE">19</attwidth>
+				<atprecis Sync="TRUE">0</atprecis>
+				<attscale Sync="TRUE">0</attscale>
+			</attr>
+			<attr>
+				<attrlabl>Shape_Area</attrlabl>
+				<attrdef>Area of feature in internal units squared.</attrdef>
+				<attrdefs>Esri</attrdefs>
+				<attrdomv>
+					<udom>Positive real numbers that are automatically generated.</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">SHAPE_Area</attalias>
+				<attrtype Sync="TRUE">Double</attrtype>
+				<attwidth Sync="TRUE">19</attwidth>
+				<atprecis Sync="TRUE">0</atprecis>
+				<attscale Sync="TRUE">0</attscale>
+			</attr>
+		</detailed>
+		<overview>
+			<eaover>AUID: The Assessment Unit Identifier - a unique identifier for each water unit in the assessment system.
+
+NAME: Name of the feature associated with the AUID.
+
+LOC_DESC: The beginning and end points of the beach in NAD 83 Decimal Degrees.
+
+USE_CLASS: Use class per MN statute 7050.0470.
+
+WATER_SIZE: The length of the reach in miles, according to the National Hydrography Dataset.
+
+AQR: Aquatic Recreation Assessment
+     FS: Fully Supporting aquatic recreation use.
+     IF: Insufficient Information for an assessment.
+     NS: Not Supporting aquatic recreation use.
+     None: Has not been assessed for aquatic recreation use.
+
+AQR_CAT: The consolidated assessment and listing methodology (CALM) category for the Aquatic Recreation use class.
+
+AQR_LAST_A(Y): The most recent year the waterbody was assessed for Aquatic Recreation use.
+
+AQL: Aquatic Life Assessment
+     FS: Fully Supporting aquatic life use.
+     IF: Insufficient Information for an assessment.
+     NS: Not Supporting aquatic life use.
+     None: Has not been assessed for aquatic life use.
+
+AQL_CAT: The CALM category for the Aquatic Life use class.
+
+AQL_LAST_A(Y): The most recent year the waterbody was assessed for Aquatic Life use.
+
+Possible CALM category values include:
+     2: Waterbody’s assessed designated uses are fully supported, the designated use is fully supported, or parameter meets standards.
+     3: Data insufficient or inconclusive to assess.
+     4A: Impaired and a TMDL study has been approved by USEPA.
+     4B: Impaired but a TMDL study is not required because water quality standards are expected to be met in the near future.
+     4C: Impaired but a TMDL study is not required because the impairment is not caused by a pollutant.
+     4D: Impaired or threatened but does not require a TMDL because impairment is solely a result of natural
+sources.
+     4E: Impaired but existing data strongly suggests a TMDL study is not required because impairment is not caused by a pollutant or is due to natural conditions with only insignificant anthropogenic influence; a final determination of Category 4C or 4D will be made in the next assessment cycle pending confirmation from additional information.
+     5: Impaired and TMDL study has not been approved by USEPA.
+     
+     None: Has not been assessed for the designated use. Not a CALM category.
+
+HUC_8: The code of the 8 digit watershed that the feature is primarily associated with.</eaover>
+		</overview>
+	</eainfo>
+	<mdLang>
+		<languageCode value="en" Sync="TRUE"/>
+		<countryCode value="US" Sync="TRUE"/>
+	</mdLang>
+	<mdHrLvName Sync="TRUE">dataset</mdHrLvName>
+	<refSysInfo>
+		<RefSystem>
+			<refSysID>
+				<identCode code="26915" Sync="TRUE"/>
+				<idCodeSpace Sync="TRUE">EPSG</idCodeSpace>
+				<idVersion Sync="TRUE">6.13(3.0.1)</idVersion>
+			</refSysID>
+		</RefSystem>
+	</refSysInfo>
+	<spdoinfo>
+		<ptvctinf>
+			<esriterm Name="assessed_2020_wetlands">
+				<efeatyp Sync="TRUE">Simple</efeatyp>
+				<efeageom code="4" Sync="TRUE"/>
+				<esritopo Sync="TRUE">FALSE</esritopo>
+				<efeacnt Sync="TRUE">0</efeacnt>
+				<spindex Sync="TRUE">FALSE</spindex>
+				<linrefer Sync="TRUE">FALSE</linrefer>
+			</esriterm>
+		</ptvctinf>
+	</spdoinfo>
+</metadata>

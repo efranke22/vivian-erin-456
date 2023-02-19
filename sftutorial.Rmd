@@ -1,0 +1,299 @@
+---
+title: "Spatial Mapping with the SF Package"
+author: "Your name here"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 2
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Learning Objectives
+
+This learning guide will introduce to the [**sf: Simple Features for R**](https://cran.r-project.org/web/packages/sf/index.html) package. We will cover: \
+
+- The basic notation of plotting with sf \
+- How to make a chloropleth map \
+- How to overlay and crop different shape files on a single map \
+- How to join spatial data frames 
+- How to aggregate points a desired spatial polygon (census tract, county, state, etc) \
+- How to customize your sf map with labels and colors
+
+# Concepts 
+
+```{r}
+library(tidyverse)
+library(sf)
+library(tidycensus)
+```
+
+### A basic map (notation)
+
+### Chloropleth maps 
+
+### Joining and aggregating spatial data
+
+#### Load the data
+
+This set of examples will use data on domestic and public drinking wells with at least one sample, which we collect below from the Minnesota Pollution Control Agency (MPCA). We will look at these drinking wells on the county level, so please download the *shapefile* folder from the [Minnesota Geospatial Commons](https://gisdata.mn.gov/dataset/bdry-counties-in-minnesota) site and change the file path below to fit your needs.
+
+```{r}
+# domestic and public drinking wells with at least one sample
+stationList <- read_csv("https://services.pca.state.mn.us/api/v1/groundwater/monitoring-stations?stationType=Well&format=csv") %>%
+  filter(stationPurpose %in% c("Domestic Drinking", "Public Drinking"), sampleCount>0) 
+
+# county boundaries for minnesota
+county_boundaries <- st_read("data/shp_bdry_counties_in_minnesota/mn_county_boundaries_500.shp")
+```
+
+#### Make sure CRS are consistent 
+
+Before joining spatial data, we need to make sure that the data we are joining have consistent coordinate reference systems. For this dataset, we are using NAD83. It also important to check data missing a latitude and longitude. 
+
+```{r}
+# clean well data
+station_points <- stationList %>% 
+  filter(lat > 0, long <0) %>% # remove wells with a missing latitude and longitude
+  st_as_sf(coords = c("long", "lat"), crs = "NAD83")
+
+# check CRS of station_points: NAD83
+st_crs(station_points)
+st_crs(county_boundaries) # need to be transformed
+
+# transform county boundaries to NAD83
+county_boundaries <- st_transform(county_boundaries, crs = "NAD83")
+```
+
+#### Complete the join
+
+Now that we have county boundaries, we can match each drinking well to its appropriate county using a spatial join. Both the `station_points` and `county_boundaries` datasets have a `geometry` column (POINT for the wells, POLYGON for the counties) and the `st_join()` matches to point to the right polygon. Now we know what county each well is located in. 
+
+```{r}
+joined <- st_join(station_points, county_boundaries) 
+head(joined)
+```
+
+#### Aggregation 
+
+Now we can count how many wells are in each station with a simple `group_by()` as shown below. 
+
+```{r}
+stations_per_county <- joined %>%
+  st_drop_geometry() %>% #removes geometry - makes calculation more efficient 
+  group_by(CTY_NAME) %>%
+  count() 
+head(stations_per_county)
+```
+
+Check out how many stations we have per county 
+
+```{r}
+# looks like the max is much higher than the 75% quantile
+summary(stations_per_county$n)
+
+# check for ourliers on the high side
+stations_per_county %>%
+  arrange(desc(n)) %>%
+  head()
+
+# make an indicator variable for the high well county
+stations_per_county$high_wells <- "1,000+"
+stations_per_county$high_wells[stations_per_county$n <= 1000] <- NA
+```
+
+Make the chloropleth map with aggregated data
+
+```{r}
+stations_per_county_geo <- county_boundaries %>% # shape file with geometry goes first
+  left_join(stations_per_county, by = "CTY_NAME")
+  
+ggplot() +
+  geom_sf(data= subset(stations_per_county_geo, n<1000), aes(fill=n)) + 
+  scale_fill_gradientn(colours = c("lightcyan", "lightcyan2", "lightskyblue3", "lightskyblue4"))+
+  geom_sf(data = subset(stations_per_county_geo, n>1000),aes(color=high_wells), fill = "dodgerblue4")+
+  labs(fill = "Wells", color = "", title = "Number of domestic/public drinking wells by Minnesota county", subtitle= "with at least one MPCA sample since 1988")+
+  theme_classic()+
+  theme(axis.line = element_blank(), 
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        legend.position = "bottom", 
+        plot.title.position = "plot", 
+        plot.title = element_text(size = 8), 
+        plot.subtitle = element_text(size = 8))
+```
+
+### Crop and overlay shape files
+
+With a map, we can overlay shape files (such as roads, rivers, and lakes) and crop and them to fit our area of interest.
+
+Start by downloading a shape file that you are interested in. For example, search "Minnesota roads shape file". For this example, visit [this site](https://catalog.data.gov/dataset/tiger-line-shapefile-2019-state-minnesota-primary-and-secondary-roads-state-based-shapefile) and download the Shapefile Zip File. Load in the shapefile (adjusting the file path as needed) using `st_read()`.
+
+```{r}
+roads <- st_read("data/tl_2019_27_prisecroads")
+```
+
+Add the shape file to the plot from above using the code `geom_sf(data = roads, fill = "gray",color = "gray", lwd= 0.2)`.
+
+```{r}
+ggplot() +
+  geom_sf(data= subset(stations_per_county_geo, n<1000), aes(fill=n)) + 
+  scale_fill_gradientn(colours = c("lightcyan", "lightcyan2", "lightskyblue3", "lightskyblue4"))+
+  geom_sf(data = subset(stations_per_county_geo, n>1000),aes(color=high_wells), fill = "dodgerblue4")+
+  geom_sf(data = roads, fill = "gray",color = "gray", lwd= 0.2)+
+  labs(fill = "Wells", color = "", title = "Number of domestic/public drinking wells by Minnesota county", subtitle= "with at least one MPCA sample since 1988")+
+  theme_classic()+
+  theme(axis.line = element_blank(), 
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        legend.position = "bottom", 
+        plot.title.position = "plot", 
+        plot.title = element_text(size = 8), 
+        plot.subtitle = element_text(size = 8))
+```
+
+The prior shapefile matches our map perfectly, but say we wanted to plot just the seven county metropolitan area with the following map. Doing this, we can't really see what we want. 
+
+```{r}
+stations_per_county_geo7 <- stations_per_county_geo %>%
+  filter(CTY_NAME %in% c("Anoka", "Hennepin", "Ramsey", "Dakota", "Carver", "Washington", "Scott"))
+
+ggplot() +
+  geom_sf(data= subset(stations_per_county_geo7, n<1000), aes(fill=n)) + 
+  scale_fill_gradientn(colours = c("lightcyan", "lightcyan2", "lightskyblue3", "lightskyblue4"))+
+  geom_sf(data = subset(stations_per_county_geo7, n>1000),aes(color=high_wells), fill = "dodgerblue4")+
+  geom_sf(data = roads, fill = "gray",color = "gray", lwd= 0.2)+
+  labs(fill = "Wells", color = "", title = "Number of domestic/public drinking wells by Minnesota county", subtitle= "with at least one MPCA sample since 1988")+
+  theme_classic()+
+  theme(axis.line = element_blank(), 
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        legend.position = "bottom", 
+        plot.title.position = "plot", 
+        plot.title = element_text(size = 8), 
+        plot.subtitle = element_text(size = 8))
+```
+
+We can fix this with `st_crop()` where we provide our area of interest. We can now more easily see the area we are interested in. 
+
+```{r}
+roads_sub <- st_crop(roads,st_bbox(county_boundaries %>% filter(CTY_NAME %in% c("Anoka", "Hennepin", "Ramsey", "Dakota", "Carver", "Washington", "Scott"))))
+
+ggplot() +
+  geom_sf(data= subset(stations_per_county_geo7, n<1000), aes(fill=n)) + 
+  scale_fill_gradientn(colours = c("lightcyan", "lightcyan2", "lightskyblue3", "lightskyblue4"))+
+  geom_sf(data = subset(stations_per_county_geo7, n>1000),aes(color=high_wells), fill = "dodgerblue4")+
+  geom_sf(data = roads_sub, fill = "gray",color = "gray", lwd= 0.2)+
+  labs(fill = "Wells", color = "", title = "Number of domestic/public drinking wells by Minnesota county", subtitle= "with at least one MPCA sample since 1988")+
+  theme_classic()+
+  theme(axis.line = element_blank(), 
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        legend.position = "bottom", 
+        plot.title.position = "plot", 
+        plot.title = element_text(size = 8), 
+        plot.subtitle = element_text(size = 8))
+```
+
+### Customization
+
+# Exercises 
+
+The following exercises will use census tract `tidycensus` data for the Hennepin and Ramsey county. We provide several variables you can choose from in order to create maps that best fit your interest.
+
+Load the data with the following code:
+
+```{r}
+census_api_key("f0d9e7b9eb0a91da1b9d33277cf20e264c19e197", install = TRUE, overwrite=TRUE)
+
+census2020 <- get_acs(year = 2020, state = "MN", geography = "tract", variables = c(	
+"B01003_001", "B19013_001", "B23006_023", "B25058_001", "B25107_001", "B25003_001", "B25003_002", "B25003_003", "B25077_001"), output = 'wide', geometry = TRUE) %>%
+  filter(word(NAME, 4) %in% c("Ramsey", "Hennepin"))%>%
+               mutate(tract = word(NAME, 3),
+                      tract = str_remove(tract, ","),
+                      county = word(NAME, 4)) %>%
+               select(-NAME) %>%
+               rename("population" = "B01003_001E", 
+                      "medianIncome" = "B19013_001E", 
+                      "bachelors" = "B23006_023E",
+                      "medContractRent" = "B25058_001E", 
+                      "tenureTotal" = "B25003_001E", 
+                      "tenureOwned" = "B25003_002E", 
+                      "tenureRented" = "B25003_003E",
+                      "medianHomeValue"= "B25077_001E") %>%
+  select(-contains("_"))
+
+crashes <- read_csv("data/Pedestrian_and_Bike_Crash_Dataset__.csv") %>%
+  filter(!is.na(Latitude), !is.na(Longitude))
+```
+
+### Exercise 1: A basic sf map
+
+### Exercise 2: A chloropleth map
+
+### Exercise 3: Joining and aggregation
+
+**Create a map of crashes per census tract in Ramsey county.** Hint: you will first have to transform the `crashes` data to have a point geometry using the code below. 
+
+```{r}
+crashes <- st_as_sf(crashes, coords = c("Longitude", "Latitude"), crs = "NAD83")
+```
+
+SOLUTION: 
+```{r}
+#check coordinates
+st_crs(census2020)
+st_crs(crashes)
+
+crashes_per_tract <- st_join(crashes, census2020) %>%
+  st_drop_geometry() %>% #removes geometry - makes calculation more efficient 
+  group_by(tract) %>%
+  count() 
+
+crashes_per_tract_geo <- census2020 %>% # shape file with geometry goes first
+  left_join(crashes_per_tract, by = "tract")
+  
+ggplot() +
+  geom_sf(data= subset(crashes_per_tract_geo, n<1000), aes(fill=n)) + 
+  scale_fill_gradientn(colours = c("lightcyan", "lightcyan2", "lightskyblue3", "lightskyblue4"))+
+  geom_sf(data = subset(crashes_per_tract_geo, n>1000), fill = "dodgerblue4")+
+  labs(fill = "Crashes", color = "", title = "Number of pedestrian crashes per census tract")+
+  theme_classic()+
+  theme(axis.line = element_blank(), 
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        legend.position = "bottom", 
+        plot.title.position = "plot", 
+        plot.title = element_text(size = 8), 
+        plot.subtitle = element_text(size = 8))
+```
+
+
+### Exercise 4: Adding layers
+
+**Plot a variable of your choice for census tracts in Hennepin and Ramsey County and add roads to the map.**
+
+SOLUTION
+
+```{r}
+roads_sub <- st_crop(roads,st_bbox(census2020))
+
+ggplot() +
+  geom_sf(data = census2020, aes(fill = population))+
+  labs(fill = "Population", color = "", title = "Population per census tract in Hennepin and Ramsey County")+
+  geom_sf(data= roads_sub, fill = "gray", color = "gray", lwd = 0.2)+
+  scale_fill_gradientn(colours = c("lightcyan", "lightcyan2", "lightskyblue3", "lightskyblue4"))+
+  theme_classic()+
+  theme(axis.line = element_blank(), 
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        legend.position = "bottom", 
+        plot.title.position = "plot", 
+        plot.title = element_text(size = 8), 
+        plot.subtitle = element_text(size = 8))
+```
+
+
