@@ -1,6 +1,6 @@
 ---
 title: "Spatial Mapping with the SF Package"
-author: "Your name here"
+author: "Erin Franke and Vivian Powell"
 output: 
   html_document:
     toc: true
@@ -27,11 +27,161 @@ This learning guide will introduce to the [**sf: Simple Features for R**](https:
 
 ```{r}
 library(tidyverse)
+library(dplyr)
 library(sf)
 library(tidycensus)
+library(USAboundaries) 
 ```
 
 ### A basic map (notation)
+
+This section will cover the basics of creating and understanding point, line, and polygon maps with the sf package. 
+
+#### Intro to vector data
+
+It's important to understand what type of spatial data you're working with, and what your goals are for your map. Most spatial data takes the form of vector data, meaning it is made up of either points, lines, or polygons (or other geometries, in more complex situations, but for the sake of this tutorial we'll stick to the main three). For example, city locations are usually be represented with points, roads are represented with lines, and country, state, or county boundaries are represented with polygons. Each layer on your map will either be points, lines, or polygons, and you can layer these in the order that makes sense for your map. 
+
+#### Understanding sf notation
+
+Sf stands for "simple features" which is a standardized way to store and interpret spatial data. In R, the sf package is really nice because it integrates spatial operations with tidyverse notation and is pretty easy to learn and use.
+
+In R, sf data are simply data frame objects or tibbles, with the addition of a "geometry" column. The geometry column contains all the spatial information that you need in order to make a map layer. You'll notice that the entries in the geometry column will tell you what type of data (point, line, or polygon) you're working with.
+
+Let's load some data so we can look at the format.
+
+#### Load the data
+
+```{r}
+mn_cities <- read_sf('shp_loc_pop_centers')
+```
+After running the code, open up the data frame in your environment panel. Notice that the "geometry" column contains "POINT" objects. The rest of the data is essentially just a regular data frame that we can use our normal functions on.
+
+It's also good to know which coordinate reference system your data uses, because if you are layering multiple datasets, the CRS needs to be consistent. Common CRS include NAD83 (for the United States only) and WGS84 (global). You can convert between these if need be.
+
+```{r}
+st_crs(mn_cities)
+```
+Our MN cities data uses NAD83 / UTM zone 15 datums. Let's convert that to regular NAD83, which is more likely to match other data. We can do this using the st_transform function, and by looking up the number for the NAD83 CRS, which turned out to be 4269.
+
+```{r}
+mn_cities <- mn_cities %>%
+st_transform(crs = 4269)
+
+st_crs(mn_cities)
+```
+
+
+Now we know that if we wanted to add another layer to our map, we'd need to to be in NAD83 as well, or we'd need convert this data to a different CRS. Let's choose a map of MN counties to plot under our cities, so that we can see the shape of Minnesota. We can get these from the "USAboundaries" package.
+
+```{r}
+#load data
+mn_counties <- us_counties(resolution = "high", states = "Minnesota")
+
+#clean out duplicate column names so we can filter later
+names_counties <- names(mn_counties)
+names(mn_counties)[names_counties == 'state_name'] <- c("state_name1", "state_name2")
+
+#check CRS
+st_crs(mn_counties)
+```
+Our county data used the WGS84 coordinate reference system, so we need to convert it to NAD83 before we use it with our city data. The number for WGS84 is 4326, if we needed to go the other way.
+
+```{r}
+mn_counties <- mn_counties %>%
+  st_transform(crs = 4269)
+
+st_crs(mn_counties)
+```
+
+#### Constructing a basic map using ggplot
+
+A basic map in sf consists of a ggplot() base and geom_sf() layers. Unlike with most ggplots, you don't need to include any aesthetics or data in the ggplot line. You'll specify the data and aesthetics separately for each geom_sf layer that you add.
+
+The order in which you add layers matters! Think of it as building a map from the bottom up. The layers you have further down in your code will appear on top of the layers at the top of your code.
+
+```{r}
+ggplot() +
+  geom_sf(data = mn_counties) +
+  geom_sf(data = mn_cities)
+```
+
+#### Customizing your map
+
+Okay, we have a basic map! Let's make that look nicer. Also, I'll filter so that we only have cities with populations over 5,000.
+
+```{r}
+ggplot() +
+  geom_sf(data = mn_counties, fill = 'wheat', color = "tan") + #add our county layer
+  geom_sf(data = mn_cities %>% filter(Population >= 5000), color = 'steelblue4') + #add our filtered city layer
+  labs(title = "Minnesota Cities with Population >= 5,000") + #labels just as with a regular ggplot
+  theme_classic() + #remove grey background
+  theme(axis.line=element_blank(), #remove the axis lines
+        axis.text.x=element_blank(), #remove the x-axis text (longitudes)
+        axis.ticks.x=element_blank(), #remove the x-axis ticks
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+```
+
+#### Color by population using aesthetics
+
+We could also choose to color the cities by their population:
+
+```{r}
+ggplot() +
+  geom_sf(data = mn_counties, fill = 'wheat', color = "tan") + 
+  geom_sf(data = mn_cities %>% filter(Population >= 5000), mapping = aes(color = Population), alpha = 0.8)+ 
+  scale_color_viridis_c() +
+  labs(title = "Minnesota Cities with Population >= 5,000") + 
+  theme_classic() + 
+  theme(axis.line=element_blank(), 
+        axis.text.x=element_blank(), 
+        axis.ticks.x=element_blank(), 
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+```
+
+#### Zooming in by filtering data
+
+Can't see much there, so let's zoom in on the Twin Cities area by choosing only a few counties. We can simply filter the county data by name. You could also zoom by specifying xlim() or ylim() for your ggplot, if you know which coordinate system is being used. In this case you'd use longitude and latitude as your x and y limits respectively.
+
+```{r}
+ggplot() +
+  geom_sf(data = mn_counties %>%
+            filter(name %in% c("Anoka", "Hennepin", "Ramsey", "Dakota", "Carver", "Washington", "Scott") ), fill = 'wheat', color = "tan") + 
+  geom_sf(data = mn_cities %>% filter(Population >= 5000), mapping = aes(color = Population), alpha = 0.8)+ 
+  scale_color_viridis_c() +
+  labs(title = "Minnesota Cities with Population >= 5,000") + 
+  theme_classic() + 
+  theme(axis.line=element_blank(), 
+        axis.text.x=element_blank(), 
+        axis.ticks.x=element_blank(), 
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+```
+
+#### Zooming in by cropping data
+
+In order to see our area of interest we also need to crop the city data. You can use the st_crop function.
+```{r}
+cities_7countyarea <- st_crop(mn_cities,st_bbox(mn_counties %>% filter(name %in% c("Anoka", "Hennepin", "Ramsey", "Dakota", "Carver", "Washington", "Scott"))))
+```
+```{r}
+ggplot() +
+  geom_sf(data = mn_counties %>%
+            filter(name %in% c("Anoka", "Hennepin", "Ramsey", "Dakota", "Carver", "Washington", "Scott") ), fill = 'wheat', color = "tan") + 
+  geom_sf(data = cities_7countyarea %>% filter(Population >= 5000), mapping = aes(color = Population))+ 
+  scale_color_viridis_c() +
+  labs(title = "Minnesota Cities with Population >= 5,000") + 
+  theme_classic() + 
+  theme(axis.line=element_blank(), 
+        axis.text.x=element_blank(), 
+        axis.ticks.x=element_blank(), 
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+```
+
+#### Conclusion
+That's a basic intro to making maps with the sf package in ggplot! There are other ways to map, but this is an especially convenient and familiar one. We'll explain more about labeling and plot design tools later on in this guide.
 
 ### Chloropleth maps 
 
