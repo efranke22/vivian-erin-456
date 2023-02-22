@@ -31,6 +31,7 @@ library(dplyr)
 library(sf)
 library(tidycensus)
 library(USAboundaries) 
+library(classInt)
 ```
 
 ### A basic map (notation)
@@ -39,20 +40,20 @@ This section will cover the basics of creating and understanding point, line, an
 
 #### Intro to vector data
 
-It's important to understand what type of spatial data you're working with, and what your goals are for your map. Most spatial data takes the form of vector data, meaning it is made up of either points, lines, or polygons (or other geometries, in more complex situations, but for the sake of this tutorial we'll stick to the main three). For example, city locations are usually be represented with points, roads are represented with lines, and country, state, or county boundaries are represented with polygons. Each layer on your map will either be points, lines, or polygons, and you can layer these in the order that makes sense for your map. 
+It's important to understand what type of spatial data you're working with, and what your goals are for your map. Most spatial data takes the form of vector data, meaning it is made up of either points, lines, polygons, or other geometries, in more complex situations. For example, city locations are usually be represented with points, roads are represented with lines, and country, state, or county boundaries are represented with polygons. Each layer on your map will have one specific type of geometry, and you can layer these in the order that makes sense for your map. 
 
 #### Understanding sf notation
 
 Sf stands for "simple features" which is a standardized way to store and interpret spatial data. In R, the sf package is really nice because it integrates spatial operations with tidyverse notation and is pretty easy to learn and use.
 
-In R, sf data are simply data frame objects or tibbles, with the addition of a "geometry" column. The geometry column contains all the spatial information that you need in order to make a map layer. You'll notice that the entries in the geometry column will tell you what type of data (point, line, or polygon) you're working with.
+In R, sf data are simply data frames or tibbles, with the addition of a "geometry" column. The geometry column contains all the spatial information that you need in order to make a map layer. You'll notice that the entries in the geometry column will tell you what type of data (point, line, polygon, etc) you're working with.
 
 Let's load some data so we can look at the format.
 
 #### Load the data
 
 ```{r}
-mn_cities <- read_sf('shp_loc_pop_centers')
+mn_cities <- read_sf('data/shp_loc_pop_centers')
 ```
 After running the code, open up the data frame in your environment panel. Notice that the "geometry" column contains "POINT" objects. The rest of the data is essentially just a regular data frame that we can use our normal functions on.
 
@@ -61,11 +62,11 @@ It's also good to know which coordinate reference system your data uses, because
 ```{r}
 st_crs(mn_cities)
 ```
-Our MN cities data uses NAD83 / UTM zone 15 datums. Let's convert that to regular NAD83, which is more likely to match other data. We can do this using the st_transform function, and by looking up the number for the NAD83 CRS, which turned out to be 4269.
+Our MN cities data uses NAD83 / UTM zone 15 datums. Let's convert that to regular NAD83, which is more likely to match other data. We can do this using the st_transform function.
 
 ```{r}
 mn_cities <- mn_cities %>%
-st_transform(crs = 4269)
+st_transform(crs = "NAD83")
 
 st_crs(mn_cities)
 ```
@@ -84,25 +85,25 @@ names(mn_counties)[names_counties == 'state_name'] <- c("state_name1", "state_na
 #check CRS
 st_crs(mn_counties)
 ```
-Our county data used the WGS84 coordinate reference system, so we need to convert it to NAD83 before we use it with our city data. The number for WGS84 is 4326, if we needed to go the other way.
+Our county data used the WGS84 coordinate reference system, so we need to convert it to NAD83 before we use it with our city data.
 
 ```{r}
 mn_counties <- mn_counties %>%
-  st_transform(crs = 4269)
+  st_transform(crs = "NAD83")
 
 st_crs(mn_counties)
 ```
 
 #### Constructing a basic map using ggplot
 
-A basic map in sf consists of a ggplot() base and geom_sf() layers. Unlike with most ggplots, you don't need to include any aesthetics or data in the ggplot line. You'll specify the data and aesthetics separately for each geom_sf layer that you add.
+A basic map in sf consists of a ggplot() base and geom_sf() layers. Unlike with most ggplots, you don't need to include any aesthetics or data in the ggplot line. You'll specify the data and aesthetics separately for each geom_sf layer that you add. X and y are pre-defined by your geometry columns, so you only need to specify other aesthetics in your geom_sf() layers.
 
 The order in which you add layers matters! Think of it as building a map from the bottom up. The layers you have further down in your code will appear on top of the layers at the top of your code.
 
 ```{r}
-ggplot() +
-  geom_sf(data = mn_counties) +
-  geom_sf(data = mn_cities)
+ggplot() + #plot frame
+  geom_sf(data = mn_counties) + #county boundary layer
+  geom_sf(data = mn_cities) #city point layer
 ```
 
 #### Customizing your map
@@ -116,10 +117,8 @@ ggplot() +
   labs(title = "Minnesota Cities with Population >= 5,000") + #labels just as with a regular ggplot
   theme_classic() + #remove grey background
   theme(axis.line=element_blank(), #remove the axis lines
-        axis.text.x=element_blank(), #remove the x-axis text (longitudes)
-        axis.ticks.x=element_blank(), #remove the x-axis ticks
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank())
+        axis.text=element_blank(), #remove the axis text
+        axis.ticks=element_blank()) #remove the axis ticks
 ```
 
 #### Color by population using aesthetics
@@ -134,10 +133,8 @@ ggplot() +
   labs(title = "Minnesota Cities with Population >= 5,000") + 
   theme_classic() + 
   theme(axis.line=element_blank(), 
-        axis.text.x=element_blank(), 
-        axis.ticks.x=element_blank(), 
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank())
+        axis.text=element_blank(), 
+        axis.ticks=element_blank())
 ```
 
 #### Zooming in by filtering data
@@ -153,10 +150,8 @@ ggplot() +
   labs(title = "Minnesota Cities with Population >= 5,000") + 
   theme_classic() + 
   theme(axis.line=element_blank(), 
-        axis.text.x=element_blank(), 
-        axis.ticks.x=element_blank(), 
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank())
+        axis.text=element_blank(), 
+        axis.ticks=element_blank())
 ```
 
 #### Zooming in by cropping data
@@ -174,16 +169,85 @@ ggplot() +
   labs(title = "Minnesota Cities with Population >= 5,000") + 
   theme_classic() + 
   theme(axis.line=element_blank(), 
-        axis.text.x=element_blank(), 
-        axis.ticks.x=element_blank(), 
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank())
+        axis.text=element_blank(), 
+        axis.ticks=element_blank())
 ```
 
-#### Conclusion
-That's a basic intro to making maps with the sf package in ggplot! There are other ways to map, but this is an especially convenient and familiar one. We'll explain more about labeling and plot design tools later on in this guide.
 
 ### Chloropleth maps 
+
+Choropleth maps are probably the most commonly made thematic maps. They're easily created using ggplot by filling areas (sf polygon geometries) according to the value of a variable of interest. Choropleth maps can use either unclassed or classed numeric data depending on the goal of the map, and there are several different classification methods that can be used.
+
+To explore how to create choropleth maps, let's use the example of county population data for Minnesota. We already have the mn_counties spatial data from the previous tutorial, so we just need to download some data on populations.
+
+```{r}
+#read data
+population <- read_csv("data/PopulationReport.csv") 
+
+#clean data
+colnames(population) <- population[1,]
+population <- population[-c(1:2, 90:92),]
+names_pop <- names(population)
+names(population)[names_pop == 'NA'] <- c("NA1", "NA2")
+population <- population %>%
+  select(-c(NA1, NA2))
+
+#join with county boundary data
+county_population <- mn_counties %>% 
+  left_join(population, by = join_by(geoid == 'FIPS*')) %>% #when joining a spatial and a non-spatial dataset, the spatial one should always come first! Here, that's our "mn_counties" data
+  select(`County name`, geometry, `Change 2020-21`) %>% 
+  mutate(chng_2021 = as.numeric(gsub("%", "",`Change 2020-21`)))
+```
+
+#### Creating an unclassed (gradient) choropleth map
+
+Unclassed choropleth maps will have a color gradient in the legend, and no two polygons will be filled in the same color unless they have the same value of the variable of interest. Using an unclassed scheme is great for when you want to show a general theme or pattern in data with fairly even distribution. For example, when we run the code for the map below, we see that counties in the suburbs of the Twin Cities, as well as the North Central region of the state, are experiencing the highest population growth. We don't need to class this data in order to see the trends.
+
+In order to build a choropleth map, we use the same structure as the "basic map": a ggplot base with a geom(sf) layer containing our data and our aesthetics, which specifies which variable to fill by. Then we have our color scheme (you want a continuous color scheme here, or you can specify a gradient using scale_fill_gradientn() ).
+
+```{r}
+ggplot() +
+  geom_sf(data= county_population, aes(fill=chng_2021)) +
+  scale_fill_viridis_c() +
+  labs(title = "Population Change in Minnesota Counties from 2020 to 2021", fill = "Percent Change in Population")+
+  theme_classic() +
+  theme(axis.line = element_blank(), axis.text = element_blank(), axis.ticks = element_blank())
+```
+
+#### Creating a classed choropleth map
+
+There are times when it makes more sense to class your data for a choropleth map. This might be wise if you have outliers that you want to keep in or if you're attempting to highlight a more specific spatial pattern or group.
+
+There are several ways to classify your data for a choropleth map. You can use cut() and manually specify your breaks, which might be a good idea if you know the specific distribution of your data or if you're aiming to highlight a certain pattern. There are also classification schemes that are widely used by cartographers and which are available in the classInt package. Some of the most common ones include:
+
+Jenks Natural Breaks: Finds the natural breaks in the distribution of your data and classes according to those. This might be good if it's important to keep clusters together in highly clustered data, but you can end up with some wildly different-sized classes. Use style = "jenks".
+
+Quantiles: Creates categories with equal numbers of data points. This is great for making maps look balanced and interpretable, but it might not work well with the distribution of your data. Use style = "quantile".
+
+Equal interval: Creates categories of equal width. This is the most easily interpretable method, but often doesn't bring out natural patterns in the data. Use style = "equal".
+
+```{r}
+#create breaks using the quantile method with 5 classes
+breaks_qt <- classIntervals(c(min(county_population$chng_2021) - .00001, county_population$chng_2021), n = 5, style = "quantile")
+
+#use cut() and the breaks we created to make a classed variable
+county_population <- county_population %>%
+  mutate(chng_2021_cat = factor(cut(chng_2021, breaks = breaks_qt$brks)))
+```
+
+
+```{r}
+#classed choropleth map
+ggplot() +
+  geom_sf(data= county_population, aes(fill=chng_2021_cat)) +
+  scale_fill_viridis_d() + #you need a discrete color scale here, or you can specify your own colors
+  labs(title = "Population Change in Minnesota Counties from 2020 to 2021", fill = "Percent Change in Population")+
+  theme_classic() +
+  theme(axis.line = element_blank(), axis.text = element_blank(), axis.ticks = element_blank())
+```
+
+You can really see the difference between the classed and unclassed maps. The classed version emphasizes the pattern of Hennepin and Ramsey counties declining in population while the surrounding counties grow in population. It's easy to play around with classification schemes until you find one that tells the story you want to see, but it's important to be honest with your data and make sure that your map isn't obscuring reality. It's also important to consider what spatial unit you're using (here we have counties) to make sure that aggregated values are appropriate for your topic. Sometimes it makes more sense to use a larger or smaller spatial unit than what you might think.
+
 
 ### Joining and aggregating spatial data
 
@@ -379,10 +443,6 @@ census2020 <- get_acs(year = 2020, state = "MN", geography = "tract", variables 
 crashes <- read_csv("data/Pedestrian_and_Bike_Crash_Dataset__.csv") %>%
   filter(!is.na(Latitude), !is.na(Longitude))
 ```
-
-### Exercise 1: A basic sf map
-
-### Exercise 2: A choropleth map
 
 ### Exercise 3: Joining and aggregation
 
