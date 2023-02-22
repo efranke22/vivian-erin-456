@@ -55,6 +55,7 @@ Let's load some data so we can look at the format.
 ```{r}
 mn_cities <- read_sf('data/shp_loc_pop_centers')
 ```
+
 After running the code, open up the data frame in your environment panel. Notice that the "geometry" column contains "POINT" objects. The rest of the data is essentially just a regular data frame that we can use our normal functions on.
 
 It's also good to know which coordinate reference system your data uses, because if you are layering multiple datasets, the CRS needs to be consistent. Common CRS include NAD83 (for the United States only) and WGS84 (global). You can convert between these if need be.
@@ -62,6 +63,7 @@ It's also good to know which coordinate reference system your data uses, because
 ```{r}
 st_crs(mn_cities)
 ```
+
 Our MN cities data uses NAD83 / UTM zone 15 datums. Let's convert that to regular NAD83, which is more likely to match other data. We can do this using the st_transform function.
 
 ```{r}
@@ -71,8 +73,7 @@ st_transform(crs = "NAD83")
 st_crs(mn_cities)
 ```
 
-
-Now we know that if we wanted to add another layer to our map, we'd need to to be in NAD83 as well, or we'd need convert this data to a different CRS. Let's choose a map of MN counties to plot under our cities, so that we can see the shape of Minnesota. We can get these from the "USAboundaries" package.
+Now we know that if we wanted to add another layer to our map, we'd need to be in NAD83 as well, or we'd need convert this data to a different CRS. Let's choose a map of MN counties to plot under our cities, so that we can see the shape of Minnesota. We can get these from the "USAboundaries" package.
 
 ```{r}
 #load data
@@ -85,6 +86,7 @@ names(mn_counties)[names_counties == 'state_name'] <- c("state_name1", "state_na
 #check CRS
 st_crs(mn_counties)
 ```
+
 Our county data used the WGS84 coordinate reference system, so we need to convert it to NAD83 before we use it with our city data.
 
 ```{r}
@@ -96,7 +98,7 @@ st_crs(mn_counties)
 
 #### Constructing a basic map using ggplot
 
-A basic map in sf consists of a ggplot() base and geom_sf() layers. Unlike with most ggplots, you don't need to include any aesthetics or data in the ggplot line. You'll specify the data and aesthetics separately for each geom_sf layer that you add. X and y are pre-defined by your geometry columns, so you only need to specify other aesthetics in your geom_sf() layers.
+A basic map in sf consists of a `ggplot()` base and `geom_sf()` layers. Unlike with most ggplots, you don't need to include any aesthetics or data in the ggplot line. You'll specify the data and aesthetics separately for each `geom_sf` layer that you add. X and y are pre-defined by your geometry columns, so you only need to specify other aesthetics in your `geom_sf()` layers.
 
 The order in which you add layers matters! Think of it as building a map from the bottom up. The layers you have further down in your code will appear on top of the layers at the top of your code.
 
@@ -139,7 +141,7 @@ ggplot() +
 
 #### Zooming in by filtering data
 
-Can't see much there, so let's zoom in on the Twin Cities area by choosing only a few counties. We can simply filter the county data by name. You could also zoom by specifying xlim() or ylim() for your ggplot, if you know which coordinate system is being used. In this case you'd use longitude and latitude as your x and y limits respectively.
+Can't see much there, so let's zoom in on the Twin Cities area by choosing only a few counties. We can simply filter the county data by name. You could also zoom by specifying `xlim()` or `ylim()` for your ggplot, if you know which coordinate system is being used. In this case you'd use longitude and latitude as your x and y limits respectively.
 
 ```{r}
 ggplot() +
@@ -156,10 +158,12 @@ ggplot() +
 
 #### Zooming in by cropping data
 
-In order to see our area of interest we also need to crop the city data. You can use the st_crop function.
+In order to see our area of interest we also need to crop the city data. You can use the `st_crop()` function.
+
 ```{r}
 cities_7countyarea <- st_crop(mn_cities,st_bbox(mn_counties %>% filter(name %in% c("Anoka", "Hennepin", "Ramsey", "Dakota", "Carver", "Washington", "Scott"))))
 ```
+
 ```{r}
 ggplot() +
   geom_sf(data = mn_counties %>%
@@ -178,7 +182,7 @@ ggplot() +
 
 Choropleth maps are probably the most commonly made thematic maps. They're easily created using ggplot by filling areas (sf polygon geometries) according to the value of a variable of interest. Choropleth maps can use either unclassed or classed numeric data depending on the goal of the map, and there are several different classification methods that can be used.
 
-To explore how to create choropleth maps, let's use the example of county population data for Minnesota. We already have the mn_counties spatial data from the previous tutorial, so we just need to download some data on populations.
+To explore how to create choropleth maps, let's use the example of county population data for Minnesota. We already have the `mn_counties` spatial data from the previous tutorial, so we just need to download some data on populations.
 
 ```{r}
 #read data
@@ -291,6 +295,7 @@ joined <- st_join(station_points, county_boundaries)
 head(joined)
 ```
 
+
 #### Aggregation 
 
 Now we can count how many wells are in each station with a simple `group_by()` as shown below. 
@@ -309,7 +314,7 @@ Check out how many stations we have per county
 # looks like the max is much higher than the 75% quantile
 summary(stations_per_county$n)
 
-# check for ourliers on the high side
+# check for outliers on the high side
 stations_per_county %>%
   arrange(desc(n)) %>%
   head()
@@ -319,7 +324,7 @@ stations_per_county$high_wells <- "1,000+"
 stations_per_county$high_wells[stations_per_county$n <= 1000] <- NA
 ```
 
-Make the chloropleth map with aggregated data
+Make the chloropleth map with aggregated data.
 
 ```{r}
 stations_per_county_geo <- county_boundaries %>% # shape file with geometry goes first
@@ -357,7 +362,7 @@ ggplot() +
   geom_sf(data= subset(stations_per_county_geo, n<1000), aes(fill=n)) + 
   scale_fill_gradientn(colours = c("lightcyan", "lightcyan2", "lightskyblue3", "lightskyblue4"))+
   geom_sf(data = subset(stations_per_county_geo, n>1000),aes(color=high_wells), fill = "dodgerblue4")+
-  geom_sf(data = roads, fill = "gray",color = "gray", lwd= 0.2)+
+  geom_sf(data = roads, fill = "gray",color = "gray", lwd= 0.2)+ #adding the shape file in this line
   labs(fill = "Wells", color = "", title = "Number of domestic/public drinking wells by Minnesota county", subtitle= "with at least one MPCA sample since 1988")+
   theme_classic()+
   theme(axis.line = element_blank(), 
@@ -372,6 +377,7 @@ ggplot() +
 The prior shapefile matches our map perfectly, but say we wanted to plot just the seven county metropolitan area with the following map. Doing this, we can't really see what we want. 
 
 ```{r}
+# filter for counties of interest
 stations_per_county_geo7 <- stations_per_county_geo %>%
   filter(CTY_NAME %in% c("Anoka", "Hennepin", "Ramsey", "Dakota", "Carver", "Washington", "Scott"))
 
@@ -414,6 +420,52 @@ ggplot() +
 
 ### Customization
 
+The maps we have created above are certainly nice, but what if we want to add labels to them. We can use `geom_text_repel()` from the `ggrepel` package. This allows us to add labels based on a variable and place that label using some manual nudging (which you may not need if you have a few spaced out points). In the example below we label 8 water wells in Hennepin county. In reality, we probably don't need the nudges, but this code shows you how to do it should you want to. 
+
+```{r}
+library(ggrepel)
+
+joined_hennepin <- joined %>%
+  filter(CTY_NAME == "Hennepin") %>%
+  mutate(long = unlist(map(geometry,1)),
+           lat = unlist(map(geometry,2))) %>%
+  head(8) %>%
+  mutate(x_nudge = case_when(stationId == '1000022143' ~ .1, 
+                             stationId == '1000022168' ~ .2, 
+                             stationId == '104747' ~ -.3,
+                             stationId == '104841' ~ -.3,
+                             stationId == '105193' ~ -0.2,
+                             stationId == '119302' ~ -0.1,
+                             stationId == '126374' ~ 0.2,
+                             stationId == '126439' ~ 0.2, 
+                             TRUE ~ 0), 
+         y_nudge = case_when(stationId == '1000022143' ~ 0.05, 
+                             stationId == '1000022168' ~ 0, 
+                             stationId == '104747' ~ -0.2,
+                             stationId == '104841' ~ -0.2,
+                             stationId == '105193' ~ 0.15,
+                             stationId == '119302' ~ 0,
+                             stationId == '126374' ~ 0.15,
+                             stationId == '126439' ~ 0.15, 
+                             TRUE ~ 0))
+
+ggplot()+
+  geom_sf(data=county_boundaries %>% filter(CTY_NAME =="Hennepin"),fill = "cornsilk") +
+  geom_sf(data=joined_hennepin)+
+  theme_classic()+
+  labs(x="", y="")+
+  geom_text_repel(data = joined_hennepin,aes(x = long, y = lat, label = stationName), nudge_x = joined_hennepin$x_nudge, nudge_y = joined_hennepin$y_nudge, size =3)+
+  theme(axis.line = element_blank(), 
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        legend.position = "bottom", 
+        plot.title.position = "plot", 
+        plot.title = element_text(size = 8), 
+        plot.subtitle = element_text(size = 8))
+```
+
+
+
 # Exercises 
 
 The following exercises will use census tract `tidycensus` data for the Hennepin and Ramsey county. We provide several variables you can choose from in order to create maps that best fit your interest.
@@ -452,59 +504,9 @@ crashes <- read_csv("data/Pedestrian_and_Bike_Crash_Dataset__.csv") %>%
 crashes <- st_as_sf(crashes, coords = c("Longitude", "Latitude"), crs = "NAD83")
 ```
 
-SOLUTION: 
-```{r}
-#check coordinates
-st_crs(census2020)
-st_crs(crashes)
-
-crashes_per_tract <- st_join(crashes, census2020) %>%
-  st_drop_geometry() %>% #removes geometry - makes calculation more efficient 
-  group_by(tract) %>%
-  count() 
-
-crashes_per_tract_geo <- census2020 %>% # shape file with geometry goes first
-  left_join(crashes_per_tract, by = "tract")
-  
-ggplot() +
-  geom_sf(data= subset(crashes_per_tract_geo, n<1000), aes(fill=n)) + 
-  scale_fill_gradientn(colours = c("lightcyan", "lightcyan2", "lightskyblue3", "lightskyblue4"))+
-  geom_sf(data = subset(crashes_per_tract_geo, n>1000), fill = "dodgerblue4")+
-  labs(fill = "Crashes", color = "", title = "Number of pedestrian crashes per census tract")+
-  theme_classic()+
-  theme(axis.line = element_blank(), 
-        axis.text = element_blank(),
-        axis.ticks = element_blank(),
-        legend.position = "bottom", 
-        plot.title.position = "plot", 
-        plot.title = element_text(size = 8), 
-        plot.subtitle = element_text(size = 8))
-```
-
-
 ### Exercise 4: Adding layers
 
 **Plot a variable of your choice for census tracts in Hennepin and Ramsey County and add roads to the map.**
-
-SOLUTION
-
-```{r}
-roads_sub <- st_crop(roads,st_bbox(census2020))
-
-ggplot() +
-  geom_sf(data = census2020, aes(fill = population))+
-  labs(fill = "Population", color = "", title = "Population per census tract in Hennepin and Ramsey County")+
-  geom_sf(data= roads_sub, fill = "gray", color = "gray", lwd = 0.2)+
-  scale_fill_gradientn(colours = c("lightcyan", "lightcyan2", "lightskyblue3", "lightskyblue4"))+
-  theme_classic()+
-  theme(axis.line = element_blank(), 
-        axis.text = element_blank(),
-        axis.ticks = element_blank(),
-        legend.position = "bottom", 
-        plot.title.position = "plot", 
-        plot.title = element_text(size = 8), 
-        plot.subtitle = element_text(size = 8))
-```
 
 
 ### Exercise 5: Map desgin
