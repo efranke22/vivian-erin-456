@@ -382,7 +382,7 @@ crashes <- read_csv("data/Pedestrian_and_Bike_Crash_Dataset__.csv") %>%
 
 ### Exercise 1: A basic sf map
 
-### Exercise 2: A chloropleth map
+### Exercise 2: A choropleth map
 
 ### Exercise 3: Joining and aggregation
 
