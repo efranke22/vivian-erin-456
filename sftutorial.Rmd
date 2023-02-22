@@ -507,3 +507,7 @@ ggplot() +
 ```
 
 
+### Exercise 5: Map desgin
+
+**Create a map with at least two different geometries, and add labels, a legend, a title, and credits to your map**
+
