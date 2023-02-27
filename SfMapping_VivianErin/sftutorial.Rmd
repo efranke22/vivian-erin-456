@@ -32,7 +32,6 @@ library(sf)
 library(tidycensus)
 library(USAboundaries) 
 library(classInt)
-library(ggsflabel)
 library(ggspatial)
 ```
 
@@ -53,6 +52,8 @@ In R, sf data are simply data frames or tibbles, with the addition of a "geometr
 Let's load some data so we can look at the format.
 
 #### Load the data
+
+Make sure you've downloaded the entire activity folder from Google Drive and extracted the zipfile before attempting to load the data!
 
 ```{r}
 mn_cities <- read_sf('shp_loc_pop_centers')
@@ -112,34 +113,20 @@ ggplot() + #plot frame
 
 #### Customizing your map
 
-Okay, we have a basic map! Let's make that look nicer. Also, I'll filter so that we only have cities with populations over 5,000.
+Okay, we have a basic map! Let's make that look nicer. Also, I'll filter so that we only have cities with populations over 5,000. I can filter within my `geom_sf()` line, which is really convenient. We could also choose to color the cities by their population using `aes()` within `geom_sf`:
 
 ```{r}
 ggplot() +
-  geom_sf(data = mn_counties, fill = 'wheat', color = "tan") + #add our county layer
-  geom_sf(data = mn_cities %>% filter(Population >= 5000), color = 'steelblue4') + #add our filtered city layer
-  labs(title = "Minnesota Cities with Population >= 5,000") + #labels just as with a regular ggplot
-  theme_classic() + #remove grey background
-  theme(axis.line=element_blank(), #remove the axis lines
-        axis.text=element_blank(), #remove the axis text
-        axis.ticks=element_blank()) #remove the axis ticks
-```
-
-#### Color by population using aesthetics
-
-We could also choose to color the cities by their population:
-
-```{r}
-ggplot() +
-  geom_sf(data = mn_counties, fill = 'wheat', color = "tan") + 
-  geom_sf(data = mn_cities %>% filter(Population >= 5000), mapping = aes(color = Population), alpha = 0.8)+ 
-  scale_color_viridis_c() +
+  geom_sf(data = mn_counties, fill = 'wheat', color = "tan") + #establishing my counties basemap
+  geom_sf(data = mn_cities %>% filter(Population >= 5000), mapping = aes(color = Population), alpha = 0.8)+ #cities layer
+  scale_color_viridis_c() + #continuous (gradient) color scale
   labs(title = "Minnesota Cities with Population >= 5,000") + 
   theme_classic() + 
-  theme(axis.line=element_blank(), 
-        axis.text=element_blank(), 
-        axis.ticks=element_blank())
+  theme(axis.line=element_blank(), #remove axis lines
+        axis.text=element_blank(), #remove axis text (latitudes and longitudes)
+        axis.ticks=element_blank()) #remove axis tick marks
 ```
+
 
 #### Zooming in by filtering data
 
@@ -184,7 +171,7 @@ ggplot() +
 
 Choropleth maps are probably the most commonly made thematic maps. They're easily created using ggplot by filling areas (sf polygon geometries) according to the value of a variable of interest. Choropleth maps can use either unclassed or classed numeric data depending on the goal of the map, and there are several different classification methods that can be used.
 
-To explore how to create choropleth maps, let's use the example of county population data for Minnesota. We already have the `mn_counties` spatial data from the previous tutorial, so we just need to download some data on populations.
+To explore how to create choropleth maps, let's use the example of county population data for Minnesota. We already have the `mn_counties` spatial data from the previous tutorial, so we just need to download some data on populations. Run the following code:
 
 ```{r}
 #read data
@@ -209,15 +196,15 @@ county_population <- mn_counties %>%
 
 Unclassed choropleth maps will have a color gradient in the legend, and no two polygons will be filled in the same color unless they have the same value of the variable of interest. Using an unclassed scheme is great for when you want to show a general theme or pattern in data with fairly even distribution. For example, when we run the code for the map below, we see that counties in the suburbs of the Twin Cities, as well as the North Central region of the state, are experiencing the highest population growth. We don't need to class this data in order to see the trends.
 
-In order to build a choropleth map, we use the same structure as the "basic map": a ggplot base with a geom(sf) layer containing our data and our aesthetics, which specifies which variable to fill by. Then we have our color scheme (you want a continuous color scheme here, or you can specify a gradient using scale_fill_gradientn() ).
+In order to build a choropleth map, we use the same structure as the "basic map": a ggplot base with a geom(sf) layer containing our data and our aesthetics, which specifies which variable to fill by. Then we have our color scheme (you want a continuous color scheme here, or you can specify a gradient using `scale_fill_gradientn()` ).
 
 ```{r}
 ggplot() +
-  geom_sf(data= county_population, aes(fill=chng_2021)) +
-  scale_fill_viridis_c() +
+  geom_sf(data = county_population, aes(fill=chng_2021)) + #specifying which data to use and which variable to fill by
+  scale_fill_viridis_c() + #continuous color scheme
   labs(title = "Population Change in Minnesota Counties from 2020 to 2021", fill = "Percent Change in Population")+
   theme_classic() +
-  theme(axis.line = element_blank(), axis.text = element_blank(), axis.ticks = element_blank())
+  theme(axis.line = element_blank(), axis.text = element_blank(), axis.ticks = element_blank()) #remove axis information
 ```
 
 #### Creating a classed choropleth map
@@ -245,7 +232,7 @@ county_population <- county_population %>%
 ```{r}
 #classed choropleth map
 ggplot() +
-  geom_sf(data= county_population, aes(fill=chng_2021_cat)) +
+  geom_sf(data= county_population, aes(fill=chng_2021_cat)) + #add your data and specify aesthetics in the same way as for an unclassed map
   scale_fill_viridis_d() + #you need a discrete color scale here, or you can specify your own colors
   labs(title = "Population Change in Minnesota Counties from 2020 to 2021", fill = "Percent Change in Population")+
   theme_classic() +
@@ -480,7 +467,14 @@ Customizing your maps is all about **visual hierarchy**; that is, how do you vis
 *Symbols. You can differentiate between different types of point features by using different symbol shapes, which are available in the `shape` attribute of `geom_sf` layers.
 *Legends. Your legend should be clear and informative. You can adjust the legend in `theme()` using `legend.justification`, `legend.box.background`, etc. You can create your own legend title as well. 
 
-Let's look at some water quality data for the twin cities. Run the following code:
+First, run `devtools::install_github("yutannihilation/ggsflabel")` in the console to install the `ggsflabel` package. The ggsflabel package makes it easy to label maps without unlisting the coordinates from the geometry like we did in the last example. Then, run this library statement:
+
+```{r}
+library(ggsflabel)
+```
+
+
+Let's look at some water quality data for the twin cities. Run the following code to read in and clean some data:
 
 ```{r}
 #read in fecal coliform bacteria concentration data
@@ -489,8 +483,8 @@ miss_river_fcb <- read_csv('miss_fcb.csv') %>%
 
 #read in state border data
 mn_wi_states <- us_states(resolution = "high", states = c("Minnesota", "Wisconsin")) %>%
-  st_transform(crs = "NAD83") %>%
-  mutate(x_nudge = case_when(state_name == 'Minnesota' ~ 1, 
+  st_transform(crs = "NAD83") %>% #transform CRS
+  mutate(x_nudge = case_when(state_name == 'Minnesota' ~ 1,  #these are nudge values -- play around with your map and see which values place your labels where you want them
                              state_name == 'Wisconsin' ~ -1), 
          y_nudge = case_when(state_name == 'Minnesota' ~ -1.7, 
                             state_name == 'Wisconsin' ~ 0))
@@ -499,7 +493,7 @@ mn_wi_states <- us_states(resolution = "high", states = c("Minnesota", "Wisconsi
 mn_twin_cities <- read_sf('shp_loc_pop_centers') %>%
   filter(Name %in% c("Minneapolis", "St. Paul")) %>%
   st_transform(crs = "NAD83") %>% 
-  mutate(x_nudge = case_when(Name == 'Minneapolis' ~ 0, 
+  mutate(x_nudge = case_when(Name == 'Minneapolis' ~ 0, #nudge values
                              Name == 'St. Paul' ~ .1), 
          y_nudge = case_when(Name == 'Minneapolis' ~ .05, 
                             Name == 'St. Paul' ~ .05))
@@ -511,7 +505,7 @@ counties <- us_counties(resolution = "high", states = c("Minnesota", "Wisconsin"
 #river shapefile
 rivers <- read_sf('shp_water_lakes_rivers')
 
-#title lengend
+#title legend
 legend_title <- "FCB per 100 mL"
 ```
 
@@ -519,28 +513,30 @@ legend_title <- "FCB per 100 mL"
 And now we can create a pretty, customized map. Run the following code:
 
 ```{r}
-ggplot() +
-  geom_sf(data = counties, color = "navajowhite", fill = "ivory", size = 0.5) + #add countiy boundaries
+ggplot() + #ggplot frame
+  geom_sf(data = counties, color = "navajowhite", fill = "ivory", size = 0.5) + #add county boundaries
   geom_sf(data = mn_wi_states, color = "tan3", fill = "NA") + #add state boundaries
   geom_sf(data = mn_twin_cities, color = "black", size = 3, shape= 15) + #add twin cities
   geom_sf(data = rivers %>% filter(NAME_DNR == "Mississippi"),color = "NA", fill = 'cornflowerblue') +  #add river
-  geom_sf_label_repel(data = mn_twin_cities, aes(label = Name), nudge_x = mn_twin_cities$x_nudge, nudge_y=mn_twin_cities$y_nudge) + #add city labels
+  geom_sf_label_repel(data = mn_twin_cities, aes(label = Name), nudge_x = mn_twin_cities$x_nudge, nudge_y=mn_twin_cities$y_nudge) + #add city labels using nudge values from above. geom_sf_label_repel adds labels in boxes.
   geom_sf(data = miss_river_fcb, mapping = aes(color = fct_reorder(NA2Cat, NA2)), size = 2.5)+ #add thematic layer -- Fecal coliform levels
   scale_color_manual(legend_title, values = c("mediumseagreen", "gold", "orange1","red2"))+ #color scheme and legend title
-  coord_sf(xlim = c(-93.41, -92.1), ylim= c(44.4, 45.2)) + #zoom
-  geom_sf_text_repel(data = mn_wi_states, min.segment.length = Inf, color = "tan3", aes(label = state_name), size = 5, nudge_y = mn_wi_states$y_nudge, nudge_x = mn_wi_states$x_nudge)+ #add state labels
+  coord_sf(xlim = c(-93.41, -92.1), ylim= c(44.4, 45.2)) + #zoom into this specific long-lat area
+  geom_sf_text_repel(data = mn_wi_states, min.segment.length = Inf, color = "tan3", aes(label = state_name), size = 5, nudge_y = mn_wi_states$y_nudge, nudge_x = mn_wi_states$x_nudge)+ #add state labels using nudge values from above. geom_sf_text_repel adds text without label boxes.
   labs(x = "", y = "", title = "Fecal Coliform Bacteria (FCB) Levels in the Mississippi River", subtitle = "Data from 2019 and 2020 at 34 monitoring stations in Southeastern Minnesota", caption = "Plot by Vivian Powell | Data from Metropolitan Council EIMS") +
   annotation_scale(location = "bl")+ #add scale bar (from `ggspatial` package)
   theme_classic() +
-  theme(legend.position = c(.95, .95),
+  theme(legend.position = c(.95, .95), 
     legend.justification = c("right", "top"),
-    legend.box.just = "right",
-    legend.box.background = element_rect(color="black", size=1),
-    legend.text = element_text(size = 7),legend.title = element_text(size = 8, face = "bold"),
-    plot.title = element_text(face = "bold", hjust = 0.5), plot.subtitle = element_text(hjust = 0.5),plot.caption = element_text(hjust = 0.5),axis.line=element_blank(),axis.text.x=element_blank(),
-      axis.ticks.x=element_blank(),
-      axis.text.y=element_blank(),
-      axis.ticks.y=element_blank())
+    legend.box.background = element_rect(color="black", size=1), #create a legend rectangle with a black border
+    legend.text = element_text(size = 7),
+    legend.title = element_text(size = 8, face = "bold"),
+    plot.title = element_text(face = "bold", hjust = 0.5), 
+    plot.subtitle = element_text(hjust = 0.5),
+    plot.caption = element_text(hjust = 0.5),
+    axis.line=element_blank(),
+    axis.text=element_blank(),
+    axis.ticks=element_blank())
 ```
 
 Now you're equipped to make your own spatial visualizations using the sf package and ggplot!
@@ -595,7 +591,7 @@ crashes <- st_as_sf(crashes, coords = c("Longitude", "Latitude"), crs = "NAD83")
 
 ### Exercise 3: Map design
 
-**Create a map with at least two different geometries, and add labels, a legend, a title, a scale bar, and credits to your map**
+**Add some labels, a legend, a title, a scale bar, and credits to your map from Exercise 2. Design your map using visual hierarchy principles!**
 
 ```{r}
 
