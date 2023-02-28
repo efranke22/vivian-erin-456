@@ -25,7 +25,7 @@ This learning guide will introduce to the [**sf: Simple Features for R**](https:
 
 # Concepts 
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(dplyr)
 library(sf)
@@ -187,7 +187,7 @@ population <- population %>%
 
 #join with county boundary data
 county_population <- mn_counties %>% 
-  left_join(population, by = join_by(geoid == 'FIPS*')) %>% #when joining a spatial and a non-spatial dataset, the spatial one should always come first! Here, that's our "mn_counties" data
+  left_join(population, by = c("geoid" = 'FIPS*')) %>% #when joining a spatial and a non-spatial dataset, the spatial one should always come first! Here, that's our "mn_counties" data
   select(`County name`, geometry, `Change 2020-21`) %>% 
   mutate(chng_2021 = as.numeric(gsub("%", "",`Change 2020-21`)))
 ```
@@ -412,52 +412,6 @@ ggplot() +
 
 The maps we have created above are certainly nice, but what if we want to add labels to them, and customize them to be more visually appealing?
 
-
-#### Labeling maps
-
-We can use `geom_text_repel()` from the `ggrepel` package. This allows us to add labels based on a variable and place that label using some manual nudging (which you may not need if you have a few spaced out points). In the example below we label 8 water wells in Hennepin county. In reality, we probably don't need the nudges, but this code shows you how to do it should you want to. 
-
-```{r}
-library(ggrepel)
-
-joined_hennepin <- joined %>%
-  filter(CTY_NAME == "Hennepin") %>%
-  mutate(long = unlist(map(geometry,1)), 
-           lat = unlist(map(geometry,2))) %>%
-  head(8) %>%
-  mutate(x_nudge = case_when(stationId == '1000022143' ~ .1, 
-                             stationId == '1000022168' ~ .2, 
-                             stationId == '104747' ~ -.3,
-                             stationId == '104841' ~ -.3,
-                             stationId == '105193' ~ -0.2,
-                             stationId == '119302' ~ -0.1,
-                             stationId == '126374' ~ 0.2,
-                             stationId == '126439' ~ 0.2, 
-                             TRUE ~ 0), 
-         y_nudge = case_when(stationId == '1000022143' ~ 0.05, 
-                             stationId == '1000022168' ~ 0, 
-                             stationId == '104747' ~ -0.2,
-                             stationId == '104841' ~ -0.2,
-                             stationId == '105193' ~ 0.15,
-                             stationId == '119302' ~ 0,
-                             stationId == '126374' ~ 0.15,
-                             stationId == '126439' ~ 0.15, 
-                             TRUE ~ 0))
-
-ggplot()+
-  geom_sf(data=county_boundaries %>% filter(CTY_NAME =="Hennepin"),fill = "cornsilk") +
-  geom_sf(data=joined_hennepin)+
-  theme_classic()+
-  labs(x="", y="")+
-  geom_text_repel(data = joined_hennepin,aes(x = long, y = lat, label = stationName), nudge_x = joined_hennepin$x_nudge, nudge_y = joined_hennepin$y_nudge, size =3)+
-  theme(axis.line = element_blank(), 
-        axis.text = element_blank(),
-        axis.ticks = element_blank(),
-        legend.position = "bottom", 
-        plot.title.position = "plot", 
-        plot.title = element_text(size = 8), 
-        plot.subtitle = element_text(size = 8))
-```
 #### Visual Hierarchies and Customization
 
 Customizing your maps is all about **visual hierarchy**; that is, how do you visually emphasize the important information on the map and ensure that your visualization looks nice and is easily interpretable? Some ways to emphasize important features or information include:
@@ -548,9 +502,7 @@ The following exercises will use census tract `tidycensus` data for the Hennepin
 
 Load the data with the following code:
 
-```{r}
-census_api_key("f0d9e7b9eb0a91da1b9d33277cf20e264c19e197", install = TRUE, overwrite=TRUE)
-
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
 census2020 <- get_acs(year = 2020, state = "MN", geography = "tract", variables = c(	
 "B01003_001", "B19013_001", "B23006_023", "B25058_001", "B25107_001", "B25003_001", "B25003_002", "B25003_003", "B25077_001"), output = 'wide', geometry = TRUE) %>%
   filter(word(NAME, 4) %in% c("Ramsey", "Hennepin"))%>%
@@ -574,26 +526,85 @@ crashes <- read_csv("Pedestrian_and_Bike_Crash_Dataset__.csv") %>%
 
 ### Exercise 1: Joining and aggregation
 
-**Create a map of crashes per census tract in Ramsey county.** Hint: you will first have to transform the `crashes` data to have a point geometry using the code below. 
+**Create a map of crashes per census tract in Ramsey county.** 
+
+First, transform the `crashes` data to have a point geometry using the code below. 
 
 ```{r}
 crashes <- st_as_sf(crashes, coords = c("Longitude", "Latitude"), crs = "NAD83")
 ```
 
+Check the coordinates of `census2020` and `crashes` using `st_crs()`.
+
+```{r}
+#code here
+```
+
+Join the crashes and census dataset together and count the number of crashes per census tract.
+
+```{r, eval=FALSE}
+crashes_per_tract <- st_join(...) %>%
+  st_drop_geometry() %>% #removes geometry - makes calculation more efficient 
+  group_by(...) %>%
+  count() 
+```
+
+Join the census data with `crashes_per_tract`.
+
+```{r, eval=FALSE}
+crashes_per_tract_geo <- ... %>% # shape file with geometry goes first
+  left_join(..., by = ...)
+```
+
+Create the plot!! Use a filter of `n>0` on the `crashes_per_tract_geo` data to only show the census tracts where crashes were recorded instead of all of Ramsey and Hennepin County. 
+
+```{r, eval=FALSE}
+ggplot() +
+  geom_sf(...)+
+  scale_fill_gradientn(colours = c("lightcyan", "lightcyan2", "lightskyblue3", "lightskyblue4"))+
+  labs(fill = "Crashes", color = "", title = "Number of pedestrian crashes per census tract")+
+  theme_classic()+
+  theme(axis.line = element_blank(), 
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        legend.position = "bottom", 
+        plot.title.position = "plot", 
+        plot.title = element_text(size = 8), 
+        plot.subtitle = element_text(size = 8))
+```
+
+
 ### Exercise 2: Adding layers
 
 **Plot a variable of your choice for census tracts in Hennepin and Ramsey County and add roads to the map.**
 
-```{r}
+Start by using `st_crop()` to crop the roads map to the area we are interested in (Hennepin and Ramsey County).
 
+```{r, eval=FALSE}
+roads_sub <- st_crop(...)
+```
+
+Create the map!!
+
+```{r, eval=FALSE}
+ggplot() +
+  geom_sf(...)+ #put census tracts on map and fill by variable of interest
+  geom_sf(... ,fill = "gray", color = "gray", lwd = 0.2)+ #roads data here
+  labs(...)+ # add labels to fit your variables 
+  scale_fill_gradientn(colours = c("lightcyan", "lightcyan2", "lightskyblue3", "lightskyblue4"))+ # change to preferred color palette
+  theme_classic()+
+  theme(axis.line = element_blank(), 
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        legend.position = "bottom", 
+        plot.title.position = "plot", 
+        plot.title = element_text(size = 8), 
+        plot.subtitle = element_text(size = 8))
 ```
 
 
-### Exercise 3: Map design
+### Bonus exercise: Map design (if you have time)
 
 **Add some labels, a legend, a title, a scale bar, and credits to your map from Exercise 2. Design your map using visual hierarchy principles!**
 
-```{r}
-
-```
 
