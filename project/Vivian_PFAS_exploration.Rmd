@@ -14,6 +14,8 @@ library(skimr)
 library(tidyverse)
 library(readr)
 library(readxl)
+library(sf)
+library(USAboundaries)
 ```
 
 ```{r, warning=FALSE}
@@ -29,7 +31,51 @@ head(pfas)
 ```
 
 ```{r}
-pfas %>% 
-  group_by(CHEMICAL_NAME)
+pfas %>%
+  count(CHEMICAL_NAME, DETECT_FLAG) %>%
+  pivot_wider(names_from = DETECT_FLAG, values_from = n) %>%
+  mutate(percent_detect = Y/(Y+N), total = N+Y) %>%
+  arrange(desc(percent_detect)) %>%
+  filter(total > 5000) %>%
+  mutate(commonName = c("PFBA", "PFOA", "PFPeA", "PFHxA", "PFOS", "PFHxS", "PFBS"))
+```
+```{r}
+pfba <- pfas %>%
+  filter(CHEMICAL_NAME == "Perfluorobutanoic acid")
+
+pfba %>% 
+  count(`LOC_TYPE_2`) %>%
+  arrange(desc(n))
+
+pfba %>%
+  group_by(LOC_TYPE_2) %>%
+  mutate(count = n()) %>%
+  filter(count > 900) %>%
+  count(DETECT_FLAG)
+```
+```{r}
+mn_counties <- us_counties(resolution = "high", states = c("Minnesota")) %>%
+  st_transform(crs = 4269)
+
+st_crs(mn_counties)
+```
+
+```{r}
+pfba_sf <- pfba %>%
+  filter(LOC_TYPE_2 == "Well-Domestic") %>%
+  filter(!is.na(LATITUDE), !is.na(LONGITUDE)) %>%
+  st_as_sf(coords = c("LONGITUDE", "LATITUDE"),
+                  crs = 4269)
+
+st_crs(pfba_sf)
+
+
+names_counties <- names(mn_counties)
+names(mn_counties)[names_counties == 'state_name'] <- c("state_name1", "state_name2")
+
+ggplot() +
+  geom_sf(data = mn_counties %>%
+            filter(name %in% c("Anoka", "Hennepin", "Ramsey", "Dakota", "Carver", "Washington", "Scott") )) +
+  geom_sf(data = pfba_sf)
 ```
 
