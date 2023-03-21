@@ -15,11 +15,22 @@ library(skimr)
 library(readxl)
 ```
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 pfas <- read_xlsx("../data/Twin Cities PFAS Data Ticket WO00000021224685.xlsx", sheet=2)
 ```
 
 ```{r}
 skim(pfas)
+pfas %>%
+  count(CHEMICAL_NAME, DETECT_FLAG) %>%
+  pivot_wider(names_from = DETECT_FLAG, values_from = n) %>%
+  mutate(percent_detect = Y/(Y+N), total = N+Y) %>%
+  arrange(desc(percent_detect)) %>%
+  filter(total > 5000) %>%
+  mutate(commonName = c("PFBA", "PFOA", "PFPeA", "PFHxA", "PFOS", "PFHxS", "PFBS"))
+```
+
+```{r}
+
 ```
 
