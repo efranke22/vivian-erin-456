@@ -1,0 +1,25 @@
+---
+title: "PFAS Data Exploration"
+author: "Erin Franke"
+date: "2023-03-21"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(skimr)
+library(readxl)
+```
+
+```{r}
+pfas <- read_xlsx("../data/Twin Cities PFAS Data Ticket WO00000021224685.xlsx", sheet=2)
+```
+
+```{r}
+skim(pfas)
+```
+
