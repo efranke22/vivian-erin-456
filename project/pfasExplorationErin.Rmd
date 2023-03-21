@@ -13,6 +13,8 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(skimr)
 library(readxl)
+library(sf)
+library(USAboundaries)
 ```
 
 ```{r, message=FALSE, warning=FALSE}
@@ -31,6 +33,23 @@ pfas %>%
 ```
 
 ```{r}
+pfas %>%
+  filter(CHEMICAL_NAME == "Perfluorooctanoic acid") %>%
+  count(LOC_TYPE_2) %>%
+  arrange(desc(n))
 
+pfas %>%
+  filter(CHEMICAL_NAME == "Perfluorooctanoic acid") %>%
+  group_by(LOC_TYPE_2) %>%
+  mutate(count = n()) %>%
+  filter(count > 900) %>%
+  count(DETECT_FLAG)
+
+pfas %>%
+  filter(CHEMICAL_NAME == "Perfluorooctanoic acid", LOC_TYPE_2 == "Well-Domestic") %>%
+  filter(!is.na(LONGITUDE), !is.na(LATITUDE)) %>%
+  st_as_sf(coords = c("LONGITUDE", "LATITUDE"), crs ="WGS 84") %>%
+  ggplot()+
+  geom_sf()
 ```
 
