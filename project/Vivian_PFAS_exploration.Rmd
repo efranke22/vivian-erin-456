@@ -18,17 +18,26 @@ library(sf)
 library(USAboundaries)
 ```
 
+Import Data
+
 ```{r, warning=FALSE}
 pfas <- read_xlsx("../data/Twin Cities PFAS Data Ticket WO00000021224685.xlsx", sheet = 2)
 ```
+
+
+Overall Summary
 
 ```{r}
 skim(pfas)
 ```
 
+Look at Data
+
 ```{r}
 head(pfas)
 ```
+
+Find 7 main PFAs
 
 ```{r}
 pfas %>%
@@ -39,6 +48,7 @@ pfas %>%
   filter(total > 5000) %>%
   mutate(commonName = c("PFBA", "PFOA", "PFPeA", "PFHxA", "PFOS", "PFHxS", "PFBS"))
 ```
+PFBA (#1) Exploration
 ```{r}
 pfba <- pfas %>%
   filter(CHEMICAL_NAME == "Perfluorobutanoic acid")
@@ -53,6 +63,8 @@ pfba %>%
   filter(count > 900) %>%
   count(DETECT_FLAG)
 ```
+Counties map
+
 ```{r}
 mn_counties <- us_counties(resolution = "high", states = c("Minnesota")) %>%
   st_transform(crs = 4269)
@@ -61,21 +73,65 @@ st_crs(mn_counties)
 ```
 
 ```{r}
-pfba_sf <- pfba %>%
-  filter(LOC_TYPE_2 == "Well-Domestic") %>%
+pfas_sf <- pfas %>%
+#  filter(LOC_TYPE_2 == "Well-Domestic") %>%
   filter(!is.na(LATITUDE), !is.na(LONGITUDE)) %>%
   st_as_sf(coords = c("LONGITUDE", "LATITUDE"),
                   crs = 4269)
 
-st_crs(pfba_sf)
+st_crs(pfas_sf)
 
 
-names_counties <- names(mn_counties)
+names_counties <- names(mn_counties) 
 names(mn_counties)[names_counties == 'state_name'] <- c("state_name1", "state_name2")
 
 ggplot() +
-  geom_sf(data = mn_counties %>%
-            filter(name %in% c("Anoka", "Hennepin", "Ramsey", "Dakota", "Carver", "Washington", "Scott") )) +
-  geom_sf(data = pfba_sf)
+  geom_sf(data = mn_counties %>% filter(name %in% c("Anoka", "Hennepin", "Ramsey", "Dakota", "Carver", "Washington", "Scott"))) +
+  geom_sf(data = pfas_sf %>% filter) 
+
+
+pfba_sf %>%
+  count(`FACILITY TYPE`)
+
+pfas %>%
+  count(`FACILITY TYPE`)
+```
+
+Temporal Analysis
+
+```{r}
+ggplot(data = pfas_sf, aes(x = `SAMPLE DATE`)) +
+  geom_density()
+
+wells = c("Well", "Well-Capture",	"Well-Commercial", "Well-DOmestic",	"Well-Domestic", "Well-Industrial", "Well-Irrigation",		"Well-Monitoring", "Well-NonPubWtrSup", "Well-Observation", "Well-Other", "Well-Piezometer", "Well-PubWtrSub", "Well-Remedial", "Well-Temporary")
+
+pfas <- pfas %>%
+  mutate(date_recent = (lubridate::year(`SAMPLE DATE`) %in% c("2019", "2020", "2021")), date_early = (lubridate::year(`SAMPLE DATE`) %in% c("2006", "2007", "2008")))
+
+pfba_temporal_stations <- pfas %>%
+  filter(CHEMICAL_NAME == "Perfluorobutanoic acid", LOC_TYPE_2 %in% wells ) %>%
+  group_by(`SYS LOC CODE`) %>%
+  summarize(n_recent = sum(date_recent), n_early = sum(date_early)) %>%
+  filter(n_recent >=1, n_early >= 1) %>%
+  select(`SYS LOC CODE`)
+
+pfba_compare <- pfas %>%
+  filter(CHEMICAL_NAME == "Perfluorobutanoic acid", LOC_TYPE_2 %in% wells ) %>%
+  semi_join(pfba_temporal_stations, by = join_by(`SYS LOC CODE`)) %>%
+  filter(lubridate::year(`SAMPLE DATE`) %in% c("2006", "2007", "2008", "2019", "2020", "2021")) %>%
+  mutate(date_recent = (lubridate::year(`SAMPLE DATE`) %in% c("2019", "2020", "2021")))
+
+pfba_compare %>%
+  group_by(`SYS LOC CODE`, date_recent) %>%
+  summarize()
+ 
+pfba_compare %>%  
+  group_by(`SYS LOC CODE`, DETECT_FLAG) %>%
+  summarize(n = n()) %>%
+  pivot_wider(names_from = DETECT_FLAG, values_from = n, values_fill = 0) %>%
+  mutate(percent_yes = Y/(Y+N))
+  
+ggplot(pfba_compare, aes(x = percent_yes)) + 
+  geom_density()
 ```
 
