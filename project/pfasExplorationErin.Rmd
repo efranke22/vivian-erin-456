@@ -14,15 +14,21 @@ library(tidyverse)
 library(skimr)
 library(readxl)
 library(sf)
-library(USAboundaries)
 ```
 
 ```{r, message=FALSE, warning=FALSE}
 pfas <- read_xlsx("../data/Twin Cities PFAS Data Ticket WO00000021224685.xlsx", sheet=2)
 ```
 
+General statistics from the data
+
 ```{r}
 skim(pfas)
+```
+
+Top 7 types of PFAS with percent detection and total number of samples.
+
+```{r}
 pfas %>%
   count(CHEMICAL_NAME, DETECT_FLAG) %>%
   pivot_wider(names_from = DETECT_FLAG, values_from = n) %>%
@@ -32,24 +38,33 @@ pfas %>%
   mutate(commonName = c("PFBA", "PFOA", "PFPeA", "PFHxA", "PFOS", "PFHxS", "PFBS"))
 ```
 
+## Understanding contamination based on sample type (well, stream, etc)
+
 ```{r}
-pfas %>%
-  filter(CHEMICAL_NAME == "Perfluorooctanoic acid") %>%
+pfas7 <- pfas %>%
+  filter(CHEMICAL_NAME %in% c("Perfluorobutanoic acid", "Perfluorooctanoic acid", "Perfluoropentanoic acid", "Perfluorohexanoic acid", "Perfluorooctane sulfonate", "Perfluorohexane sulfonate", "Perfluorobutane sulfonate")) %>%
+  mutate(commonName = case_when(CHEMICAL_NAME == "Perfluorobutanoic acid" ~ "PFBA", 
+                                CHEMICAL_NAME == "Perfluorooctanoic acid" ~ "PFOA", 
+                                CHEMICAL_NAME == "Perfluoropentanoic acid" ~ "PFPeA",
+                                CHEMICAL_NAME == "Perfluorohexanoic acid" ~ "PFHxA", 
+                                CHEMICAL_NAME == "Perfluorooctane sulfonate" ~ "PFOS", 
+                                CHEMICAL_NAME == "Perfluorohexane sulfonate" ~ "PFHxS", 
+                                CHEMICAL_NAME == "Perfluorobutane sulfonate" ~ "PFBS")) %>%
+  mutate(LOC_TYPE_2 = case_when(LOC_TYPE_2 == "Well-DOmestic" ~ "Well-Domestic", 
+                                TRUE ~ LOC_TYPE_2))
+```
+
+We likely want to focus locations that are "Well-Domestic", "Well-Monitoring", and "River/Stream" with "River/Stream Peren".
+
+```{r}
+pfas7 %>%
   count(LOC_TYPE_2) %>%
   arrange(desc(n))
+```
 
-pfas %>%
-  filter(CHEMICAL_NAME == "Perfluorooctanoic acid") %>%
-  group_by(LOC_TYPE_2) %>%
-  mutate(count = n()) %>%
-  filter(count > 900) %>%
-  count(DETECT_FLAG)
-
-pfas %>%
-  filter(CHEMICAL_NAME == "Perfluorooctanoic acid", LOC_TYPE_2 == "Well-Domestic") %>%
-  filter(!is.na(LONGITUDE), !is.na(LATITUDE)) %>%
-  st_as_sf(coords = c("LONGITUDE", "LATITUDE"), crs ="WGS 84") %>%
-  ggplot()+
-  geom_sf()
+```{r}
+pfas7 %>%
+  select(`FACILITY CODE`:CHEMICAL_NAME, `SAMPLE TYPE`, `RESULT NUMERIC`, `LATITUDE`, `LONGITUDE`) %>%
+  pivot_wider(names_from = commonName, )
 ```
 
