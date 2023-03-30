@@ -100,10 +100,13 @@ pfas %>%
 Temporal Analysis
 
 ```{r}
+pfas %>%
+  count(LOC_TYPE_2)
+
 ggplot(data = pfas_sf, aes(x = `SAMPLE DATE`)) +
   geom_density()
 
-wells = c("Well", "Well-Capture",	"Well-Commercial", "Well-DOmestic",	"Well-Domestic", "Well-Industrial", "Well-Irrigation",		"Well-Monitoring", "Well-NonPubWtrSup", "Well-Observation", "Well-Other", "Well-Piezometer", "Well-PubWtrSub", "Well-Remedial", "Well-Temporary")
+wells = c("Well", "Well-DOmestic",	"Well-Domestic","Well-Monitoring", "Well-Observation", "Well-Other", "Well-Piezometer", "Well-PubWtrSub")
 
 pfas <- pfas %>%
   mutate(date_recent = (lubridate::year(`SAMPLE DATE`) %in% c("2019", "2020", "2021")), date_early = (lubridate::year(`SAMPLE DATE`) %in% c("2006", "2007", "2008")))
@@ -125,13 +128,13 @@ pfba_compare %>%
   group_by(`SYS LOC CODE`, date_recent) %>%
   summarize()
  
-pfba_compare %>%  
+pfba_compare_yes <- pfba_compare %>%  
   group_by(`SYS LOC CODE`, DETECT_FLAG) %>%
   summarize(n = n()) %>%
   pivot_wider(names_from = DETECT_FLAG, values_from = n, values_fill = 0) %>%
   mutate(percent_yes = Y/(Y+N))
   
-ggplot(pfba_compare, aes(x = percent_yes)) + 
+ggplot(pfba_compare_yes, aes(x = percent_yes)) + 
   geom_density()
 ```
 
