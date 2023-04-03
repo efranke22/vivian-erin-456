@@ -174,10 +174,18 @@ superfund_washington <- bind_rows(threeM, oakdale, ashland, bayport, lakeland) %
                                     TRUE ~ RESULT_NUMERIC))
   
 superfund_washington <- st_as_sf(superfund_washington, coords = c("LONGITUDE", "LATITUDE"), crs = 6783)
+library(lubridate)
+superfund_washington %>%
+  mutate(ANALYSIS_DATE= str_trim(ANALYSIS_DATE)) %>%
+  mutate(year = substr(ANALYSIS_DATE, -4, -1)) %>%
+  count(year)
+
+counties_cropped <- st_crop(counties, xmin = -93.2, xmax=-92.7, ymin = 44.7, ymax=45.35)
 
 ggplot()+
   geom_sf(data = counties_cropped, color = "navajowhite", fill = "ivory", size = 0.5)+
-  geom_sf(data = superfund_washington, size= 0.9, aes(color = site), alpha = 0.5)
+  geom_sf(data = superfund_washington, size= 0.9, aes(color = site), alpha = 0.5)+
+  labs(title = "Fun map!", subtitle = "Washington County")
 ```
 
 ```{r}
