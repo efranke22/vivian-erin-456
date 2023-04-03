@@ -101,40 +101,80 @@ Temporal Analysis
 
 ```{r}
 pfas %>%
-  count(LOC_TYPE_2)
+  group_by(`SYS LOC CODE`, LATITUDE) %>%
+  summarize()
 
 ggplot(data = pfas_sf, aes(x = `SAMPLE DATE`)) +
   geom_density()
 
-wells = c("Well", "Well-DOmestic",	"Well-Domestic","Well-Monitoring", "Well-Observation", "Well-Other", "Well-Piezometer", "Well-PubWtrSub")
+wells = c("Well", "Well-DOmestic",	"Well-Domestic","Well-Monitoring", "Well-Observation", "Well-Other","Well-PubWtrSub")
 
 pfas <- pfas %>%
-  mutate(date_recent = (lubridate::year(`SAMPLE DATE`) %in% c("2019", "2020", "2021")), date_early = (lubridate::year(`SAMPLE DATE`) %in% c("2006", "2007", "2008")))
+  mutate(date_post_2015 = (lubridate::year(`SAMPLE DATE`) %in% c("2016","2017", "2018", "2019", "2020", "2021","2022", "2023")), date_pre_2015 = (lubridate::year(`SAMPLE DATE`) %in% c("2010", "2011", "2012","2013", "2014", "2015")))
 
 pfba_temporal_stations <- pfas %>%
   filter(CHEMICAL_NAME == "Perfluorobutanoic acid", LOC_TYPE_2 %in% wells ) %>%
   group_by(`SYS LOC CODE`) %>%
-  summarize(n_recent = sum(date_recent), n_early = sum(date_early)) %>%
+  summarize(n_recent = sum(date_post_2015), n_early = sum(date_pre_2015)) %>%
   filter(n_recent >=1, n_early >= 1) %>%
   select(`SYS LOC CODE`)
 
 pfba_compare <- pfas %>%
   filter(CHEMICAL_NAME == "Perfluorobutanoic acid", LOC_TYPE_2 %in% wells ) %>%
   semi_join(pfba_temporal_stations, by = join_by(`SYS LOC CODE`)) %>%
-  filter(lubridate::year(`SAMPLE DATE`) %in% c("2006", "2007", "2008", "2019", "2020", "2021")) %>%
-  mutate(date_recent = (lubridate::year(`SAMPLE DATE`) %in% c("2019", "2020", "2021")))
+  filter(lubridate::year(`SAMPLE DATE`) %in% c("2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023")) %>%
+  mutate(date_post_2016 = (lubridate::year(`SAMPLE DATE`) %in% c("2016","2017", "2018", "2019", "2020", "2021","2022", "2023")))
 
 pfba_compare %>%
-  group_by(`SYS LOC CODE`, date_recent) %>%
+  group_by(`SYS LOC CODE`, date_post_2015) %>%
   summarize()
  
 pfba_compare_yes <- pfba_compare %>%  
-  group_by(`SYS LOC CODE`, DETECT_FLAG) %>%
+  group_by(`SYS LOC CODE`, date_post_2015, DETECT_FLAG) %>%
   summarize(n = n()) %>%
   pivot_wider(names_from = DETECT_FLAG, values_from = n, values_fill = 0) %>%
   mutate(percent_yes = Y/(Y+N))
   
-ggplot(pfba_compare_yes, aes(x = percent_yes)) + 
-  geom_density()
+ggplot(pfba_compare_yes, aes(x = percent_yes, fill = date_post_2015)) + 
+  geom_density(alpha = 0.6)
+
+pfas %>%
+  ggplot(aes(x = `SAMPLE DATE`)) +
+  geom_histogram()
+```
+
+```{r}
+pfba_latlongs <- pfba_compare %>%
+  group_by(`SYS LOC CODE`, LATITUDE, LONGITUDE) %>%
+  summarize() %>%
+  group_by(`SYS LOC CODE`) %>%
+  slice_head()
+```
+
+```{r}
+pfba_detected_temporal <- pfba_compare_yes %>%
+  left_join(pfba_latlongs, by = join_by(`SYS LOC CODE`))
+```
+
+```{r}
+pfba_detected_pre2015 <- pfba_detected_temporal %>%
+  filter(date_post_2015 == FALSE) %>%
+  st_as_sf(coords = c("LONGITUDE", "LATITUDE"),
+                  crs = 4269)
+
+pfba_detected_post2015 <- pfba_detected_temporal %>%
+  filter(date_post_2015 == TRUE) %>% 
+  st_as_sf(coords = c("LONGITUDE", "LATITUDE"),
+                  crs = 4269)
+```
+
+```{r}
+ggplot() +
+  geom_sf(data = mn_counties %>% filter(name %in% c("Washington"))) +
+  geom_sf(data = pfba_detected_pre2015, aes(color = percent_yes), alpha = 0.7) 
+
+ggplot() +
+  geom_sf(data = mn_counties %>% filter(name %in% c("Washington"))) +
+  geom_sf(data = pfba_detected_post2015, aes(color = percent_yes), alpha = 0.7) 
 ```
 
