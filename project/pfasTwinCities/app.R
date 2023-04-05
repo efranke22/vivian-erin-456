@@ -55,7 +55,7 @@ superfund_washington <- st_as_sf(superfund_washington, coords = c("LONGITUDE", "
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(theme = shinytheme("superhero"), 
-                titlePanel("PFAS in Washington County supersites"),
+                titlePanel("PFAS in Washington County Superfund sites"),
                   mainPanel(
                     h4("Please select a PFAS to detection levels "),
                     selectInput(inputId = "commonName",
@@ -76,7 +76,7 @@ server <- function(input, output) {
                       %>% mutate(over_limit = RESULT_NUMERIC > MIN_ACTION_LEVEL, 
                                  over_limit = case_when(is.na(over_limit) ~ FALSE, TRUE ~ over_limit))), 
               size= 0.9, aes(color = RESULT_NUMERIC), alpha = 0.5)+
-        labs(color = "Detected (ug/L)", title = paste("Detected", input$commonName, "in Washington County supersites"))+
+        labs(color = "Detected (ug/L)", title = paste("Detected", input$commonName, "in Washington County Superfund sites"))+
         scale_color_gradient(low = "pink", high = "darkred")+
         theme(axis.ticks = element_blank(), 
               axis.text = element_blank(), 

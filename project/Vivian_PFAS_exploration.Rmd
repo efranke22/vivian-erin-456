@@ -177,4 +177,34 @@ ggplot() +
   geom_sf(data = mn_counties %>% filter(name %in% c("Washington"))) +
   geom_sf(data = pfba_detected_post2015, aes(color = percent_yes), alpha = 0.7) 
 ```
+```{r}
+pfas %>%
+  filter(CHEMICAL_NAME == "Perfluorobutanoic acid", LOC_TYPE_2 %in% wells) %>%
+  group_by(lubridate::year(`SAMPLE DATE`), `SYS LOC CODE`) %>%
+  count()
+```
+```{r}
+pfas <- pfas%>% 
+  filter(CHEMICAL_NAME %in% c("Perfluorobutanoic acid", "Perfluorooctanoic acid", "Perfluoropentanoic acid", "Perfluorohexanoic acid", "Perfluorooctane sulfonate", "Perfluorohexane sulfonate", "Perfluorobutane sulfonate")) %>%
+  mutate(commonName = case_when(CHEMICAL_NAME == "Perfluorobutanoic acid" ~ "PFBA", 
+                                CHEMICAL_NAME == "Perfluorooctanoic acid" ~ "PFOA", 
+                                CHEMICAL_NAME == "Perfluoropentanoic acid" ~ "PFPeA",
+                                CHEMICAL_NAME == "Perfluorohexanoic acid" ~ "PFHxA", 
+                                CHEMICAL_NAME == "Perfluorooctane sulfonate" ~ "PFOS", 
+                                CHEMICAL_NAME == "Perfluorohexane sulfonate" ~ "PFHxS", 
+                                CHEMICAL_NAME == "Perfluorobutane sulfonate" ~ "PFBS")) %>%
+  mutate(LOC_TYPE_2 = case_when(LOC_TYPE_2 == "Well-DOmestic" ~ "Well-Domestic", 
+                                TRUE ~ LOC_TYPE_2)) 
+
+
+pfas %>%
+  filter(`FACILITY TYPE` == "Superfund", LOC_TYPE_2 %in% wells) %>%
+  filter(COUNTY == "Washington") %>%
+  mutate(detected = ifelse(DETECT_FLAG == "Y", TRUE, FALSE)) %>%
+  group_by(year(`SAMPLE DATE`), commonName, `SYS LOC CODE`) %>%
+  summarize(facility = unique(`FACILITY NAME`), facility_code = unique(`FACILITY CODE`), perc_detected = sum(detected)/n())
+```
+```{r}
+
+```
 
