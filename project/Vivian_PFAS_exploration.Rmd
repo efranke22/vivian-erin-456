@@ -184,6 +184,16 @@ pfas %>%
   count()
 ```
 ```{r}
+pfas_latlongs <- pfas %>% 
+  filter(CHEMICAL_NAME %in% c("Perfluorobutanoic acid", "Perfluorooctanoic acid", "Perfluoropentanoic acid", "Perfluorohexanoic acid", "Perfluorooctane sulfonate", "Perfluorohexane sulfonate", "Perfluorobutane sulfonate"), LATITUDE != "NA", LONGITUDE != "NA") %>%
+  group_by(`SYS LOC CODE`, LATITUDE, LONGITUDE) %>%
+  summarize() %>%
+  group_by(`SYS LOC CODE`) %>%
+  slice_head()
+```
+
+
+```{r}
 pfas <- pfas%>% 
   filter(CHEMICAL_NAME %in% c("Perfluorobutanoic acid", "Perfluorooctanoic acid", "Perfluoropentanoic acid", "Perfluorohexanoic acid", "Perfluorooctane sulfonate", "Perfluorohexane sulfonate", "Perfluorobutane sulfonate")) %>%
   mutate(commonName = case_when(CHEMICAL_NAME == "Perfluorobutanoic acid" ~ "PFBA", 
@@ -197,14 +207,14 @@ pfas <- pfas%>%
                                 TRUE ~ LOC_TYPE_2)) 
 
 
-pfas %>%
+pfas_superfund <- pfas %>%
   filter(`FACILITY TYPE` == "Superfund", LOC_TYPE_2 %in% wells) %>%
   filter(COUNTY == "Washington") %>%
-  mutate(detected = ifelse(DETECT_FLAG == "Y", TRUE, FALSE)) %>%
-  group_by(year(`SAMPLE DATE`), commonName, `SYS LOC CODE`) %>%
-  summarize(facility = unique(`FACILITY NAME`), facility_code = unique(`FACILITY CODE`), perc_detected = sum(detected)/n())
-```
-```{r}
+  mutate(detected = ifelse(DETECT_FLAG == "Y", TRUE, FALSE), year = year(`SAMPLE DATE`)) %>%
+  group_by(year, commonName, `SYS LOC CODE`) %>%
+  summarize(facility = unique(`FACILITY NAME`), facility_code = unique(`FACILITY CODE`), perc_detected = sum(detected)/n()) %>%
+  left_join(pfas_latlongs, by = join_by(`SYS LOC CODE`)) %>%
+  rename(sys_loc_code =`SYS LOC CODE`)
 
+write.csv(pfas_superfund, "C:\\Users\\vivianpowell\\Desktop\\STAT 456\\project\\vivian-erin-456\\pfas_superfund.csv")
 ```
-

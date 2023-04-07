@@ -53,18 +53,34 @@ superfund_washington <- bind_rows(threeM, oakdale, ashland, bayport, lakeland) %
 
 superfund_washington <- st_as_sf(superfund_washington, coords = c("LONGITUDE", "LATITUDE"), crs = 6783)
 
-# Define UI for application that draws a histogram
+pfas_super_washington <- read_csv("../../data/pfas_superfund.csv") %>%
+  filter(LATITUDE != "NA", LONGITUDE != "NA") %>%
+  st_as_sf(coords = c("LONGITUDE", "LATITUDE"), crs = 6783)
+
 ui <- fluidPage(theme = shinytheme("superhero"), 
                 titlePanel("PFAS in Washington County Superfund sites"),
-                  mainPanel(
-                    h4("Please select a PFAS to detection levels "),
+                  fluidRow(
+                    h4("Please select a PFAS to view detection levels "),
                     selectInput(inputId = "commonName",
                       label = "Chemical Name",
                       choices = unique(superfund_washington$commonName)),
-                    submitButton(text = "Submit", ),
+                    submitButton(text = "Submit"),
                     plotOutput(outputId = "pfasplot"), 
                     p("These data are collected by the MPCA. More information can be found at https://www.pca.state.mn.us/air-water-land-climate/cleaning-up-minnesota-superfund-sites."),
-                    width = 6)
+                    width = 6),
+                  fluidRow(
+                    h4("Please select a PFAS"),
+                    selectInput(inputId = "common_name",
+                      label = "Chemical Name",
+                      choices = unique(pfas_super_washington$commonName)),
+                    selectInput(inputId = "year",
+                      label = "Sample Year",
+                      choice = unique(pfas_super_washington$year)),
+                    submitButton(text = "Submit"),
+                    plotOutput(outputId = "pfasplottemporal"),
+                    p("These data are collected by the MPCA. More information can be found at https://www.pca.state.mn.us/air-water-land-climate/cleaning-up-minnesota-superfund-sites."),
+                    width = 6
+                  )
                 )
 
 server <- function(input, output) {
@@ -81,6 +97,12 @@ server <- function(input, output) {
         theme(axis.ticks = element_blank(), 
               axis.text = element_blank(), 
               axis.line = element_blank())
+  )
+  output$pfasplottemporal <- renderPlot(
+    ggplot() + 
+      geom_sf(data = counties_cropped, color = "navajowhite", fill = "ivory", size = 0.5)+
+      geom_sf(data = (pfas_super_washington %>%
+                filter(commonName == input$common_name, year == input$year)), aes(color = perc_detected))
   )
 }
 
