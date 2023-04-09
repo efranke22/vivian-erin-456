@@ -9,21 +9,27 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Load libraries and data
+
 ```{r}
 library(tidyverse)
 library(skimr)
 library(readxl)
 library(sf)
 library(USAboundaries)
+```
+
+```{r, message=FALSE, warning=FALSE}
+# data provided my MPCA
+pfas <- read_xlsx("../data/Twin Cities PFAS Data Ticket WO00000021224685.xlsx", sheet=2)
+
 counties <- us_counties(resolution = "high", states = c("Minnesota", "Wisconsin")) %>%
   st_transform(crs = 6783)
 rivers <- read_sf('../data/shp_water_lakes_rivers') %>%
   st_transform(crs = 6783)
 ```
 
-```{r, message=FALSE, warning=FALSE}
-pfas <- read_xlsx("../data/Twin Cities PFAS Data Ticket WO00000021224685.xlsx", sheet=2)
-```
+## General data information
 
 General statistics from the data
 
@@ -43,7 +49,7 @@ pfas %>%
   mutate(commonName = c("PFBA", "PFOA", "PFPeA", "PFHxA", "PFOS", "PFHxS", "PFBS"))
 ```
 
-## Understanding contamination based on sample type (well, stream, etc)
+Filter for only these types of PFAS
 
 ```{r}
 pfas7 <- pfas %>%
@@ -59,7 +65,9 @@ pfas7 <- pfas %>%
                                 TRUE ~ LOC_TYPE_2))
 ```
 
-We likely want to focus locations that are "Well-Domestic", "Well-Monitoring", and "River/Stream" with "River/Stream Peren".
+What types of locations are we interested in? 
+
+- "Well-Domestic", "Well-Monitoring", and "River/Stream" with "River/Stream Peren".
 
 ```{r}
 pfas7 %>%
@@ -68,11 +76,14 @@ pfas7 %>%
   head(10)
 ```
 
-### Overall map
+# Understanding contamination based on sample type (well, stream, etc)
+
+Overall map of PFAS samples and whether or not there was detection. This includes all types of samples. 
 
 ```{r}
 pfas7_sf <- st_as_sf(pfas7 %>%
                        filter(!is.na(LATITUDE), LATITUDE <45.5, LATITUDE >44.4), coords = c("LONGITUDE", "LATITUDE"), crs = 6783)
+
 counties_cropped <- st_crop(counties, st_bbox(pfas7_sf))
 pfas7 %>%
   ggplot()+
@@ -80,17 +91,20 @@ pfas7 %>%
   geom_sf(data = pfas7_sf, size= 1, aes(color = DETECT_FLAG))
 ```
 
+## Rivers and Streams
 
-### Zooming in on the river
+Detection in rivers and streams
 
 ```{r}
+sf_use_s2(FALSE)
+
 river_stream <- pfas7 %>% 
   filter(LOC_TYPE_2 %in% c("River/Stream", "River/Stream Peren"), 
          !is.na(LATITUDE), !is.na(LONGITUDE), 
          LATITUDE > 44.671, LONGITUDE > -93.2, LONGITUDE < -92.6) 
 river_stream <- st_as_sf(river_stream, coords = c("LONGITUDE", "LATITUDE"), crs = 6783)
 
-counties_cropped <- st_crop(counties, st_bbox(river_stream))
+counties_cropped <- st_crop(counties, xmin = -93.2, xmax = -92.6, ymin = 44.6, ymax = 45.02)
 rivers_cropped <- st_crop(rivers, st_bbox(river_stream))
 
 ggplot()+
@@ -98,6 +112,8 @@ ggplot()+
   geom_sf(data= rivers_cropped, fill = "blue", color = "blue")+
   geom_sf(data = river_stream, size= 1, aes(color = DETECT_FLAG))
 ```
+
+Zoom in on part of river and plot what type of PFAS is being sampled for
 
 ```{r}
 river_stream <- pfas7 %>% 
@@ -120,7 +136,7 @@ river_stream %>%
 ```
 
 
-### Wells 
+## Wells 
 
 ```{r}
 well <- pfas7 %>% 
@@ -129,17 +145,15 @@ well <- pfas7 %>%
          LATITUDE <46, LATITUDE >44, LONGITUDE > -94.5, LONGITUDE < -92.2) 
 well <- st_as_sf(well, coords = c("LONGITUDE", "LATITUDE"), crs = 6783)
 
-counties_cropped <- st_crop(counties, st_bbox(well))
+counties_cropped <- st_crop(counties, st_bbox(pfas7_sf))
 
 ggplot()+
   geom_sf(data = counties_cropped, color = "navajowhite", fill = "ivory", size = 0.5)+
-  geom_sf(data= rivers, fill = "blue", color = "blue", alpha=0.3)+
   geom_sf(data = well, size= 1, aes(color = DETECT_FLAG))
 
 ggplot()+
   geom_sf(data = counties_cropped, color = "navajowhite", fill = "ivory", size = 0.5)+
-  geom_sf(data= rivers, fill = "blue", color = "blue", alpha=0.3)+
-  geom_sf(data = well %>% filter(DETECT_FLAG = "Y"), size= 1, aes(color = commonName))
+  geom_sf(data = well %>% filter(DETECT_FLAG == "Y"), size= 1, aes(color = commonName), alpha=0.5)
 
 well %>%
   filter(DETECT_FLAG == "Y") %>%
@@ -173,12 +187,6 @@ superfund_washington <- bind_rows(threeM, oakdale, ashland, bayport, lakeland) %
          RESULT_NUMERIC = case_when(RESULT_UNIT == "ng/L" ~ RESULT_NUMERIC/ 1000, 
                                     TRUE ~ RESULT_NUMERIC))
   
-superfund_washington <- st_as_sf(superfund_washington, coords = c("LONGITUDE", "LATITUDE"), crs = 6783)
-library(lubridate)
-superfund_washington %>%
-  mutate(ANALYSIS_DATE= str_trim(ANALYSIS_DATE)) %>%
-  mutate(year = substr(ANALYSIS_DATE, -4, -1)) %>%
-  count(year)
 
 counties_cropped <- st_crop(counties, xmin = -93.2, xmax=-92.7, ymin = 44.7, ymax=45.35)
 
@@ -202,4 +210,5 @@ ggplot() +
   geom_sf(data = (superfund_washington %>% filter(commonName == "PFPeA", RESULT_NUMERIC >0)), size= 0.9, aes(color = RESULT_NUMERIC), alpha = 0.5)+
   scale_color_gradient(low = "pink", high = "darkred")
 ```
+
 
