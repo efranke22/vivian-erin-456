@@ -78,7 +78,7 @@ pfas7 %>%
 
 # Understanding contamination based on sample type (well, stream, etc)
 
-Overall map of PFAS samples and whether or not there was detection. This includes all types of samples. 
+This map of PFAS samples and whether or not there was detection. This includes all sample locations. 
 
 ```{r}
 pfas7_sf <- st_as_sf(pfas7 %>%
@@ -88,7 +88,11 @@ counties_cropped <- st_crop(counties, st_bbox(pfas7_sf))
 pfas7 %>%
   ggplot()+
   geom_sf(data = counties_cropped, color = "navajowhite", fill = "ivory", size = 0.5)+
-  geom_sf(data = pfas7_sf, size= 1, aes(color = DETECT_FLAG))
+  geom_sf(data = pfas7_sf, size= 1, aes(color = DETECT_FLAG))+
+  theme(axis.line = element_blank(),
+        axis.text = element_blank(), 
+        axis.ticks = element_blank())+
+  labs(title = "PFAS samples in the greater Twin Cities", color = "Detection?")
 ```
 
 ## Rivers and Streams
@@ -138,6 +142,8 @@ river_stream %>%
 
 ## Wells 
 
+Filter for PFAS samples in Domestic and Monitoring wells. PFAS in well has largely been detected in southern Washington county, though there are spots over neighboring counties where it has also been detected. 	PFBA has the most detection with over 9,000. 
+
 ```{r}
 well <- pfas7 %>% 
   filter(LOC_TYPE_2 %in% c("Well-Domestic", "Well-Monitoring"), 
@@ -149,11 +155,12 @@ counties_cropped <- st_crop(counties, st_bbox(pfas7_sf))
 
 ggplot()+
   geom_sf(data = counties_cropped, color = "navajowhite", fill = "ivory", size = 0.5)+
-  geom_sf(data = well, size= 1, aes(color = DETECT_FLAG))
-
-ggplot()+
-  geom_sf(data = counties_cropped, color = "navajowhite", fill = "ivory", size = 0.5)+
-  geom_sf(data = well %>% filter(DETECT_FLAG == "Y"), size= 1, aes(color = commonName), alpha=0.5)
+  geom_sf(data = well, size= 1, aes(color = DETECT_FLAG))+
+  theme(axis.line = element_blank(),
+        axis.text = element_blank(), 
+        axis.ticks = element_blank())+
+  labs("PFAS in wells in the greater Twin Cities", color = "Detection")
+  
 
 well %>%
   filter(DETECT_FLAG == "Y") %>%
