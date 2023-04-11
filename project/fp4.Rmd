@@ -319,7 +319,7 @@ ggplot()+
   labs(title = "PFAS samples from superfund sites", subtitle = "Sites located in Hennepin, Washington, and Ramsey counties")
 ```
 
-This map shows a quick zoom in on Washinton County to learn more about the superfund sites testing for PFAS located there. 
+This map shows a quick zoom in on Washington County to learn more about the superfund sites testing for PFAS located there. 
 
 ```{r}
 washington <- superfund_loc_pfas %>% filter(county == "Washington")
@@ -375,7 +375,7 @@ wells = c("Well",	"Well-Domestic","Well-Monitoring", "Well-Observation", "Well-O
 pfas_superfund <- pfas7 %>%
   filter(`FACILITY TYPE` == "Superfund", LOC_TYPE_2 %in% wells) %>%
   filter(COUNTY == "Washington") %>%
-  mutate(detected = ifelse(DETECT_FLAG == "Y", TRUE, FALSE), year = year(`SAMPLE DATE`)) %>%
+  mutate(detected = ifelse(DETECT_FLAG == "Y", TRUE, FALSE), year = lubridate::year(`SAMPLE DATE`)) %>%
   group_by(year, commonName, `SYS LOC CODE`) %>%
   summarize(facility = unique(`FACILITY NAME`), facility_code = unique(`FACILITY CODE`), perc_detected = sum(detected)/n()) %>%
   left_join(pfas_latlongs, by = join_by(`SYS LOC CODE`)) %>%
