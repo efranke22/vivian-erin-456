@@ -12,53 +12,46 @@ counties <- us_counties(resolution = "high", states = c("Minnesota", "Wisconsin"
 rivers <- read_sf('../../data/shp_water_lakes_rivers') %>%
   st_transform(crs = 6783)
 
-pfas <- read_xlsx("../../data/Twin Cities PFAS Data Ticket WO00000021224685.xlsx", sheet=2)
+read_csv("../../data/pfas7.csv")
+load("../../data/superfund_site_data/superfund.rds")
 
-pfas7 <- pfas %>%
-  filter(CHEMICAL_NAME %in% c("Perfluorobutanoic acid", "Perfluorooctanoic acid", "Perfluoropentanoic acid", "Perfluorohexanoic acid", "Perfluorooctane sulfonate", "Perfluorohexane sulfonate", "Perfluorobutane sulfonate")) %>%
-  mutate(commonName = case_when(CHEMICAL_NAME == "Perfluorobutanoic acid" ~ "PFBA", 
-                                CHEMICAL_NAME == "Perfluorooctanoic acid" ~ "PFOA", 
-                                CHEMICAL_NAME == "Perfluoropentanoic acid" ~ "PFPeA",
-                                CHEMICAL_NAME == "Perfluorohexanoic acid" ~ "PFHxA", 
-                                CHEMICAL_NAME == "Perfluorooctane sulfonate" ~ "PFOS", 
-                                CHEMICAL_NAME == "Perfluorohexane sulfonate" ~ "PFHxS", 
-                                CHEMICAL_NAME == "Perfluorobutane sulfonate" ~ "PFBS")) %>%
-  mutate(LOC_TYPE_2 = case_when(LOC_TYPE_2 == "Well-DOmestic" ~ "Well-Domestic", 
-                                TRUE ~ LOC_TYPE_2))
-
-threeM <- read_csv("../../data/superfund_site_data/3m_chemolite.csv") %>%
-  mutate(site = "3M Chemolite", county = "Washington", SYS_LOC_CODE = as.numeric(SYS_LOC_CODE))
-oakdale <- read_csv("../../data/superfund_site_data/oakdale.csv") %>%
-  mutate(site = "3M Oakland")
-ashland <- read_csv("../../data/superfund_site_data/ashland.csv") %>%
-  mutate(site = "Ashland Oil - Park Penta")
-bayport <- read_csv("../../data/superfund_site_data/bayport.csv") %>%
-  mutate(site = "Baytown Township")
-lakeland <- read_csv("../../data/superfund_site_data/lakeland.csv") %>%
-  mutate(site = "Lakeland")
-
-superfund_washington <- bind_rows(threeM, oakdale, ashland, bayport, lakeland) %>%
-  filter(!is.na(LATITUDE), LATITUDE > 40, LONGITUDE > -93, LONGITUDE < -91) %>%
-  filter(ANALYTE_NAME %in% c("Perfluorohexanoic acid (PFHxA)", "Perfluorohexanesulfonate (PFHxS)", "Perfluorooctanesulfonate (PFOS)", "Perfluorooctanoic acid (PFOA)", "Perfluoropentanoic acid (PFPeA)", "Perfluorobutanesulfonate (PFBS)", "Perfluorobutanoic acid (PFBA)")) %>%
-  mutate(commonName = case_when(ANALYTE_NAME == "Perfluorobutanoic acid (PFBA)" ~ "PFBA", 
-                                ANALYTE_NAME == "Perfluorooctanoic acid (PFOA)" ~ "PFOA", 
-                                ANALYTE_NAME == "Perfluoropentanoic acid (PFPeA)" ~ "PFPeA",
-                                ANALYTE_NAME == "Perfluorohexanoic acid (PFHxA)" ~ "PFHxA", 
-                                ANALYTE_NAME == "Perfluorooctanesulfonate (PFOS)" ~ "PFOS", 
-                                ANALYTE_NAME == "Perfluorohexanesulfonate (PFHxS)" ~ "PFHxS", 
-                                ANALYTE_NAME == "Perfluorobutanesulfonate (PFBS)" ~ "PFBS"), 
-         RESULT_NUMERIC = case_when(RESULT_UNIT == "ng/L" ~ RESULT_NUMERIC/ 1000, 
-                                    TRUE ~ RESULT_NUMERIC))
-
-
-superfund_washington <- st_as_sf(superfund_washington, coords = c("LONGITUDE", "LATITUDE"), crs = 6783)
+superfund_washington <- st_as_sf(superfund %>% filter(county == "Washington", LATITUDE != "NA", LONGITUDE != "NA"), coords = c("LONGITUDE", "LATITUDE"), crs = 6783)
 
 pfas_super_washington <- read_csv("../../data/pfas_superfund.csv") %>%
   filter(LATITUDE != "NA", LONGITUDE != "NA", LATITUDE <= 45.298915338179285, LATITUDE >= 44.7471734793455) %>%
   st_as_sf(coords = c("LONGITUDE", "LATITUDE"), crs = 6783)
 
 ui <- fluidPage(theme = shinytheme("flatly"), 
-                titlePanel("PFAS in Washington County Superfund sites"),
+                navbarPage("Water Contamination", tags$style(
+                  ".navbar-nav li a {
+        font-size: 20px;
+        font-weight: bold;
+      }
+      "),
+                  tabPanel("What are PFAS?", tags$style(
+                      ".navbar-nav li a {
+        font-size: 20px;
+        font-weight: normal;
+      }
+      "),
+                    "PFAS background info!"
+                  ),
+                  tabPanel(
+                    "Sampling Sites", tags$style(
+                      ".navbar-nav li a {
+        font-size: 20px;
+        font-weight: normal;
+      }
+      "),
+                    "Interactive map of sampling sites + links to sites for more info"
+                  ),
+                  tabPanel(
+                "PFAS in Washington County Superfund sites", tags$style(
+                  ".navbar-nav li a {
+        font-size: 20px;
+        font-weight: normal;
+      }
+      "),
                   fluidRow(
                     column(
                     h4("Please select a PFAS to view most recent sample results"),
@@ -100,7 +93,18 @@ ui <- fluidPage(theme = shinytheme("flatly"),
                 fluidRow(
                   p("These data are collected by the MPCA. More information can be found at https://www.pca.state.mn.us/air-water-land-climate/cleaning-up-minnesota-superfund-sites.")
                 )
+                ),
+                tabPanel(
+                  "Other Contaminants", tags$style(
+                    ".navbar-nav li a {
+        font-size: 20px;
+        font-weight: normal;
+      }
+      "),
+                  "Look at other contaminants for Hennepin and Ramsey"
                 )
+)
+)
 
 server <- function(input, output) {
   counties_cropped <- st_crop(counties, xmin = -93.2, xmax=-92.7, ymin = 44.7, ymax=45.35)

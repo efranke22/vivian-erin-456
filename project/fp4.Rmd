@@ -351,7 +351,10 @@ ggplot(data = pfas_sf, aes(x = `SAMPLE DATE`)) +
   geom_density()
 
 ggplot(data = pfas_sf, aes(x = `SAMPLE DATE`, fill = DETECT_FLAG)) +
-  geom_density(alpha = 0.7)
+  geom_density(alpha = 0.7) +
+  labs(fill = "PFAS detected?", title = "PFAS Sample Density 2004 - 2022") +
+  theme_classic() +
+  theme(axis.text.y = element_blank())
 ```
 
 Now, we want to create a plot in Shiny where you can select one of the 7 main PFAS and see an animation of how samples of that chemical has changed over the years in Washington county superfund sites. For this visualization, we'll use the percent of samples per location per year that detected the chemical. 
