@@ -41,8 +41,6 @@ pfas7 <- pfas %>%
                                 TRUE ~ LOC_TYPE_2))
 ```
 
-```{r}
 
-```
 
 

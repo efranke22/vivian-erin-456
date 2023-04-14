@@ -12,14 +12,18 @@ counties <- us_counties(resolution = "high", states = c("Minnesota", "Wisconsin"
 rivers <- read_sf('../../data/shp_water_lakes_rivers') %>%
   st_transform(crs = 6783)
 
-read_csv("../../data/pfas7.csv")
+pfas7 <- read_csv("../../data/pfas7.csv")
 load("../../data/superfund_site_data/superfund.rds")
 
-superfund_washington <- st_as_sf(superfund %>% filter(county == "Washington", LATITUDE != "NA", LONGITUDE != "NA"), coords = c("LONGITUDE", "LATITUDE"), crs = 6783)
+superfund_washington <- st_as_sf(superfund %>% filter(county == "Washington", LATITUDE != "NA", LONGITUDE != "NA", LATITUDE >40, LONGITUDE > -94), coords = c("LONGITUDE", "LATITUDE"), crs = 6783) %>%
+  mutate(year = as.numeric(substr(SAMPLE_DATE,7,11)))
 
-pfas_super_washington <- read_csv("../../data/pfas_superfund.csv") %>%
-  filter(LATITUDE != "NA", LONGITUDE != "NA", LATITUDE <= 45.298915338179285, LATITUDE >= 44.7471734793455) %>%
-  st_as_sf(coords = c("LONGITUDE", "LATITUDE"), crs = 6783)
+pfas_super_washington <- superfund_washington %>%
+  filter(!is.na(commonName)) 
+
+#pfas_super_washington <- read_csv("../../data/pfas_superfund.csv") %>%
+#  filter(LATITUDE != "NA", LONGITUDE != "NA", LATITUDE <= 45.298915338179285, LATITUDE >= 44.7471734793455) %>%
+#  st_as_sf(coords = c("LONGITUDE", "LATITUDE"), crs = 6783)
 
 ui <- fluidPage(theme = shinytheme("flatly"), 
                 navbarPage("Water Contamination", tags$style(
@@ -43,7 +47,7 @@ ui <- fluidPage(theme = shinytheme("flatly"),
         font-weight: normal;
       }
       "),
-                    "Interactive map of sampling sites + links to sites for more info"
+                    
                   ),
                   tabPanel(
                 "PFAS in Washington County Superfund sites", tags$style(
@@ -107,6 +111,7 @@ ui <- fluidPage(theme = shinytheme("flatly"),
 )
 
 server <- function(input, output) {
+  
   counties_cropped <- st_crop(counties, xmin = -93.2, xmax=-92.7, ymin = 44.7, ymax=45.35)
   output$pfasplot <- renderPlot(
       ggplot() +
