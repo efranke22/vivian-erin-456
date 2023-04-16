@@ -40,8 +40,6 @@ ui <- fluidPage(theme = shinytheme("flatly"),
     titlePanel("Locating Superfund Sites: Washington, Hennepin, and Ramsey Counties"),
     
     HTML("<br>"),
-    
-    #h3("Samples from superfund sites in Washington, Hennepin, and Ramsey Counties"),
  
     fluidRow(
           sliderInput(
@@ -70,7 +68,31 @@ ui <- fluidPage(theme = shinytheme("flatly"),
         ),
     fluidRow(
     dataTableOutput("siteTable")
-    )
+    ),
+    fluidRow(
+      checkboxInput(
+        inputId = "detectFlag",
+        label = "Only show samples where contaminant is detected",
+        value = TRUE
+      ),
+      selectInput(
+        inputId = "chemicalGroup",
+        label = "Select an analyte group", 
+        selected = c("Perfluorochemicals"),
+        choices = c("Inorganics", "Metals", "Other Organics", "Perfluorochemicals", "Pesticides and PCBs", "Semi-Volatile Organics", "Volatile Organics"), 
+        multiple = TRUE
+    ),
+    sliderInput(
+      inputId = "year2",
+      label = "Select Date Range",
+      min = min(superfund_loc$year),
+      max = max(superfund_loc$year),
+      value = c(2010, 2020),
+      ticks = FALSE,
+      step = 1
+    ), 
+    plotlyOutput("contaminantPlot")
+)
 )
 
 # Define server logic required to draw a histogram
@@ -117,6 +139,29 @@ server <- function(input, output) {
               filter = 'top',              ## include column filters at the bottom
               rownames = TRUE                ## don't show row numbers/names
     )
+    output$contaminantPlot <- renderPlotly({
+      
+      superfund_loc_points2 <- superfund %>%
+        left_join(site_information, by = c("county", "site")) %>%
+        filter(!is.na(LATITUDE), !is.na(LONGITUDE), LATITUDE > 44, LATITUDE < 46, LONGITUDE < -92, LONGITUDE > -94) %>%
+        mutate(DETECT_FLAG = case_when(DETECT_FLAG == "Y" ~ TRUE, 
+                                       TRUE ~ FALSE)) %>%
+        filter(DETECT_FLAG == input$detectFlag, ANALYTE_GROUP_DESC %in% input$chemicalGroup) %>%
+        mutate(year1 = as.numeric(substr(SAMPLE_DATE, 7, 11))) %>%
+        filter(year1 >= input$year2[1] & year1 <= input$year2[2])
+      superfund_loc_points2 <- st_as_sf(superfund_loc_points2, coords = c("LONGITUDE", "LATITUDE"), crs = 6783)
+      
+      ggplotly(
+      ggplot()+
+        geom_sf(data = counties_cropped, color = "navajowhite", fill = "ivory", size = 0.5)+
+        geom_sf(data = superfund_loc_points2, alpha = 0.5)+
+        labs(title = "Samples from superfund sites in Washington, Hennepin, and Ramsey Counties")+
+        theme(legend.position = "none", 
+              axis.line = element_blank(), 
+              axis.text = element_blank(), 
+              axis.ticks = element_blank(), 
+              plot.title = element_text(hjust= 0.5)))
+    })
 }
 
 # Run the application 

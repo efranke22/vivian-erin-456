@@ -76,3 +76,25 @@ superfund %>%
         mutate(year1 = as.numeric(substr(SAMPLE_DATE, 7, 11)))
 ```
 
+About 552845 samples did not have detection and 155413 did
+
+```{r}
+superfund %>%
+  count(DETECT_FLAG)
+```
+
+```{r}
+superfund %>%
+  count(ANALYTE_GROUP_DESC)
+```
+
+DATE
+DETECT FLAG
+ANALYTE_TYPE_DESC
+MIN ACTION LEVEL
+
+```{r}
+superfund %>%
+  filter(RESULT_NUMERIC > MIN_ACTION_LEVEL)
+```
+
