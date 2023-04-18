@@ -84,7 +84,8 @@ superfund %>%
 
 ```{r}
 superfund %>%
-  count(ANALYTE_GROUP_DESC)
+  count(ANALYTE_NAME) %>%
+  arrange(desc(n))
 ```
 
 DATE
@@ -124,4 +125,5 @@ grd %>%
   ggplot()+
   geom_sf(aes(fill = n))
 ```
+
 

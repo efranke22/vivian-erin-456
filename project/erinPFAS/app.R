@@ -68,6 +68,9 @@ ui <- fluidPage(theme = shinytheme("flatly"),
            plotlyOutput("superfundSamplePlot")
         )),
     fluidRow(
+    
+    h4("The following table provides additional information about each of these 34 superfund sites (as of April 15, 2023) and is filtered according to the inital widgets."),
+      
     dataTableOutput("siteTable")
     ),
     fluidRow(
@@ -98,30 +101,39 @@ ui <- fluidPage(theme = shinytheme("flatly"),
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
+  
+  dataInputMap <- reactive({
+    if(input$chemical == ''){ chemInput = '.*'}else{chemInput = input$chemical}
+    
+    superfund_loc_points <- superfund %>%
+      left_join(site_information, by = c("county", "site")) %>%
+      filter(!is.na(LATITUDE), !is.na(LONGITUDE), LATITUDE > 44, LATITUDE < 46, LONGITUDE < -92, LONGITUDE > -94,
+             Status %in% input$stage) %>%
+      mutate(year1 = as.numeric(substr(SAMPLE_DATE, 7, 11))) %>%
+      filter(year1 >= input$year[1] & year1 <= input$year[2], str_detect(Contaminants, pattern = chemInput)) %>%
+      group_by(LATITUDE, LONGITUDE) %>%
+      mutate(Samples = n()) %>%
+      distinct(LATITUDE, LONGITUDE, Samples, site) %>%
+      rename("Site" = "site") %>%
+      arrange(desc(Samples)) %>%
+      filter(!is.na(LATITUDE), !is.na(LONGITUDE), LATITUDE > 44, LATITUDE < 46, LONGITUDE < -92, LONGITUDE > -94)
+    superfund_loc_points <- st_as_sf(superfund_loc_points, coords = c("LONGITUDE", "LATITUDE"), crs = 6783)
+    return(superfund_loc_points)
+  })
+  
+  dataInputTable <- reactive({
+    if(input$chemical == ''){ chemInput = '.*'}else{chemInput = input$chemical}
+    site_information %>% filter(Status %in% input$stage) %>% filter(str_detect(Contaminants, pattern = chemInput))
+  })
+  
   counties_cropped <- st_crop(counties, xmin = -93.7, xmax=-92.6, ymin = 44.7, ymax=45.2)
 
     output$superfundSamplePlot <- renderPlotly({
       
-      if(input$chemical == ''){ chemInput = '.*'}else{chemInput = input$chemical}
-      
-      superfund_loc_points <- superfund %>%
-        left_join(site_information, by = c("county", "site")) %>%
-        filter(!is.na(LATITUDE), !is.na(LONGITUDE), LATITUDE > 44, LATITUDE < 46, LONGITUDE < -92, LONGITUDE > -94,
-               Status %in% input$stage) %>%
-        mutate(year1 = as.numeric(substr(SAMPLE_DATE, 7, 11))) %>%
-        filter(year1 >= input$year[1] & year1 <= input$year[2], str_detect(Contaminants, pattern = chemInput)) %>%
-        group_by(LATITUDE, LONGITUDE) %>%
-        mutate(Samples = n()) %>%
-        distinct(LATITUDE, LONGITUDE, Samples, site) %>%
-        rename("Site" = "site") %>%
-        arrange(desc(Samples)) %>%
-        filter(!is.na(LATITUDE), !is.na(LONGITUDE), LATITUDE > 44, LATITUDE < 46, LONGITUDE < -92, LONGITUDE > -94)
-      superfund_loc_points <- st_as_sf(superfund_loc_points, coords = c("LONGITUDE", "LATITUDE"), crs = 6783)
-      
       ggplotly(
         ggplot()+
           geom_sf(data = counties_cropped, color = "navajowhite", fill = "ivory", size = 0.5)+
-          geom_sf(data = superfund_loc_points, aes(color = Site, size = Samples), alpha = 0.5)+
+          geom_sf(data = dataInputMap(), aes(color = Site, size = Samples), alpha = 0.5)+
           labs(title = "Samples from superfund sites in Washington, Hennepin, and Ramsey Counties")+
           theme(legend.position = "none", 
                 axis.line = element_blank(), 
@@ -131,7 +143,7 @@ server <- function(input, output) {
      })
     
     output$siteTable <- DT::renderDataTable(
-              site_information %>% filter(Status %in% input$stage), 
+              dataInputTable(), 
                                               options = list(paging = FALSE,    ## paginate the output
                                                pageLength = 34,  ## number of rows to output for each page
                                                scrollX = TRUE,   ## enable scrolling on X axis
