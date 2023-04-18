@@ -4,6 +4,57 @@ author: "Vivian Powell"
 date: "2023-04-11"
 output: html_document
 ---
-<video width="320" height="240" controls>
-  <source src="app.mp4" type="video/mp4">
-</video>
+
+```{r}
+pfas7 <- read_csv("../data/pfas7.csv")
+
+pfas7 %>% distinct(commonName)
+
+min_action_levels <- data.frame(commonName = c("PFHxS", "PFHxA", "PFOA", "PFBA", "PFBS", "PFOS", "PFPeA"), action_level = c(0.027, NA, 0.035, 7.000, 7.000, 0.027, NA))
+
+pfas_health_levels <- pfas7 %>% 
+  left_join(min_action_levels, by = "commonName") %>%
+  mutate(result_num = ifelse(UNIT == "ng/L", `RESULT NUMERIC`/1000, `RESULT NUMERIC`),above_level = ifelse(DETECT_FLAG == "Y", `RESULT NUMERIC` > action_level, FALSE)) %>%
+  filter(UNIT != "NA", `FACILITY TYPE` == "Superfund")
+  
+  
+ggplot(pfas_health_levels, aes(x = year(`SAMPLE DATE`), fill = above_level)) +
+  geom_density(alpha = 0.6)
+
+pfas_health_levels %>%
+  filter(commonName == "PFOA", DETECT_FLAG == "Y", result_num < 10*action_level) %>% 
+  group_by(sample_day = `SAMPLE DATE`) %>%
+  summarize(mean_result_num = mean(result_num), above_level = mean_result_num > action_level) %>%
+  ggplot(aes(x = sample_day, y = mean_result_num)) +
+  geom_point(aes(color = above_level)) +
+  geom_smooth(aes(color = above_level), se = FALSE) +
+  theme_classic()
+
+pfas_health_levels %>%
+  filter(commonName == "PFBA", DETECT_FLAG == "Y") %>% 
+  group_by(year = year(`SAMPLE DATE`)) %>%
+  summarize(mean_result_num = mean(result_num), above_level = mean_result_num > action_level) %>%
+  ggplot(aes(x = year, y = mean_result_num)) +
+  geom_point(aes(color = above_level)) +
+  geom_smooth(se = FALSE)
+
+pfas_health_levels %>%
+  filter(commonName == "PFBA") %>%
+  arrange(desc(`RESULT NUMERIC`))
+
+pfas_health_levels %>%
+  count(`FACILITY NAME`)
+  
+  
+pfas_health_levels %>%
+  filter(commonName == "PFOA", DETECT_FLAG == "Y", result_num < 10*action_level) %>% 
+  group_by(`FACILITY NAME`) %>%
+  summarize(mean_result_num = mean(result_num), above_level = mean_result_num > action_level) %>%
+  ggplot(aes(x = sample_day, y = mean_result_num)) +
+  geom_point(aes(color = above_level)) +
+  geom_smooth(aes(color = above_level), se = FALSE) +
+  theme_classic()
+
+  
+```
+
