@@ -19,7 +19,8 @@ superfund_washington <- st_as_sf(superfund %>% filter(county == "Washington", LA
   mutate(year = as.numeric(substr(SAMPLE_DATE,7,11)))
 
 pfas_super_washington <- superfund_washington %>%
-  filter(!is.na(commonName)) 
+  filter(!is.na(commonName))
+  
 
 #pfas_super_washington <- read_csv("../../data/pfas_superfund.csv") %>%
 #  filter(LATITUDE != "NA", LONGITUDE != "NA", LATITUDE <= 45.298915338179285, LATITUDE >= 44.7471734793455) %>%
