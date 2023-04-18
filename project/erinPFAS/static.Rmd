@@ -42,7 +42,6 @@ superfund_loc_points <- st_as_sf(superfund_loc_points, coords = c("LONGITUDE", "
 
 # INTERACTIVE SAMPLE SITE MAP
 
-
 ```{r}
 counties_cropped <- st_crop(counties, xmin = -93.7, xmax=-92.7, ymin = 44.72, ymax=45.15)
 ggplotly(
@@ -96,5 +95,33 @@ MIN ACTION LEVEL
 ```{r}
 superfund %>%
   filter(RESULT_NUMERIC > MIN_ACTION_LEVEL)
+```
+
+```{r}
+superfund_locY <- superfund_loc %>% filter(DETECT_FLAG == "Y")
+grd <- st_make_grid(superfund_locY, square = FALSE, flat_topped = TRUE)
+plot(grd)
+plot(superfund_locY, add=TRUE)
+grd <- st_sf(grd)
+grd$n <- lengths(st_intersects(grd, superfund_locY)) 
+index <- which(lengths(st_intersects(grd, superfund_locY)) >0)
+plot(grd[index])
+plot(superfund_locY, add=TRUE)
+fnet <- grd[index] %>%
+  st_as_sf() %>%
+  mutate(id = row_number())
+
+points <- st_join(superfund_locY, fnet)
+points_count <- points %>%
+  st_drop_geometry() %>%
+  group_by(id) %>%
+  count()
+
+final <- fnet %>%
+  right_join(points_count, by = "id")
+
+grd %>%
+  ggplot()+
+  geom_sf(aes(fill = n))
 ```
 

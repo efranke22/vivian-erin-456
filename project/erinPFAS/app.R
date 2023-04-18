@@ -41,7 +41,7 @@ ui <- fluidPage(theme = shinytheme("flatly"),
     
     HTML("<br>"),
  
-    fluidRow(
+    fluidRow(column(width = 1),column(width = 11,
           sliderInput(
             inputId = "year",
             label = "Select Date Range",
@@ -49,7 +49,8 @@ ui <- fluidPage(theme = shinytheme("flatly"),
             max = max(superfund_loc$year),
             value = c(2010, 2020),
             ticks = FALSE,
-            step = 1
+            step = 1, 
+            sep= ""
           ),
           checkboxGroupInput(
             inputId = "stage", 
@@ -61,11 +62,11 @@ ui <- fluidPage(theme = shinytheme("flatly"),
           textInput(
             inputId = "chemical",
             label = "Filter to show all samples from sites harmed by a particular contaminant of interest", 
-            value = "[:alpha:]",
+            value = "",
             placeholder = "PFAS"
           ),
            plotlyOutput("superfundSamplePlot")
-        ),
+        )),
     fluidRow(
     dataTableOutput("siteTable")
     ),
@@ -101,12 +102,14 @@ server <- function(input, output) {
 
     output$superfundSamplePlot <- renderPlotly({
       
+      if(input$chemical == ''){ chemInput = '.*'}else{chemInput = input$chemical}
+      
       superfund_loc_points <- superfund %>%
         left_join(site_information, by = c("county", "site")) %>%
         filter(!is.na(LATITUDE), !is.na(LONGITUDE), LATITUDE > 44, LATITUDE < 46, LONGITUDE < -92, LONGITUDE > -94,
                Status %in% input$stage) %>%
         mutate(year1 = as.numeric(substr(SAMPLE_DATE, 7, 11))) %>%
-        filter(year1 >= input$year[1] & year1 <= input$year[2], str_detect(Contaminants, pattern = input$chemical)) %>%
+        filter(year1 >= input$year[1] & year1 <= input$year[2], str_detect(Contaminants, pattern = chemInput)) %>%
         group_by(LATITUDE, LONGITUDE) %>%
         mutate(Samples = n()) %>%
         distinct(LATITUDE, LONGITUDE, Samples, site) %>%
