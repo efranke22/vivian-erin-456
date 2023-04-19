@@ -6,6 +6,9 @@ output: html_document
 ---
 
 ```{r}
+```
+
+```{r}
 pfas7 <- read_csv("../data/pfas7.csv")
 
 pfas7 %>% distinct(commonName)
@@ -38,6 +41,8 @@ pfas_health_levels %>%
   geom_point(aes(color = above_level)) +
   geom_smooth(se = FALSE)
 
+
+
 pfas_health_levels %>%
   filter(commonName == "PFBA") %>%
   arrange(desc(`RESULT NUMERIC`))
@@ -56,5 +61,19 @@ pfas_health_levels %>%
   theme_classic()
 
   
+```
+```{r}
+pfas_health_levels %>%
+  filter(commonName == "PFOS", DETECT_FLAG == "Y") %>% 
+  group_by(year = year(`SAMPLE DATE`), month = month(`SAMPLE DATE`)) %>%
+      summarize(date = as_date(paste(year, month, sep = "-"), "%y-%m"), mean_result_num = mean(result_num), above_level = mean_result_num > action_level) %>%
+  ggplot(aes(x = year, y = mean_result_num)) +
+  geom_point(aes(color = above_level)) +
+  geom_smooth(se = FALSE)
+
+```
+```{r}
+pfas7 %>%
+  count(DETECT_FLAG, )
 ```
 
