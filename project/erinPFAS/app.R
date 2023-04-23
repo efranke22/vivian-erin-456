@@ -39,82 +39,118 @@ site_information <- superfund %>% distinct(site, county) %>%
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(theme = shinytheme("flatly"),
+                navbarPage("Water Contamination", tags$style(
+                  ".navbar-nav li a {
+        font-size: 20px;
+        font-weight: bold;
+      }
+      "),
+                  tabPanel("Background: Superfund Sites & PFAS", tags$style(
+                    ".navbar-nav li a {
+        font-size: 10px;
+        font-weight: normal;
+      }
+      "),
+                    titlePanel("Background Information: Superfund Sites and PFAS"),
+                      mainPanel(
+                        h3("What is a superfund site?"),
+                        p("A ", strong("superfund site"), "is an area where where hazardous waste has been spilled or dumped and where contamination poses an actual or potential threat to public health or the environment."),
+                        p("Responsible parties are legally responsible for the cleanup. These responsible parties can include past or present property owners, operators, waste haulers, and/or generators who dumped material on the site."),
+                        h3("What is PFAS?"),
+                        p("Also bad")
+                      )
+                  ),
+                  tabPanel(
+                    "Locating Superfund Sites", tags$style(
+                      ".navbar-nav li a {
+        font-size: 10px;
+        font-weight: normal;
+      }
+      "),
+                    # Application title
+                    titlePanel("Locating Superfund Sites: Washington, Hennepin, and Ramsey Counties"),
+                    
+                    HTML("<br>"),
+                    
+                    fluidRow(column(width = 1),column(width = 11,
+                                                      sliderInput(
+                                                        inputId = "year",
+                                                        label = "Select Date Range",
+                                                        min = min(superfund_loc$year),
+                                                        max = max(superfund_loc$year),
+                                                        value = c(2010, 2020),
+                                                        ticks = FALSE,
+                                                        step = 1, 
+                                                        sep= ""
+                                                      ),
+                                                      checkboxGroupInput(
+                                                        inputId = "stage", 
+                                                        label = "Stage of Remediation Process",
+                                                        choices = c("Identified", "Investigation", "Response Selected", "Response Implemented", "Complete"),
+                                                        selected = unique(site_information$Status),
+                                                        inline = TRUE
+                                                      ),
+                                                      textInput(
+                                                        inputId = "chemical",
+                                                        label = "Filter to depict rough site locations for all sites harmed by a particular contaminant of interest.", 
+                                                        value = "",
+                                                        placeholder = "PFAS"
+                                                      ),
+                                                      plotlyOutput("superfundSamplePlot", height = "800px")
+                    )),
+                    fluidRow(
+                      
+                      h4("The following table provides additional information about each of these 34 superfund sites (as of April 15, 2023) and is filtered according to the inital widgets."),
+                      
+                      dataTableOutput("siteTable")
+                    )         
+                  ),
 
-    # Application title
-    titlePanel("Locating Superfund Sites: Washington, Hennepin, and Ramsey Counties"),
-    
-    HTML("<br>"),
- 
-    fluidRow(column(width = 1),column(width = 11,
-          sliderInput(
-            inputId = "year",
-            label = "Select Date Range",
-            min = min(superfund_loc$year),
-            max = max(superfund_loc$year),
-            value = c(2010, 2020),
-            ticks = FALSE,
-            step = 1, 
-            sep= ""
-          ),
-          checkboxGroupInput(
-            inputId = "stage", 
-            label = "Stage of Remediation Process",
-            choices = c("Identified", "Investigation", "Response Selected", "Response Implemented", "Complete"),
-            selected = unique(site_information$Status),
-            inline = TRUE
-          ),
-          textInput(
-            inputId = "chemical",
-            label = "Filter to depict rough site locations for all sites harmed by a particular contaminant of interest.", 
-            value = "",
-            placeholder = "PFAS"
-          ),
-          plotlyOutput("superfundSamplePlot", height = "800px")
-        )),
-    fluidRow(
-    
-    h4("The following table provides additional information about each of these 34 superfund sites (as of April 15, 2023) and is filtered according to the inital widgets."),
-      
-    dataTableOutput("siteTable")
-    ),
-    
-    h4("The following map provides additional information about the number of samples taken of different analyte groups across the superfund sites."),
-    
-    fluidRow(
-      checkboxGroupInput(
-        inputId = "detectFlag",
-        label = "Sample detected?",
-        choices = unique(superfund$DETECT_FLAG),
-        selected = c("Y"),
-        inline = TRUE
-      ),
-      checkboxGroupInput(
-        inputId = "aboveLimit",
-        label = "Sample above MDH limit? Note that not all analytes have a MDH limit.",
-        choices = unique(superfund_loc$above_level),
-        selected = c("Yes", "No"),
-        inline = TRUE
-      ),
-      selectInput(
-        inputId = "chemicalGroup",
-        label = "Select an analyte group", 
-        selected = c("Perfluorochemicals"),
-        choices = c("Inorganics", "Metals", "Other Organics", "Perfluorochemicals", "Pesticides and PCBs", "Semi-Volatile Organics", "Volatile Organics"), 
-        multiple = TRUE
-    ),
-    sliderInput(
-      inputId = "year2",
-      label = "Select Date Range",
-      min = min(superfund_loc$year),
-      max = max(superfund_loc$year),
-      value = c(2010, 2020),
-      ticks = FALSE,
-      step = 1, 
-      sep = ""
-    ), 
-    plotlyOutput("contaminantPlot", height = "800px"), 
+                  tabPanel(
+                    "Superfund Sample Information", tags$style(
+                      ".navbar-nav li a {
+        font-size: 10px;
+        font-weight: normal;
+      }
+      "),
+                    h4("The following map provides additional information about the number of samples taken of different analyte groups across the superfund sites."),
+                    
+                    fluidRow(
+                      checkboxGroupInput(
+                        inputId = "detectFlag",
+                        label = "Sample detected?",
+                        choices = unique(superfund$DETECT_FLAG),
+                        selected = c("Y"),
+                        inline = TRUE
+                      ),
+                      checkboxGroupInput(
+                        inputId = "aboveLimit",
+                        label = "Sample above MDH limit? Note that not all analytes have a MDH limit.",
+                        choices = unique(superfund_loc$above_level),
+                        selected = c("Yes", "No"),
+                        inline = TRUE
+                      ),
+                      selectInput(
+                        inputId = "chemicalGroup",
+                        label = "Select an analyte group", 
+                        selected = c("Perfluorochemicals"),
+                        choices = c("Inorganics", "Metals", "Other Organics", "Perfluorochemicals", "Pesticides and PCBs", "Semi-Volatile Organics", "Volatile Organics"), 
+                        multiple = TRUE
+                      ),
+                      sliderInput(
+                        inputId = "year2",
+                        label = "Select Date Range",
+                        min = min(superfund_loc$year),
+                        max = max(superfund_loc$year),
+                        value = c(2010, 2020),
+                        ticks = FALSE,
+                        step = 1, 
+                        sep = ""
+                      ), 
+                      plotlyOutput("contaminantPlot", height = "800px")         
+                  ),
 )
-)
+))
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
