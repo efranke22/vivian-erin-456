@@ -84,6 +84,7 @@ superfund %>%
 
 ```{r}
 superfund %>%
+  filter(DETECT_FLAG == "Y") %>%
   count(ANALYTE_NAME) %>%
   arrange(desc(n))
 ```
@@ -124,6 +125,13 @@ final <- fnet %>%
 grd %>%
   ggplot()+
   geom_sf(aes(fill = n))
+
+superfund %>%
+  count(RESULT_UNIT)
+  filter(RESULT_UNIT != ACTION_LEVEL_UNIT)
+  filter(!is.na(MIN_ACTION_LEVEL), RESULT_NUMERIC > MIN_ACTION_LEVEL) %>%
+  count(ANALYTE_NAME) %>%
+  arrange(desc(n))
 ```
 
 

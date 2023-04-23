@@ -21,12 +21,16 @@ load("../../data/superfund_site_data/superfund.rds")
 
 superfund_loc <- superfund %>%
    filter(!is.na(LATITUDE), !is.na(LONGITUDE), LATITUDE > 44, LATITUDE < 46, LONGITUDE < -92, LONGITUDE > -94) %>%
-   mutate(year = as.numeric(substr(SAMPLE_DATE, 7, 11)))
+   mutate(year = as.numeric(substr(SAMPLE_DATE, 7, 11)))%>%
+    mutate(RESULT_NUMERIC = case_when(RESULT_UNIT == "ng/L" ~ RESULT_NUMERIC/1000, 
+                                    TRUE ~ RESULT_NUMERIC)) %>%
+    mutate(above_level = case_when(DETECT_FLAG == "Y" & RESULT_NUMERIC > MIN_ACTION_LEVEL ~ "Yes", 
+                                 TRUE ~ "No"))
 
 superfund_loc <- st_as_sf(superfund_loc, coords = c("LONGITUDE", "LATITUDE"), crs = 6783)
 
 site_information <- superfund %>% distinct(site, county) %>%
-  mutate(Contaminants = c("TCE and its degradation products", "PCE, PFAS, TCE", "TCE and its degradation products", "PCP, PAHs, dioxins/furans", "PCP and its degradation products", "TCE and its degradation products", "PCE, TCE, DCE, VC", "Arsenic", "SVOCs, metals, organochlorine pesticides, VOCs, PCBs, DRO, PFAS", "TCE", "PCE and its degradation products", "VC, VOCs", "PCE and its degradation products", "Chlorinated VOCs, TCE and its degradation products", "PCE and its degradation products", "PCP, arsenic, chromium, PAHs, dioxins", "BTEX, PAHs", "BTEX, trimethylbenzenes, isopropyl ether, PFAS", "PFAS", "PCE and its degradation products", "chlorinated solvents, including TCE, cis-DCE, and vinyl chloride", "PAHs", "VOCs including PCE, TCE, DCE, VC", "PCE and its degradation products, including TCE, cis-1,2-DCE, and VC", "TCE", "TCE and its degradation products", "TCE, cyanide, and several heavy metals", "VOCs, lead, PCBs, PAHs", "PFAS", "TCE and its degradation products", "PCE, TCE, PFAS", "PCE, TCE", "PCE", "PCE and its degradation products"),
+  mutate(Contaminants = c("TCE and its degradation products", "PCE, PFAS, TCE", "TCE and its degradation products, PFAS", "PCP, PAHs, dioxins/furans", "PCP and its degradation products", "TCE and its degradation products", "PCE, TCE, DCE, VC", "Arsenic", "SVOCs, metals, organochlorine pesticides, VOCs, PCBs, DRO, PFAS", "TCE", "PCE and its degradation products", "VC, VOCs", "PCE and its degradation products", "Chlorinated VOCs, TCE and its degradation products", "PCE and its degradation products", "PCP, arsenic, chromium, PAHs, dioxins", "BTEX, PAHs", "BTEX, trimethylbenzenes, isopropyl ether, PFAS", "PFAS", "PCE and its degradation products", "chlorinated solvents, including TCE, cis-DCE, and vinyl chloride", "PAHs", "VOCs including PCE, TCE, DCE, VC", "PCE and its degradation products, including TCE, cis-1,2-DCE, and VC", "TCE", "TCE and its degradation products", "TCE, cyanide, and several heavy metals", "VOCs, lead, PCBs, PAHs", "PFAS", "TCE and its degradation products", "PCE, TCE, PFAS", "PCE, TCE", "PCE", "PCE and its degradation products"),
          Status = c("Identified", "Identified", "Response Selected", "Complete", "Response Implemented", "Identified", "Response Selected", "Response Implemented", "Investigation", "Response Selected", "Identified", "Response Selected", "Identified", "Response Implemented", "Identified", "Response Implemented", "Response Implemented", "Response Implemented", "Response Implemented", "Response Implemented", "Investigation", "Investigation", "Identified", "Response Implemented", "Identified", "Identified", "Response Implemented", "Investigation", "Response Implemented", "Response Implemented", "Investigation", "Identified", "Identified", "Response Implemented"), 
          Link = c("https://webapp.pca.state.mn.us/cleanup/search/superfund?text=Arcade%20%26%20Hawthorne%20Ave%20E&siteId=213687-AREA0000000001", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=ASHLAND%20OIL%20-%20PARK%20PENTA&siteId=192580-AREA0000000004", "https://webapp.pca.state.mn.us/cleanup/search/superfund?siteId=21451-AREA0000000002", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=BELL%20LUMBER%20%26%20POLE%20COMPANY&siteId=196669-AREA0000000002", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=Cedar%20Services&siteId=187060-AREA0000000004", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=Centerville%20Road%20Site&siteId=197192-AREA0000000002", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=CHEMICAL%20MARKETING%20CORP%20OF%20AMERICA&siteId=34000-AREA0000000003", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=CMC%20Heartland%20Lite%20Yard&siteId=195132-AREA0000000002", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=Fish%20Hatchery%20Dump&siteId=208492-AREA0000000003", "https://webapp.pca.state.mn.us/cleanup/search/superfund?siteId=102356-AREA0000000002", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=Gold%20Eagle%20Cleaners%20–%20Richfield&siteId=108010-AREA0000000003", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=HIGHWAY%2096%20DUMP&siteId=190060-AREA0000000002", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=Hmong%20American%20Shopping%20Center%2FPilgrim&siteId=104343-AREA0000000001", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=LAKELAND%20GROUND%20WATER%20CONTAMINATION&siteId=195554-AREA0000000001", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=55th%20St%20%26%20Lyndale%20Ave%20S&siteId=213688-AREA0000000001", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=Macgillis%20and%20Gibbs%20Waste%20Site&siteId=195905-AREA0000000002", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=MINNEGASCO%20%20OU-2%20Groundwater&siteId=186829-AREA0000000001", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=3M%20OAKDALE%20DUMP%20SITES&siteId=185391-AREA0000000003", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=PIG%27S%20EYE%20LANDFILL&siteId=197401-AREA0000000002", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=Pilgrim%20Cleaners&siteId=19408-AREA0000000001", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=Precision%20Plating%20Inc&siteId=4292-AREA0000000002", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=REILLY%20TAR%20%26%20CHEM%20SAINT%20LOUIS%20PARK&siteId=193787-AREA0000000002", "https://webapp.pca.state.mn.us/cleanup/search/superfund?siteId=189593-AREA0000000002", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=SCHLOFF%20CHEMICAL%20(SF)&siteId=193207-AREA0000000002", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=SOUTHEAST%20HENNEPIN%20AREA%20GROUNDWATER%20%26%20VAPOR%20SITE&siteId=213685-AREA0000000001", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=SPRING%20PARK%20MUNICIPAL%20WELLS&siteId=88053-AREA0000000003", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=SUPERIOR%20PLATING%20INC%20(SF)&siteId=2555-AREA0000000004", "https://webapp.pca.state.mn.us/cleanup/search/superfund?siteId=47112-AREA0000000014", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=3M%20CHEMOLITE&siteId=1163-AREA0000000005", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=TONKA%20MAIN%20PLANT&siteId=22434-AREA0000000002", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=UNIVERSAL%20PLATING&siteId=23769-AREA0000000006", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=UNIVERSITY%20AVE%20%26%20PASCAL%20ST&siteId=213689-AREA0000000001", "https://webapp.pca.state.mn.us/cleanup/search/superfund?siteId=213683-AREA0000000001", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=WHITE%20WAY%20CLEANERS%20(SF)&siteId=103215-AREA0000000002")) %>%
   mutate(Link = map(Link, ~ htmltools::a(href = .x, "Website")),
@@ -61,11 +65,11 @@ ui <- fluidPage(theme = shinytheme("flatly"),
           ),
           textInput(
             inputId = "chemical",
-            label = "Filter to show all samples from sites harmed by a particular contaminant of interest", 
+            label = "Filter to depict rough site locations for all sites harmed by a particular contaminant of interest.", 
             value = "",
             placeholder = "PFAS"
           ),
-           plotlyOutput("superfundSamplePlot")
+          plotlyOutput("superfundSamplePlot", height = "800px")
         )),
     fluidRow(
     
@@ -73,11 +77,23 @@ ui <- fluidPage(theme = shinytheme("flatly"),
       
     dataTableOutput("siteTable")
     ),
+    
+    h4("The following map provides additional information about the number of samples taken of different analyte groups across the superfund sites."),
+    
     fluidRow(
-      checkboxInput(
+      checkboxGroupInput(
         inputId = "detectFlag",
-        label = "Only show samples where contaminant is detected",
-        value = TRUE
+        label = "Sample detected?",
+        choices = unique(superfund$DETECT_FLAG),
+        selected = c("Y"),
+        inline = TRUE
+      ),
+      checkboxGroupInput(
+        inputId = "aboveLimit",
+        label = "Sample above MDH limit? Note that not all analytes have a MDH limit.",
+        choices = unique(superfund_loc$above_level),
+        selected = c("Yes", "No"),
+        inline = TRUE
       ),
       selectInput(
         inputId = "chemicalGroup",
@@ -93,9 +109,10 @@ ui <- fluidPage(theme = shinytheme("flatly"),
       max = max(superfund_loc$year),
       value = c(2010, 2020),
       ticks = FALSE,
-      step = 1
+      step = 1, 
+      sep = ""
     ), 
-    plotlyOutput("contaminantPlot")
+    plotlyOutput("contaminantPlot", height = "800px"), 
 )
 )
 
@@ -133,7 +150,7 @@ server <- function(input, output) {
       ggplotly(
         ggplot()+
           geom_sf(data = counties_cropped, color = "navajowhite", fill = "ivory", size = 0.5)+
-          geom_sf(data = dataInputMap(), aes(color = Site, size = Samples), alpha = 0.5)+
+          geom_sf(data = dataInputMap() %>% st_jitter(amount = 0.02), aes(color = Site), alpha = 0.5, size = 0.8)+
           labs(title = "Samples from superfund sites in Washington, Hennepin, and Ramsey Counties")+
           theme(legend.position = "none", 
                 axis.line = element_blank(), 
@@ -158,18 +175,28 @@ server <- function(input, output) {
       
       superfund_loc_points2 <- superfund %>%
         left_join(site_information, by = c("county", "site")) %>%
+        mutate(RESULT_NUMERIC = case_when(RESULT_UNIT == "ng/L" ~ RESULT_NUMERIC/1000, 
+                                          TRUE ~ RESULT_NUMERIC)) %>%
+        mutate(above_level = case_when(DETECT_FLAG == "Y" & RESULT_NUMERIC > MIN_ACTION_LEVEL ~ "Yes", 
+                                       TRUE ~ "No"))%>%
         filter(!is.na(LATITUDE), !is.na(LONGITUDE), LATITUDE > 44, LATITUDE < 46, LONGITUDE < -92, LONGITUDE > -94) %>%
-        mutate(DETECT_FLAG = case_when(DETECT_FLAG == "Y" ~ TRUE, 
-                                       TRUE ~ FALSE)) %>%
-        filter(DETECT_FLAG == input$detectFlag, ANALYTE_GROUP_DESC %in% input$chemicalGroup) %>%
+        filter(DETECT_FLAG %in% input$detectFlag, ANALYTE_GROUP_DESC %in% input$chemicalGroup) %>%
+        mutate(DETECT_FLAG = case_when(DETECT_FLAG == "Y" ~ "Yes", 
+                                       TRUE ~ "No")) %>%
         mutate(year1 = as.numeric(substr(SAMPLE_DATE, 7, 11))) %>%
-        filter(year1 >= input$year2[1] & year1 <= input$year2[2])
-      superfund_loc_points2 <- st_as_sf(superfund_loc_points2, coords = c("LONGITUDE", "LATITUDE"), crs = 6783)
+        filter(year1 >= input$year2[1] & year1 <= input$year2[2]) %>%
+        filter(above_level %in% input$aboveLimit) %>%
+        mutate(LONGITUDE_short = round(LONGITUDE, 2), 
+               LATITUDE_short = round(LATITUDE, 2)) %>%
+        group_by(LONGITUDE_short, LATITUDE_short, site) %>%
+        rename("Site" = "site") %>%
+        summarize(Samples = n())
+      superfund_loc_points2 <- st_as_sf(superfund_loc_points2, coords = c("LONGITUDE_short", "LATITUDE_short"), crs = 6783)
       
       ggplotly(
       ggplot()+
         geom_sf(data = counties_cropped, color = "navajowhite", fill = "ivory", size = 0.5)+
-        geom_sf(data = superfund_loc_points2, alpha = 0.5)+
+        geom_sf(data = superfund_loc_points2, alpha = 0.5, aes(size = Samples, color = Site))+
         labs(title = "Samples from superfund sites in Washington, Hennepin, and Ramsey Counties")+
         theme(legend.position = "none", 
               axis.line = element_blank(), 
