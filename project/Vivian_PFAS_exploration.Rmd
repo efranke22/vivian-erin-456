@@ -209,7 +209,7 @@ pfas <- pfas%>%
 
 pfas_superfund <- pfas %>%
   filter(`FACILITY TYPE` == "Superfund", LOC_TYPE_2 %in% wells) %>%
-  filter(COUNTY == "Washington") %>%
+  #filter(COUNTY == "Washington") %>%
   mutate(detected = ifelse(DETECT_FLAG == "Y", TRUE, FALSE), year = year(`SAMPLE DATE`)) %>%
   group_by(year, commonName, `SYS LOC CODE`) %>%
   summarize(facility = unique(`FACILITY NAME`), facility_code = unique(`FACILITY CODE`), perc_detected = sum(detected)/n()) %>%
