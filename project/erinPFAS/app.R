@@ -39,7 +39,7 @@ site_information <- superfund %>% distinct(site, county) %>%
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(theme = shinytheme("flatly"),
-                navbarPage("Water Contamination", tags$style(
+                navbarPage("Contamination in the Twin Cities", tags$style(
                   ".navbar-nav li a {
         font-size: 20px;
         font-weight: bold;
@@ -55,7 +55,12 @@ ui <- fluidPage(theme = shinytheme("flatly"),
                       mainPanel(
                         h3("What is a superfund site?"),
                         p("A ", strong("superfund site"), "is an area where where hazardous waste has been spilled or dumped and where contamination poses an actual or potential threat to public health or the environment."),
+                        h4("How does cleanup work?"),
                         p("Responsible parties are legally responsible for the cleanup. These responsible parties can include past or present property owners, operators, waste haulers, and/or generators who dumped material on the site."),
+                        p("When there is no responsible party to pay for cleanup, the site may be placed on the  Minnesota Permanent List of Priorities, making it eligible for state cleanup dollars. Sites may recieve additional federal funding for cleanup if a successful request is made by the MPCA to list the site on the federal Superfund National Priorities List. Currently, Minnesota has 25 sites on this list."),
+                        h4("What is an example of a superfund site in Minnesota?"),
+                        p("The image below shows the 3M production facility in Cottage Grove (Washington County). 3M has used these grounds for years as a disposal site for chemical compounds, which are contaminating the Mississippi River. Photo Credit to MPR/Bill Alkofer."),
+                        img(src = "threeM.jpg", height = 300, width = 300),
                         h3("What is PFAS?"),
                         p("Also bad")
                       )
