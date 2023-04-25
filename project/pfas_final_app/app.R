@@ -35,6 +35,26 @@ site_information <- superfund %>% distinct(site, county) %>%
          Link = c("https://webapp.pca.state.mn.us/cleanup/search/superfund?text=Arcade%20%26%20Hawthorne%20Ave%20E&siteId=213687-AREA0000000001", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=ASHLAND%20OIL%20-%20PARK%20PENTA&siteId=192580-AREA0000000004", "https://webapp.pca.state.mn.us/cleanup/search/superfund?siteId=21451-AREA0000000002", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=BELL%20LUMBER%20%26%20POLE%20COMPANY&siteId=196669-AREA0000000002", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=Cedar%20Services&siteId=187060-AREA0000000004", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=Centerville%20Road%20Site&siteId=197192-AREA0000000002", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=CHEMICAL%20MARKETING%20CORP%20OF%20AMERICA&siteId=34000-AREA0000000003", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=CMC%20Heartland%20Lite%20Yard&siteId=195132-AREA0000000002", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=Fish%20Hatchery%20Dump&siteId=208492-AREA0000000003", "https://webapp.pca.state.mn.us/cleanup/search/superfund?siteId=102356-AREA0000000002", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=Gold%20Eagle%20Cleaners%20–%20Richfield&siteId=108010-AREA0000000003", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=HIGHWAY%2096%20DUMP&siteId=190060-AREA0000000002", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=Hmong%20American%20Shopping%20Center%2FPilgrim&siteId=104343-AREA0000000001", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=LAKELAND%20GROUND%20WATER%20CONTAMINATION&siteId=195554-AREA0000000001", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=55th%20St%20%26%20Lyndale%20Ave%20S&siteId=213688-AREA0000000001", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=Macgillis%20and%20Gibbs%20Waste%20Site&siteId=195905-AREA0000000002", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=MINNEGASCO%20%20OU-2%20Groundwater&siteId=186829-AREA0000000001", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=3M%20OAKDALE%20DUMP%20SITES&siteId=185391-AREA0000000003", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=PIG%27S%20EYE%20LANDFILL&siteId=197401-AREA0000000002", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=Pilgrim%20Cleaners&siteId=19408-AREA0000000001", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=Precision%20Plating%20Inc&siteId=4292-AREA0000000002", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=REILLY%20TAR%20%26%20CHEM%20SAINT%20LOUIS%20PARK&siteId=193787-AREA0000000002", "https://webapp.pca.state.mn.us/cleanup/search/superfund?siteId=189593-AREA0000000002", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=SCHLOFF%20CHEMICAL%20(SF)&siteId=193207-AREA0000000002", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=SOUTHEAST%20HENNEPIN%20AREA%20GROUNDWATER%20%26%20VAPOR%20SITE&siteId=213685-AREA0000000001", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=SPRING%20PARK%20MUNICIPAL%20WELLS&siteId=88053-AREA0000000003", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=SUPERIOR%20PLATING%20INC%20(SF)&siteId=2555-AREA0000000004", "https://webapp.pca.state.mn.us/cleanup/search/superfund?siteId=47112-AREA0000000014", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=3M%20CHEMOLITE&siteId=1163-AREA0000000005", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=TONKA%20MAIN%20PLANT&siteId=22434-AREA0000000002", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=UNIVERSAL%20PLATING&siteId=23769-AREA0000000006", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=UNIVERSITY%20AVE%20%26%20PASCAL%20ST&siteId=213689-AREA0000000001", "https://webapp.pca.state.mn.us/cleanup/search/superfund?siteId=213683-AREA0000000001", "https://webapp.pca.state.mn.us/cleanup/search/superfund?text=WHITE%20WAY%20CLEANERS%20(SF)&siteId=103215-AREA0000000002")) %>%
   mutate(Link = map(Link, ~ htmltools::a(href = .x, "Website")),
         Link = map(Link, ~ gt::html(as.character(.x))))
+
+############################################################################################# vivian data
+
+pfas7 <- read_csv("../../data/pfas7.csv")
+
+min_action_levels <- data.frame(commonName = c("PFHxS", "PFHxA", "PFOA", "PFBA", "PFBS", "PFOS", "PFPeA"), action_level = c(0.027, NA, 0.035, 7.000, 7.000, 0.027, NA))
+
+pfas_super <- read_csv("../../data/pfas_superfund.csv") %>%
+  filter(LATITUDE != "NA", LONGITUDE != "NA") %>%
+  st_as_sf(coords = c("LONGITUDE", "LATITUDE"), crs = 6783)
+
+pfas_health_levels <- pfas7 %>% 
+  left_join(min_action_levels, by = "commonName") %>%
+  mutate(result_num = ifelse(DETECT_FLAG == "Y" & UNIT == "ng/L", `RESULT NUMERIC`/1000, ifelse(DETECT_FLAG == "Y" & UNIT != "ng/L", `RESULT NUMERIC`, 0.00)), above_level = ifelse(DETECT_FLAG == "Y" & result_num > action_level, "Above Health Action Level", ifelse(DETECT_FLAG == "Y" & result_num < action_level, "Below Health Action Level", "Not Detected")), year = year(`SAMPLE DATE`)) %>%
+  filter(UNIT != "NA", `FACILITY TYPE` == "Superfund", LATITUDE != "NA", LONGITUDE != "NA", above_level != "NA")
+
+
+pfas_health_sf <- pfas_health_levels %>%
+  st_as_sf(coords = c("LONGITUDE", "LATITUDE"), crs = 6783) %>%
+  st_crop(xmin = -93.2, xmax=-92.7, ymin = 44.7, ymax=45.35)
 ###############################################################################################
 
 # Define UI for application that draws a histogram
@@ -154,7 +174,87 @@ ui <- fluidPage(theme = shinytheme("flatly"),
                       ), 
                       plotlyOutput("contaminantPlot", height = "800px")         
                   ),
-)
+),
+tabPanel(
+  "PFAS levels in Superfund sites", tags$style(
+    ".navbar-nav li a {
+        font-size: 20px;
+        font-weight: normal;
+      }
+      "),
+  fluidRow(
+    h4("Please select a PFAS to view time series"),
+    selectInput(inputId = "common_name",
+                label = "Chemical Name",
+                choices = unique(pfas_super$commonName)),
+    sliderInput(
+      inputId = "year",
+      label = "Sample Year",
+      min = min(pfas_super$year),
+      max = max(pfas_super$year),
+      sep = "",
+      value = 2005,
+      ticks = FALSE,
+      step = 1,
+      animate = animationOptions(interval = 300, loop = TRUE, playButton = c("Play Animation"))
+    )
+  ),
+  fluidRow(
+    plotOutput(outputId = "pfasplottemporal",
+               height = 600)
+  ),
+  fluidRow(
+    h4("Please select a PFAS to view time series"),
+    selectInput(inputId = "Common_Name",
+                label = "Chemical Name",
+                choices = unique(pfas_health_sf$commonName)),
+    sliderInput(
+      inputId = "Year",
+      label = "Sample Year",
+      min = min(2005),
+      max = max(2022),
+      sep = "",
+      value = 2005,
+      ticks = FALSE,
+      step = 1,
+      animate = animationOptions(interval = 500, loop = TRUE, playButton = c("Play Animation"))
+    )
+  ),
+  fluidRow(
+    plotOutput(outputId = "pfasplottemporal2",
+               height = 600)
+  ),
+  fluidRow(
+    p("These data are collected by the MPCA. More information can be found at https://www.pca.state.mn.us/air-water-land-climate/cleaning-up-minnesota-superfund-sites.")
+  ),
+  fluidRow(
+    column(
+      selectInput(inputId = "location",
+                  label = "Select a sampling site",
+                  selected = c("East Metro PFAS"),
+                  choices = c("3M Chemolite / Cottage Grove",
+                              "3M Woodbury",
+                              "Baytown Twp Groundwater Cont",
+                              "East Metro PFAS",
+                              "Farmington Ground Water Plume",
+                              "Oakdale Dump Sites",
+                              "Pigs Eye Landfill",
+                              "Pine Street Dump (SF)",
+                              "Precision Plating, Inc. (SF)",
+                              "St. Louis Park Solvent Plume",
+                              "Superior Plating Inc (SF)",
+                              "Universal Plating (SF)"),
+                  multiple = TRUE
+                  
+      ),
+      width = 2
+    ),
+    column(
+      plotOutput(outputId = "pfaslevelsplot"), 
+      width = 10
+    )
+  )
+),
 ))
 
 # Define server logic required to draw a histogram
@@ -245,6 +345,63 @@ server <- function(input, output) {
               axis.ticks = element_blank(), 
               plot.title = element_text(hjust= 0.5)))
     })
+    
+    output$pfasplottemporal <- renderPlot(
+      ggplot() + 
+        geom_sf(data = counties_cropped #%>% filter(name == "Washington")
+                , color = "navajowhite", fill = "ivory", size = 1)+
+        geom_sf(data = (pfas_super %>%
+                          filter(commonName == input$common_name, year == input$year)), aes(color = perc_detected)) +
+        labs(color = "% Samples Above Detection Limit", title = paste(input$common_name, "over time in Washington \n County Superfund sites"))+
+        scale_color_gradient(low = "pink", high = "darkred")+
+        theme_classic() +
+        theme(axis.ticks = element_blank(), 
+              axis.text = element_blank(), 
+              axis.line = element_blank(),
+              title = element_text(size = 20),
+              legend.title = element_text(size=16),
+              legend.text = element_text(size=14),
+              text = element_text(family = "AppleGothic"))
+    )
+    
+    output$pfasplottemporal2 <- renderPlot(
+      ggplot() + 
+        geom_sf(data = counties_cropped #%>% filter(name == "Washington")
+                , color = "navajowhite", fill = "ivory", size = 1)+
+        geom_sf(data = (pfas_health_sf %>%
+                          filter(commonName == input$Common_Name, year == input$Year)), aes(color = above_level)) +
+        labs(color = "% Samples Above Detection Limit", title = paste(input$common_name, "over time in Washington \n County Superfund sites"))+
+        scale_color_manual(values=c("#de2d26","#fc9272","#fee0d2"))+
+        theme_classic() +
+        theme(axis.ticks = element_blank(), 
+              axis.text = element_blank(), 
+              axis.line = element_blank(),
+              title = element_text(size = 20),
+              legend.title = element_text(size=16),
+              legend.text = element_text(size=14),
+              text = element_text(family = "AppleGothic"))
+    )
+    
+    output$pfaslevelsplot <- renderPlot(
+      pfas_health_levels %>%
+        filter(#commonName == input$pfaschoice,
+          commonName %in% c("PFHxS", "PFOA", "PFBA", "PFBS", "PFOS"),
+          `FACILITY NAME` == input$location) %>%
+        # ,DETECT_FLAG == "Y", result_num < 10*action_level) %>% 
+        ggplot(aes(x = `SAMPLE DATE`, color = factor(above_level, levels = c("Not Detected", "Below Health Action Level", "Above Health Action Level")), fill = factor(above_level, levels = c("Not Detected", "Below Health Action Level", "Above Health Action Level")))) +
+        geom_histogram(
+          binwidth = 92
+        ) +
+        scale_fill_manual(values=c("#fee0d2","#fc9272", "#de2d26"))+
+        scale_color_manual(values=c("#fee0d2","#fc9272", "#de2d26"))+
+        labs(title = "Progression of Seven Main PFAS over time",fill = "Sample Result", x = "Sample Date", y = "Number of Samples") +
+        guides(color = FALSE) +
+        theme_classic() +
+        theme(title = element_text(face = "bold", size = 18), axis.title = element_text(size = 14, face = "plain"),legend.title = element_text(face = "bold", size = 14), legend.text = element_text(size = 14),
+              text = element_text(family = "AppleGothic")),
+      height = 600
+      
+    )
 }
 
 # Run the application 

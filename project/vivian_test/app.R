@@ -14,18 +14,12 @@ min_action_levels <- data.frame(commonName = c("PFHxS", "PFHxA", "PFOA", "PFBA",
 pfas_health_levels <- pfas7 %>% 
   left_join(min_action_levels, by = "commonName") %>%
   mutate(result_num = ifelse(DETECT_FLAG == "Y" & UNIT == "ng/L", `RESULT NUMERIC`/1000, ifelse(DETECT_FLAG == "Y" & UNIT != "ng/L", `RESULT NUMERIC`, 0.00)), above_level = ifelse(DETECT_FLAG == "Y" & result_num > action_level, "Above Health Action Level", ifelse(DETECT_FLAG == "Y" & result_num < action_level, "Below Health Action Level", "Not Detected"))) %>%
-  filter(UNIT != "NA", `FACILITY TYPE` == "Superfund")
+  filter(UNIT != "NA", `FACILITY TYPE` == "Superfund", LATITUDE != "NA", LONGITUDE != "NA", above_level != "NA")
 
 ui <- fluidPage(theme = shinytheme("flatly"),
                 
                fluidRow(
                  column(
-                 # selectInput(inputId = "pfaschoice",
-                 #             label = "Select a PFA", 
-                 #             selected = c("PFBA"),
-                 #             choices = c("PFBA", "PFOA","PFBS","PFHxA", "PFHxS", "PFOS", "PFPeA"), 
-                 #             multiple = TRUE
-                 #             ),
                  selectInput(inputId = "location",
                              label = "Select a sampling site",
                              selected = c("East Metro PFAS"),

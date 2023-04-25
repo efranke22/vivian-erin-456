@@ -59,7 +59,7 @@ ui <- fluidPage(theme = shinytheme("flatly"), tags$style(type="text/css",
                     
                   ),
                   tabPanel(
-                    "PFAS in Washington County Superfund sites", tags$style(
+                    "PFAS levels in Superfund sites", tags$style(
                       ".navbar-nav li a {
         font-size: 20px;
         font-weight: normal;
