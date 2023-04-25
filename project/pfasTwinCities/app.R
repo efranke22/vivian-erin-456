@@ -23,14 +23,18 @@ pfas_super <- read_csv("../../data/pfas_superfund.csv") %>%
 pfas_health_levels <- pfas7 %>% 
   left_join(min_action_levels, by = "commonName") %>%
   mutate(result_num = ifelse(DETECT_FLAG == "Y" & UNIT == "ng/L", `RESULT NUMERIC`/1000, ifelse(DETECT_FLAG == "Y" & UNIT != "ng/L", `RESULT NUMERIC`, 0.00)), above_level = ifelse(DETECT_FLAG == "Y" & result_num > action_level, "Above Health Action Level", ifelse(DETECT_FLAG == "Y" & result_num < action_level, "Below Health Action Level", "Not Detected")), year = year(`SAMPLE DATE`)) %>%
-  filter(UNIT != "NA", `FACILITY TYPE` == "Superfund", LATITUDE != "NA", LONGITUDE != "NA")
+  filter(UNIT != "NA", `FACILITY TYPE` == "Superfund", LATITUDE != "NA", LONGITUDE != "NA", above_level != "NA")
+
 
 pfas_health_sf <- pfas_health_levels %>%
-  st_as_sf(coords = c("LONGITUDE", "LATITUDE"), crs = 6783)
+  st_as_sf(coords = c("LONGITUDE", "LATITUDE"), crs = 6783) %>%
+  st_crop(xmin = -93.2, xmax=-92.7, ymin = 44.7, ymax=45.35)
 
 #LATITUDE <= 45.298915338179285, LATITUDE >= 44.7471734793455
 
-ui <- fluidPage(theme = shinytheme("flatly"), 
+ui <- fluidPage(theme = shinytheme("flatly"), tags$style(type="text/css",
+                                                         ".recalculating {opacity: 1.0;}"
+),
                 navbarPage("Water Contamination", tags$style(
                   ".navbar-nav li a {
         font-size: 20px;
@@ -96,7 +100,7 @@ ui <- fluidPage(theme = shinytheme("flatly"),
                         value = 2005,
                         ticks = FALSE,
                         step = 1,
-                        animate = animationOptions(interval = 300, loop = TRUE, playButton = c("Play Animation"))
+                        animate = animationOptions(interval = 500, loop = TRUE, playButton = c("Play Animation"))
                       )
                     ),
                     fluidRow(
@@ -146,8 +150,7 @@ server <- function(input, output) {
       geom_sf(data = counties_cropped #%>% filter(name == "Washington")
               , color = "navajowhite", fill = "ivory", size = 1)+
       geom_sf(data = (pfas_health_sf %>%
-                        st_crop(xmin = -93.2, xmax=-92.7, ymin = 44.7, ymax=45.35) %>%
-                        filter(commonName == input$Common_Name, year == input$Year, above_level != "NA")), aes(color = above_level)) +
+                        filter(commonName == input$Common_Name, year == input$Year)), aes(color = above_level)) +
       labs(color = "% Samples Above Detection Limit", title = paste(input$common_name, "over time in Washington \n County Superfund sites"))+
       scale_color_manual(values=c("#de2d26","#fc9272","#fee0d2"))+
       theme_classic() +
