@@ -127,7 +127,8 @@ grd %>%
   geom_sf(aes(fill = n))
 
 superfund %>%
-  count(RESULT_UNIT)
+  filter(!is.na(MIN_ACTION_LEVEL)) %>%
+  count(ACTION_LEVEL_UNIT)
   filter(RESULT_UNIT != ACTION_LEVEL_UNIT)
   filter(!is.na(MIN_ACTION_LEVEL), RESULT_NUMERIC > MIN_ACTION_LEVEL) %>%
   count(ANALYTE_NAME) %>%
