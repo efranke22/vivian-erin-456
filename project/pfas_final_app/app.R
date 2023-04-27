@@ -48,7 +48,7 @@ pfas_super <- read_csv("../../data/pfas_superfund.csv") %>%
 
 pfas_health_levels <- pfas7 %>% 
   left_join(min_action_levels, by = "commonName") %>%
-  mutate(result_num = ifelse(DETECT_FLAG == "Y" & UNIT == "ng/L", `RESULT NUMERIC`/1000, ifelse(DETECT_FLAG == "Y" & UNIT != "ng/L", `RESULT NUMERIC`, 0.00)), above_level = ifelse(DETECT_FLAG == "Y" & result_num > action_level, "Above Health Action Level", ifelse(DETECT_FLAG == "Y" & result_num < action_level, "Below Health Action Level", "Not Detected")), year = year(`SAMPLE DATE`)) %>%
+  mutate(result_num = ifelse(DETECT_FLAG == "Y" & UNIT == "ng/L", `RESULT NUMERIC`/1000, ifelse(DETECT_FLAG == "Y" & UNIT != "ng/L", `RESULT NUMERIC`, 0.00)), above_level = factor(ifelse(DETECT_FLAG == "Y" & result_num > action_level, "Above Health Action Level", ifelse(DETECT_FLAG == "Y" & result_num < action_level, "Below Health Action Level", "Not Detected"))), year = year(`SAMPLE DATE`)) %>%
   filter(UNIT != "NA", `FACILITY TYPE` == "Superfund", LATITUDE != "NA", LONGITUDE != "NA", above_level != "NA")
 
 
@@ -72,7 +72,9 @@ ui <- fluidPage(theme = shinytheme("flatly"),
       }
       "),
                     titlePanel("Background Information: Superfund Sites and PFAS"),
-                      mainPanel(
+                     
+                        fluidRow(
+                        column(
                         h3("What is a superfund site?"),
                         p("A ", strong("superfund site"), "is an area where where hazardous waste has been spilled or dumped and where contamination poses an actual or potential threat to public health or the environment."),
                         h4("How does cleanup work?"),
@@ -81,9 +83,18 @@ ui <- fluidPage(theme = shinytheme("flatly"),
                         h4("What is an example of a superfund site in Minnesota?"),
                         p("The image below shows the 3M production facility in Cottage Grove (Washington County). 3M has used these grounds for years as a disposal site for chemical compounds, which are contaminating the Mississippi River. Photo Credit to MPR/Bill Alkofer."),
                         img(src = "threeM.jpg", height = 300, width = 300),
+                        width = 6
+                          ),
+                        column(
                         h3("What is PFAS?"),
-                        p("Also bad")
+                        p("PFAS is the umbrella term for a large group of over 1000 synthetic chemicals called per- and polyfluoroalkyl substances. PFAS are widely found in consumer products since the 1940s, most notably in nonstick cooking pans, food packaging, and water-repellent materials. PFAS from manufacturing and waste disposal do not break down in the environment; instead, PFAS travels through water and soil, leading to bioaccumulation in organisms."),
+                        h4("Why do PFAS matter?"),
+                        p("Recent studies have found that most people in the United States have been exposed to PFAS through sources like contaminated drinking water and the use of products containing PFAS. More research is needed to understand the specific health impacts of exposure to different levels of PFAS, but PFAS in blood is generally linked to immune problems, thyroid issues, delayed development, and increased risks of certain cancers."),
+                        img(src = "infographic.png", height = 300, width = 300),
+                        width = 6
+                        )
                       )
+                      
                   ),
                   tabPanel(
                     "Locating Superfund Sites", tags$style(
@@ -186,7 +197,7 @@ tabPanel(
     h4("Please select a PFAS to view time series"),
     selectInput(inputId = "common_name",
                 label = "Chemical Name",
-                choices = unique(pfas_super$commonName)),
+                choices = c("PFHxS","PFOA", "PFBA", "PFBS", "PFOS")),
     sliderInput(
       inputId = "year",
       label = "Sample Year",
@@ -198,26 +209,6 @@ tabPanel(
       step = 1,
       animate = animationOptions(interval = 300, loop = TRUE, playButton = c("Play Animation"))
     )
-  ),
-  fluidRow(
-    plotOutput(outputId = "pfasplottemporal",
-               height = 600)
-  ),
-  fluidRow(
-    h4("Please select a PFAS to view time series"),
-    selectInput(inputId = "Common_Name",
-                label = "Chemical Name",
-                choices = unique(pfas_health_sf$commonName)),
-    sliderInput(
-      inputId = "Year",
-      label = "Sample Year",
-      min = min(2005),
-      max = max(2022),
-      sep = "",
-      value = 2005,
-      ticks = FALSE,
-      step = 1,
-      animate = animationOptions(interval = 500, loop = TRUE, playButton = c("Play Animation"))
     )
   ),
   fluidRow(
@@ -255,7 +246,7 @@ tabPanel(
     p("These data are collected and managed by the MPCA, and have been used with permission. More information can be found at https://www.pca.state.mn.us/air-water-land-climate/cleaning-up-minnesota-superfund-sites.")
   )
 ),
-))
+)
 
 server <- function(input, output) {
   
@@ -345,32 +336,15 @@ server <- function(input, output) {
               plot.title = element_text(hjust= 0.5)))
     })
     
-    output$pfasplottemporal <- renderPlot(
-      ggplot() + 
-        geom_sf(data = counties_cropped #%>% filter(name == "Washington")
-                , color = "navajowhite", fill = "ivory", size = 1)+
-        geom_sf(data = (pfas_super %>%
-                          filter(commonName == input$common_name, year == input$year)), aes(color = perc_detected)) +
-        labs(color = "% Samples Above Detection Limit", title = paste(input$common_name, "over time in Washington \n County Superfund sites"))+
-        scale_color_gradient(low = "pink", high = "darkred")+
-        theme_classic() +
-        theme(axis.ticks = element_blank(), 
-              axis.text = element_blank(), 
-              axis.line = element_blank(),
-              title = element_text(size = 20),
-              legend.title = element_text(size=16),
-              legend.text = element_text(size=14),
-              text = element_text(family = "AppleGothic"))
-    )
-    
-    output$pfasplottemporal2 <- renderPlot(
+    output$pfasplottemporal2 <- renderPlot({
+      #browser()
       ggplot() + 
         geom_sf(data = counties_cropped #%>% filter(name == "Washington")
                 , color = "navajowhite", fill = "ivory", size = 1)+
         geom_sf(data = (pfas_health_sf %>%
                           filter(commonName == input$Common_Name, year == input$Year)), aes(color = above_level), alpha = 0.7, size = 3) +
-        labs(color = "% Samples Above Detection Limit", title = paste(input$common_name, "over time in Washington \n County Superfund sites"))+
-        scale_color_manual(values=c("darkred","#de2d26","#fc9272"), drop = FALSE)+
+        labs(color = "Sample Result", title = paste(input$common_name, "over time in Twin Cities Area Superfund sites"))+
+        scale_color_manual(values=c('Above Health Action Level' = "#de2d26",'Below Health Action Level' = "goldenrod1",'Not Detected'  = "palegreen3"), drop = FALSE)+
         theme_classic() +
         theme(axis.ticks = element_blank(), 
               axis.text = element_blank(), 
@@ -379,7 +353,7 @@ server <- function(input, output) {
               legend.title = element_text(size=16),
               legend.text = element_text(size=14),
               text = element_text(family = "AppleGothic"))
-    )
+    })
     
     output$pfaslevelsplot <- renderPlot(
       pfas_health_levels %>%
@@ -389,8 +363,8 @@ server <- function(input, output) {
         geom_histogram(
           binwidth = 92
         ) +
-        scale_fill_manual(values=c("#fee0d2","#fc9272", "#de2d26"))+
-        scale_color_manual(values=c("#fee0d2","#fc9272", "#de2d26"))+
+        scale_fill_manual(values=c('Above Health Action Level' = "#de2d26",'Below Health Action Level' = "goldenrod1",'Not Detected'  = "palegreen3"))+
+        scale_color_manual(values=c('Above Health Action Level' = "#de2d26",'Below Health Action Level' = "goldenrod1",'Not Detected'  = "palegreen3"))+
         labs(title = "Progression of Seven Main PFAS over time",fill = "Sample Result", x = "Sample Date", y = "Number of Samples") +
         guides(color = FALSE) +
         theme_classic() +
