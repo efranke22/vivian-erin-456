@@ -218,3 +218,25 @@ pfas_superfund <- pfas %>%
 
 write.csv(pfas_superfund, "C:\\Users\\vivianpowell\\Desktop\\STAT 456\\project\\vivian-erin-456\\pfas_superfund.csv")
 ```
+```{r}
+pfas7 <- read_csv("../data/pfas7.csv")
+
+min_action_levels <- data.frame(commonName = c("PFHxS", "PFHxA", "PFOA", "PFBA", "PFBS", "PFOS", "PFPeA"), action_level = c(0.027, NA, 0.035, 7.000, 7.000, 0.027, NA))
+
+pfas_super <- read_csv("../data/pfas_superfund.csv") %>%
+  filter(LATITUDE != "NA", LONGITUDE != "NA") %>%
+  st_as_sf(coords = c("LONGITUDE", "LATITUDE"), crs = 6783)
+
+pfas_health_levels <- pfas7 %>% 
+  left_join(min_action_levels, by = "commonName") %>%
+  mutate(result_num = ifelse(DETECT_FLAG == "Y" & UNIT == "ng/L", `RESULT NUMERIC`/1000, ifelse(DETECT_FLAG == "Y" & UNIT != "ng/L", `RESULT NUMERIC`, 0.00)), above_level = ifelse(DETECT_FLAG == "Y" & result_num > action_level, "Above Health Action Level", ifelse(DETECT_FLAG == "Y" & result_num < action_level, "Below Health Action Level", "Not Detected")), year = year(`SAMPLE DATE`)) %>%
+  filter(UNIT != "NA", `FACILITY TYPE` == "Superfund", LATITUDE != "NA", LONGITUDE != "NA", above_level != "NA")
+
+
+pfas_health_sf <- pfas_health_levels %>%
+  st_as_sf(coords = c("LONGITUDE", "LATITUDE"), crs = 6783) %>%
+  st_crop(xmin = -93.2, xmax=-92.7, ymin = 44.7, ymax=45.35)
+
+pfas
+```
+

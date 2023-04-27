@@ -54,10 +54,10 @@ pfas_health_levels <- pfas7 %>%
 
 pfas_health_sf <- pfas_health_levels %>%
   st_as_sf(coords = c("LONGITUDE", "LATITUDE"), crs = 6783) %>%
-  st_crop(xmin = -93.2, xmax=-92.7, ymin = 44.7, ymax=45.35)
+  st_crop(xmin = -93.7, xmax=-92.6, ymin = 44.7, ymax=45.2)
+
 ###############################################################################################
 
-# Define UI for application that draws a histogram
 ui <- fluidPage(theme = shinytheme("flatly"),
                 navbarPage("Contamination in the Twin Cities", tags$style(
                   ".navbar-nav li a {
@@ -225,9 +225,6 @@ tabPanel(
                height = 600)
   ),
   fluidRow(
-    p("These data are collected by the MPCA. More information can be found at https://www.pca.state.mn.us/air-water-land-climate/cleaning-up-minnesota-superfund-sites.")
-  ),
-  fluidRow(
     column(
       selectInput(inputId = "location",
                   label = "Select a sampling site",
@@ -253,11 +250,13 @@ tabPanel(
       plotOutput(outputId = "pfaslevelsplot"), 
       width = 10
     )
+  ),
+  fluidRow(
+    p("These data are collected and managed by the MPCA, and have been used with permission. More information can be found at https://www.pca.state.mn.us/air-water-land-climate/cleaning-up-minnesota-superfund-sites.")
   )
 ),
 ))
 
-# Define server logic required to draw a histogram
 server <- function(input, output) {
   
   dataInputMap <- reactive({
@@ -369,9 +368,9 @@ server <- function(input, output) {
         geom_sf(data = counties_cropped #%>% filter(name == "Washington")
                 , color = "navajowhite", fill = "ivory", size = 1)+
         geom_sf(data = (pfas_health_sf %>%
-                          filter(commonName == input$Common_Name, year == input$Year)), aes(color = above_level)) +
+                          filter(commonName == input$Common_Name, year == input$Year)), aes(color = above_level), alpha = 0.7, size = 3) +
         labs(color = "% Samples Above Detection Limit", title = paste(input$common_name, "over time in Washington \n County Superfund sites"))+
-        scale_color_manual(values=c("#de2d26","#fc9272","#fee0d2"))+
+        scale_color_manual(values=c("darkred","#de2d26","#fc9272"), drop = FALSE)+
         theme_classic() +
         theme(axis.ticks = element_blank(), 
               axis.text = element_blank(), 
@@ -384,10 +383,8 @@ server <- function(input, output) {
     
     output$pfaslevelsplot <- renderPlot(
       pfas_health_levels %>%
-        filter(#commonName == input$pfaschoice,
-          commonName %in% c("PFHxS", "PFOA", "PFBA", "PFBS", "PFOS"),
+        filter(commonName %in% c("PFHxS", "PFOA", "PFBA", "PFBS", "PFOS"),
           `FACILITY NAME` == input$location) %>%
-        # ,DETECT_FLAG == "Y", result_num < 10*action_level) %>% 
         ggplot(aes(x = `SAMPLE DATE`, color = factor(above_level, levels = c("Not Detected", "Below Health Action Level", "Above Health Action Level")), fill = factor(above_level, levels = c("Not Detected", "Below Health Action Level", "Above Health Action Level")))) +
         geom_histogram(
           binwidth = 92
