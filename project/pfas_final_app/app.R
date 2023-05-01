@@ -8,6 +8,7 @@ library(shinythemes)
 library(lubridate)
 library(DT)
 library(plotly)
+library(dplyr)
 
 ###########################################################################################
 ## DATA LOADING 
@@ -201,18 +202,17 @@ tabPanel(
     sliderInput(
       inputId = "year",
       label = "Sample Year",
-      min = min(pfas_super$year),
-      max = max(pfas_super$year),
+      min = min(pfas_health_levels$year),
+      max = max(pfas_health_levels$year),
       sep = "",
       value = 2005,
       ticks = FALSE,
       step = 1,
       animate = animationOptions(interval = 300, loop = TRUE, playButton = c("Play Animation"))
     )
-    )
-  ),
+    ),
   fluidRow(
-    plotOutput(outputId = "pfasplottemporal2",
+    plotOutput(outputId = "pfasplottemporal",
                height = 600)
   ),
   fluidRow(
@@ -238,14 +238,15 @@ tabPanel(
       width = 2
     ),
     column(
-      plotOutput(outputId = "pfaslevelsplot"), 
+      plotOutput(outputId = "pfaslevelsplot", height = 600), 
       width = 10
     )
   ),
   fluidRow(
     p("These data are collected and managed by the MPCA, and have been used with permission. More information can be found at https://www.pca.state.mn.us/air-water-land-climate/cleaning-up-minnesota-superfund-sites.")
   )
-),
+)
+)
 )
 
 server <- function(input, output) {
@@ -336,14 +337,12 @@ server <- function(input, output) {
               plot.title = element_text(hjust= 0.5)))
     })
     
-    output$pfasplottemporal2 <- renderPlot({
-      #browser()
+    output$pfasplottemporal <- renderPlot(
       ggplot() + 
-        geom_sf(data = counties_cropped #%>% filter(name == "Washington")
-                , color = "navajowhite", fill = "ivory", size = 1)+
+        geom_sf(data = counties_cropped, color = "navajowhite", fill = "ivory", size = 1)+
         geom_sf(data = (pfas_health_sf %>%
-                          filter(commonName == input$Common_Name, year == input$Year)), aes(color = above_level), alpha = 0.7, size = 3) +
-        labs(color = "Sample Result", title = paste(input$common_name, "over time in Twin Cities Area Superfund sites"))+
+                          filter(commonName == input$common_name, year == input$year)), aes(color = above_level), alpha = 0.7, size = 3) +
+        labs(color = "Sample Result", title = paste(input$common_name, "over time in Twin Cities Area Superfund sites")) +
         scale_color_manual(values=c('Above Health Action Level' = "#de2d26",'Below Health Action Level' = "goldenrod1",'Not Detected'  = "palegreen3"), drop = FALSE)+
         theme_classic() +
         theme(axis.ticks = element_blank(), 
@@ -353,7 +352,7 @@ server <- function(input, output) {
               legend.title = element_text(size=16),
               legend.text = element_text(size=14),
               text = element_text(family = "AppleGothic"))
-    })
+    )
     
     output$pfaslevelsplot <- renderPlot(
       pfas_health_levels %>%
@@ -365,8 +364,8 @@ server <- function(input, output) {
         ) +
         scale_fill_manual(values=c('Above Health Action Level' = "#de2d26",'Below Health Action Level' = "goldenrod1",'Not Detected'  = "palegreen3"))+
         scale_color_manual(values=c('Above Health Action Level' = "#de2d26",'Below Health Action Level' = "goldenrod1",'Not Detected'  = "palegreen3"))+
-        labs(title = "Progression of Seven Main PFAS over time",fill = "Sample Result", x = "Sample Date", y = "Number of Samples") +
-        guides(color = FALSE) +
+        labs(title = "Progression of 5 main PFAS over time",fill = "Sample Result", x = "Sample Date", y = "Number of Samples") +
+        guides(color = "none") +
         theme_classic() +
         theme(title = element_text(face = "bold", size = 18), axis.title = element_text(size = 14, face = "plain"),legend.title = element_text(face = "bold", size = 14), legend.text = element_text(size = 14),
               text = element_text(family = "AppleGothic")),
