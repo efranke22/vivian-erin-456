@@ -94,8 +94,19 @@ ui <- fluidPage(theme = shinytheme("flatly"),
                         img(src = "infographic.png", height = 300, width = 300),
                         width = 6
                         )
-                      )
+                      ),
+      h3("Sources"),
+      p("https://www.pca.state.mn.us/air-water-land-climate/cleaning-up-minnesota-superfund-sites"),
+      p("https://www.mprnews.org/story/2007/05/11/contamdeal")
                       
+                  ),
+                  tabPanel(
+                    "Research Questions & Data", tags$style(
+                      ".navbar-nav li a {
+                  font-size: 10px;
+                  font-weight: normal;
+                  }
+                  "),
                   ),
                   tabPanel(
                     "Locating Superfund Sites", tags$style(
@@ -245,6 +256,14 @@ tabPanel(
   fluidRow(
     p("These data are collected and managed by the MPCA, and have been used with permission. More information can be found at https://www.pca.state.mn.us/air-water-land-climate/cleaning-up-minnesota-superfund-sites.")
   )
+),
+tabPanel(
+  "Limiations & Future Work", tags$style(
+    ".navbar-nav li a {
+                  font-size: 10px;
+                  font-weight: normal;
+                  }
+                  "),
 )
 )
 )
