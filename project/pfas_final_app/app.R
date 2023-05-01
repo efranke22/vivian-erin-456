@@ -207,19 +207,19 @@ tabPanel(
       "),
   fluidRow(
     h4("Please select a PFAS to view time series"),
-    selectInput(inputId = "common_name",
+    selectInput(inputId = "Common_Name",
                 label = "Chemical Name",
                 choices = c("PFHxS","PFOA", "PFBA", "PFBS", "PFOS")),
     sliderInput(
-      inputId = "year",
+      inputId = "Year",
       label = "Sample Year",
-      min = min(pfas_health_levels$year),
-      max = max(pfas_health_levels$year),
+      min = min(pfas_health_sf$year),
+      max = max(pfas_health_sf$year),
       sep = "",
-      value = 2005,
+      value = 2004,
       ticks = FALSE,
       step = 1,
-      animate = animationOptions(interval = 300, loop = TRUE, playButton = c("Play Animation"))
+      animate = animationOptions(interval = 500, loop = TRUE, playButton = c("Play Animation"))
     )
     ),
   fluidRow(
@@ -360,9 +360,10 @@ server <- function(input, output) {
       ggplot() + 
         geom_sf(data = counties_cropped, color = "navajowhite", fill = "ivory", size = 1)+
         geom_sf(data = (pfas_health_sf %>%
-                          filter(commonName == input$common_name, year == input$year)), aes(color = above_level), alpha = 0.7, size = 3) +
+                          filter(commonName == input$Common_Name, year == input$Year)), aes(color = above_level), alpha = 0.4, size = 3) +
         labs(color = "Sample Result", title = paste(input$common_name, "over time in Twin Cities Area Superfund sites")) +
-        scale_color_manual(values=c('Above Health Action Level' = "#de2d26",'Below Health Action Level' = "goldenrod1",'Not Detected'  = "palegreen3"), drop = FALSE)+
+        scale_color_manual(values=c('Above Health Action Level' = "#de2d26",'Below Health Action Level' = "goldenrod1",'Not Detected'  = "palegreen3"), drop = FALSE, guide = guide_legend(override.aes = list(shape = 19, size = 3) ) )+
+        #guides(fill = guide_legend(override.aes = list(shape = 19, size = 3) ) ) +
         theme_classic() +
         theme(axis.ticks = element_blank(), 
               axis.text = element_blank(), 
