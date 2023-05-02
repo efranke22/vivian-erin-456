@@ -265,12 +265,19 @@ tabPanel(
   )
 ),
 tabPanel(
-  "Limiations & Future Work", tags$style(
+  "Results, Limitations, & Future Work", tags$style(
     ".navbar-nav li a {
                   font-size: 10px;
                   font-weight: normal;
                   }
                   "),
+  h3("Main Takeaways"),
+  p("insert results paragraph here"),
+  h3(""),
+  h3("Limitations"),
+  p("Environmental data has some natural limitations that can make it tricky to work with. With our specific data, there were so many different variables to consider, such as sample type, chemical, location, medium, and date. As is often the case with water samples, not all observations were taken in the same units, and work had to be done to standardize units before analysis. Recording errors, such as issues with latitude, longitude, and county not matching, made some samples unusable. Additionally, we look at the change in PFAS concentrations over time, which is limited by the inconsistency of samples over the years. Some years a given chemical will have hundreds of samples taken, while other years there won't be any. This makes it difficult to make conclusions from our temporal analysis." ),
+  h3("Future Work"),
+  p("More research is needed to understand the long-term health and environmental effects of PFAS. This knowledge would help similar projects to link their analyses to real issues and provide recommendations for future remediation efforts. Future research in this area could focus on the correlations between analyte concentrations, specifically in PFAS, to understand whether different types PFAS tend to co-occur or not. Additionally, it would be interesting to look into different mediums, such as soil, and understand how chemicals travel through soils as opposed to water. This analysis would benefit from more time, more consistent data, and a deeper look into the factors that determine where PFAS ends up highly concentrated."),
 )
 )
 )
@@ -368,7 +375,7 @@ server <- function(input, output) {
         geom_sf(data = counties_cropped, color = "navajowhite", fill = "ivory", size = 1)+
         geom_sf(data = (pfas_health_sf %>%
                           filter(commonName == input$Common_Name, year == input$Year)), aes(color = above_level), alpha = 0.4, size = 3) +
-        labs(color = "Sample Result", title = paste(input$common_name, "over time in Twin Cities Area Superfund sites")) +
+        labs(color = "Sample Result", title = paste(input$Common_Name, "over time in Twin Cities Area Superfund sites")) +
         scale_color_manual(values=c('Above Health Action Level' = "#de2d26",'Below Health Action Level' = "goldenrod1",'Not Detected'  = "palegreen3"), drop = FALSE, guide = guide_legend(override.aes = list(shape = 19, size = 3) ) )+
         #guides(fill = guide_legend(override.aes = list(shape = 19, size = 3) ) ) +
         theme_classic() +
