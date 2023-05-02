@@ -80,7 +80,7 @@ ui <- fluidPage(theme = shinytheme("flatly"),
                         p("A ", strong("superfund site"), "is an area where where hazardous waste has been spilled or dumped and where contamination poses an actual or potential threat to public health or the environment."),
                         h4("How does cleanup work?"),
                         p("Responsible parties are legally responsible for the cleanup. These responsible parties can include past or present property owners, operators, waste haulers, and/or generators who dumped material on the site."),
-                        p("When there is no responsible party to pay for cleanup, the site may be placed on the  Minnesota Permanent List of Priorities, making it eligible for state cleanup dollars. Sites may recieve additional federal funding for cleanup if a successful request is made by the MPCA to list the site on the federal Superfund National Priorities List. Currently, Minnesota has 25 sites on this list."),
+                        p("When there is no responsible party to pay for cleanup, the site may be placed on the Minnesota Permanent List of Priorities, making it eligible for state cleanup dollars. Sites may recieve additional federal funding for cleanup if a successful request is made by the MPCA to list the site on the federal superfund", tags$a(href = "https://www.epa.gov/superfund/superfund-national-priorities-list-npl", "National Priorities List."), " Currently, Minnesota has 25 sites on this list."),
                         h4("What is an example of a superfund site in Minnesota?"),
                         p("The image below shows the 3M production facility in Cottage Grove (Washington County). 3M has used these grounds for years as a disposal site for chemical compounds, which are contaminating the Mississippi River. Photo Credit to MPR/Bill Alkofer."),
                         img(src = "threeM.jpg", height = 300, width = 300),
@@ -107,6 +107,13 @@ ui <- fluidPage(theme = shinytheme("flatly"),
                   font-weight: normal;
                   }
                   "),
+                  h3("Research Questions"),
+                  p("It is clear that superfund sites should be cleaned up as soon as possible. Among other harmful chemicals, they contain PFAS which has both environmental and health hazards. To learn more about superfund sites and PFAS in the Twin Cities, we are asking the following questions:"),
+                  p("1. Where are superfund sites located in the Twin Cities area?"),
+                  p("2. How have they progressed in containing harmful chemicals, specifically PFAS?"),
+                  h3("Data"),
+                  p("Our data comes from the Minnesota Pollution Control Agency (MPCA).  Much of the background information about superfund sites is taken from their website, which you can visit", tags$a(href="https://www.pca.state.mn.us/air-water-land-climate/cleaning-up-minnesota-superfund-sites", "here."), " We downloaded all recorded samples from every superfund site in Hennepin, Ramsey, and Washington Counties.  Chemicals sampled range from PFAS to pesticides and PBCs, metals, and beyond.  Each superfund site's data needing to be individually downloaded and the datasets can be combined fairly easily.  There are some instances in which the units should be changed (nanograms to micrograms) or the county is mislabeled, but otherwise the data is fairly clean.  Relevant field include sample latitude and longitude, county, facility name, location type, analysis name, analyte name, analyte group, result numeric, whether the result was detected,  and Minnesota action level."),
+                  img(src = "mpca.jpg", height = 400, width = 600),
                   ),
                   tabPanel(
                     "Locating Superfund Sites", tags$style(
