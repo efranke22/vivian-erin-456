@@ -72,9 +72,10 @@ ui <- fluidPage(theme = shinytheme("flatly"),
         font-weight: normal;
       }
       "),
-                    titlePanel("Background Information: Superfund Sites and PFAS"),
+                    titlePanel("Water Contamination in the Twin Cities: A project by Vivian Powell and Erin Franke"),
                      
                         fluidRow(
+                        h2("Background Information: Superfund Sites & PFAS"),
                         column(
                         h3("What is a superfund site?"),
                         p("A ", strong("superfund site"), "is an area where where hazardous waste has been spilled or dumped and where contamination poses an actual or potential threat to public health or the environment."),
@@ -126,11 +127,13 @@ ui <- fluidPage(theme = shinytheme("flatly"),
                     titlePanel("Locating Superfund Sites: Washington, Hennepin, and Ramsey Counties"),
                     
                     HTML("<br>"),
+      
+                    p("The following map shows all samples taken from superfund sites in Hennepin, Ramsey, and Washington counties. Please use the slider bar to show samples from a particular date range. Feel free to only show sites at a particular remediation stage - these stages are as listed on the MPCA website as of April 15, 2023. An additional filter that can be applied is to only show superfund sites where a particular contaminant is of interest. Please note that this does not show only samples for this contaminant, but all samples from that particular site as the goal of this map is to show general locations of superfund sites. With the filters you have chosen, the table below the map will update to match."),
                     
                     fluidRow(column(width = 1),column(width = 11,
                                                       sliderInput(
                                                         inputId = "year",
-                                                        label = "Select Date Range",
+                                                        label = "Date Range",
                                                         min = min(superfund_loc$year),
                                                         max = max(superfund_loc$year),
                                                         value = c(2010, 2020),
@@ -158,7 +161,9 @@ ui <- fluidPage(theme = shinytheme("flatly"),
                       h4("The following table provides additional information about each of these 34 superfund sites (as of April 15, 2023) and is filtered according to the inital widgets."),
                       
                       dataTableOutput("siteTable")
-                    )         
+                    ), 
+                   HTML("<br>"),
+                  p("There are a few takeaways from these maps. First, samples taken from 3M Oakdale and Baytown Township superfund sites span a large portion of central Washington county.  Hennepin and Ramsey counties each have several superfund sites in which samples are more concentrated in location. Second, the superfund sites seem to be at various stages of their remediation. 11 sites are in the identification phase, 5 are in the investigation phase, 4 are in the response selected phase, 13 are in the response implemented phase, and 1 site (Bell Lumber & Pole Company) is in the complete phase. Third, as far as contaminants go, for the sites being so close in geographic location there is quite a range of primary problematic chemicals. The majority of the sites contain TCE and/or PCE. According to ", tags$a(html = "https://serc.carleton.edu/woburn/issues/tce_toxicity.html", "research by Carleton College,"), "TCE and PCE are toxic chlorinated hydrocarbons with TCE mainly being used as an effective solvent for a variety of organic materials and PCE for the dry cleaning of fabrics. Seven sites list PFAS as a major contaminant, with four of these sites being in Washington County. For a more in-depth discussion of PFAS, please visit the", strong("PFAS levels in Superfund sites"), "tab.")
                   ),
 
                   tabPanel(
@@ -168,8 +173,10 @@ ui <- fluidPage(theme = shinytheme("flatly"),
         font-weight: normal;
       }
       "),
-                    h4("The following map provides additional information about the number of samples taken of different analyte groups across the superfund sites."),
-                    
+                    h4("This following map provides additional information about the number of samples taken of different analyte groups across the superfund sites."),
+      
+                    p("This map builds off of the previous tab to dive further into the quantities of particular chemicals that have been detected overtime. You are able to filter to show samples based on a few variables. First, was the chemical detected in the sample? Second, was the amount of chemical detected over the MDH health limit? Please note that a fair amount of analytes do not have an MDH health limit listed within the dataset. We are not sure why this is: it could be because the chemical does not cause enough harm to have one, because a limit was not recorded, or for another reason. Third, you can filter to show samples solely of a particular analyte group. Fourth, there is again a date range slider."),
+                      
                     fluidRow(
                       checkboxGroupInput(
                         inputId = "detectFlag",
@@ -204,6 +211,9 @@ ui <- fluidPage(theme = shinytheme("flatly"),
                       ), 
                       plotlyOutput("contaminantPlot", height = "800px")         
                   ),
+      HTML("<br>"),
+      p("Given the number of available constraints a user can play with, this map can produce loads of information dependent on what you are interested in. Given that we are not water contamination experts and additionally did not collect this data, we largely want to avoid jumping to conclusions. However, there are a few very broad takeaways we feel comfortable stating. First, over the past decade, the majority of sites have had a sample over the MDH health limit for one chemical or another. While very general information, we feel this important information to share. We do not intend to cause concern with this information, but rather bring to light that superfund sites need cleaning. Second, in better news, try filtering to show samples for a particular analyte group of interest (e.g. PFAS) that did not have a chemical detected. It is clear that a large amount of samples do not have notable levels detected. While this could be in part due to the way in which the sample was taken, it is a good sign that not all samples and/or areas are turning up problematic for particular contaminant of interest."),
+      p("There are also limitations with this map. First, you may notice for particular sets of constraints that there are overlapping points, making it hard to see the number of samples in a particular location. Originally, we had rounded the latitude and longitude of each sample so that this would not occur. However, after talking with an expert at the MPCA, we understand that the precision with which the data is collected is incredibly important, and that aggregating samples could cause panic. Second, we learned from our expert that MDH health levels are always changing, usually becoming more strict (decreasing overtime) and will continue to change with additional research. Thus, we want to emphasize that the current data just provides a snapshot in time, and just because a particular site does not have samples with levels detected above the MDH limit, that does not mean cleanup is done. MDH health limits for PFAS will be further explored in the PFAS levels in Superfund sites tab. A third limitation is sampling bias. When viewing this map, it is important to remember that there is sampling bias! Sampling costs money, and the MPCA is likely going to only sample areas of concern for particular contaminants. Thus, we shouldn't necessarily use 'not detected' numbers to measure cleanup success.")
 ),
 tabPanel(
   "PFAS levels in Superfund sites", tags$style(
