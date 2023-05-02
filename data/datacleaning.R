@@ -17,7 +17,7 @@ write.csv(pfas7, "pfas7.csv")
 threeM <- read_csv("../data/superfund_site_data/3m_chemolite.csv") %>%
   mutate(site = "3M Chemolite", county = "Washington", SYS_LOC_CODE = as.numeric(SYS_LOC_CODE))
 oakdale <- read_csv("../data/superfund_site_data/oakdale.csv") %>%
-  mutate(site = "3M Oakland", county = "Washington")
+  mutate(site = "3M Oakdale", county = "Washington")
 ashland <- read_csv("../data/superfund_site_data/ashland.csv") %>%
   mutate(site = "Ashland Oil - Park Penta", county = "Washington")
 bayport <- read_csv("../data/superfund_site_data/bayport.csv") %>%

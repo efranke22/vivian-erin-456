@@ -351,12 +351,12 @@ server <- function(input, output) {
         mutate(year1 = as.numeric(substr(SAMPLE_DATE, 7, 11))) %>%
         filter(year1 >= input$year2[1] & year1 <= input$year2[2]) %>%
         filter(above_level %in% input$aboveLimit) %>%
-        mutate(LONGITUDE_short = round(LONGITUDE, 2), 
-               LATITUDE_short = round(LATITUDE, 2)) %>%
-        group_by(LONGITUDE_short, LATITUDE_short, site) %>%
+        #mutate(LONGITUDE_short = round(LONGITUDE, 2), 
+        #       LATITUDE_short = round(LATITUDE, 2)) %>%
+        group_by(LONGITUDE, LATITUDE, site) %>%
         rename("Site" = "site") %>%
         summarize(Samples = n())
-      superfund_loc_points2 <- st_as_sf(superfund_loc_points2, coords = c("LONGITUDE_short", "LATITUDE_short"), crs = 6783)
+      superfund_loc_points2 <- st_as_sf(superfund_loc_points2, coords = c("LONGITUDE", "LATITUDE"), crs = 6783)
       
       ggplotly(
       ggplot()+
