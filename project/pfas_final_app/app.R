@@ -41,7 +41,7 @@ site_information <- superfund %>% distinct(site, county) %>%
 
 pfas7 <- read_csv("../../data/pfas7.csv")
 
-min_action_levels <- data.frame(commonName = c("PFHxS", "PFHxA", "PFOA", "PFBA", "PFBS", "PFOS", "PFPeA"), action_level = c(0.027, NA, 0.035, 7.000, 7.000, 0.027, NA))
+min_action_levels <- data.frame(commonName = c("PFHxS", "PFHxA", "PFOA", "PFBA", "PFBS", "PFOS", "PFPeA"), action_level = c(0.047, 0.2, 0.035, 7.000, 0.1, 0.015, NA))
 
 pfas_super <- read_csv("../../data/pfas_superfund.csv") %>%
   filter(LATITUDE != "NA", LONGITUDE != "NA") %>%
@@ -96,8 +96,8 @@ ui <- fluidPage(theme = shinytheme("flatly"),
                         p("Recent studies have found that most people in the United States have been exposed to PFAS through sources like contaminated drinking water and the use of products containing PFAS. More research is needed to understand the specific health impacts of exposure to different levels of PFAS, but PFAS in blood is generally linked to immune problems, thyroid issues, delayed development, and increased risks of certain cancers."),
                         img(src = "infographic.png", height = 500, width = 500),
                         h3("Which PFAS are of most concern?"),
-                        p("Although there are thousands of known PFAS, we have narrowed our analyses to five main PFAS of concern, which were chosen based on background research, the number of samples taken for that chemical, and the existence of an MDH health limit. These five PFAS and their MDH health limits are in the table below."),
-                        img(src = "limits.png", height = 300, width = 500),
+                        p("Although there are thousands of known PFAS, we have narrowed our analyses to six main PFAS of concern, which were chosen based on background research, the number of samples taken for that chemical, and the existence of an MDH health limit. These six PFAS and their MDH health limits are in the table below."),
+                        img(src = "limits2.png", height = 300, width = 500),
                         width = 6
                         )
                       )
@@ -109,13 +109,19 @@ ui <- fluidPage(theme = shinytheme("flatly"),
                   font-weight: normal;
                   }
                   "),
+                  column(width = 6,
                   h3("Research Questions"),
-                  p("It is clear that superfund sites should be cleaned up as soon as possible. Among other harmful chemicals, they contain PFAS which has both environmental and health hazards. To learn more about superfund sites and PFAS in the Twin Cities, we are asking the following questions:"),
+                  p("It is clear that superfund sites require attention to contain and clean up harmful chemicals. Among other compounds, many superfund sites contain PFAS which has both environmental and health hazards. To learn more about superfund sites and PFAS in the Twin Cities, we are asking the following questions:"),
                   p("1. Where are superfund sites located in the Twin Cities area?"),
                   p("2. How have they progressed in containing harmful chemicals, specifically PFAS?"),
                   h3("Data"),
                   p("Our data comes from the Minnesota Pollution Control Agency (MPCA).  Much of the background information about superfund sites is taken from their website, which you can visit", tags$a(href="https://www.pca.state.mn.us/air-water-land-climate/cleaning-up-minnesota-superfund-sites", "here."), " We downloaded all recorded samples from every superfund site in Hennepin, Ramsey, and Washington Counties.  Chemicals sampled range from PFAS to pesticides and PBCs, metals, and beyond.  Each superfund site's data needing to be individually downloaded and the datasets can be combined fairly easily.  There are some instances in which the units should be changed (nanograms to micrograms) or the county is mislabeled, but otherwise the data is fairly clean.  Relevant field include sample latitude and longitude, county, facility name, location type, analysis name, analyte name, analyte group, result numeric, whether the result was detected,  and Minnesota action level."),
-                  img(src = "mpca.jpg", height = 400, width = 600),
+                  ),
+                  column(width = 4,
+                  HTML("<br>"),
+                  img(src = "mpca.jpg", height = 400, width = 600)
+                  ),
+                  column(width = 2)
                   ),
                   tabPanel(
                     "Locating Superfund Sites", tags$style(
@@ -247,7 +253,7 @@ tabPanel(
     h4("Please select a PFAS"),
     selectInput(inputId = "Common_Name",
                 label = "Chemical Name",
-                choices = c("PFHxS","PFOA", "PFBA", "PFBS", "PFOS")),
+                choices = c("PFOA", "PFHxS", "PFBA", "PFBS", "PFOS", "PFHxA")),
     sliderInput(
       inputId = "Year",
       label = "Sample Year",
@@ -369,7 +375,7 @@ server <- function(input, output) {
         ggplot()+
           geom_sf(data = counties_cropped, color = "navajowhite", fill = "ivory", size = 0.5)+
           geom_sf(data = dataInputMap() %>% st_jitter(amount = 0.02), aes(color = Site), alpha = 0.5, size = 0.8)+
-          geom_sf_text(data = counties_cropped %>% filter(name %in% c("Hennepin", "Washington", "Ramsey")), aes(label = name), size = 4)+
+          geom_sf_text(data = counties_cropped %>% filter(name %in% c("Hennepin", "Washington", "Ramsey")), aes(label = name), size = 4, family = "AppleGothic")+
           labs(title = "Samples from superfund sites in Washington, Hennepin, and Ramsey Counties", x="", y="")+
           theme_classic()+
           theme(legend.position = "none", 
@@ -417,7 +423,7 @@ server <- function(input, output) {
       ggplot()+
         geom_sf(data = counties_cropped, color = "navajowhite", fill = "ivory", size = 0.5)+
         geom_sf(data = superfund_loc_points2, alpha = 0.5, aes(size = Samples, color = Site))+
-        geom_sf_text(data = counties_cropped %>% filter(name %in% c("Hennepin", "Washington", "Ramsey")), aes(label = name), size = 4)+
+        geom_sf_text(data = counties_cropped %>% filter(name %in% c("Hennepin", "Washington", "Ramsey")), aes(label = name), size = 4, family = "AppleGothic")+
         labs(title = "Samples from superfund sites in Washington, Hennepin, and Ramsey Counties", x="", y="")+
         theme_classic()+
         theme(legend.position = "none", 
@@ -432,7 +438,7 @@ server <- function(input, output) {
         geom_sf(data = counties_cropped, color = "navajowhite", fill = "ivory", size = 1)+
         geom_sf(data = (pfas_health_sf %>%
                           filter(commonName == input$Common_Name, year == input$Year)), aes(color = above_level), alpha = 0.4, size = 3) +
-        geom_sf_text(data = counties_cropped %>% filter(name %in% c("Hennepin", "Washington", "Ramsey")), aes(label = name), size = 4)+
+        geom_sf_text(data = counties_cropped %>% filter(name %in% c("Hennepin", "Washington", "Ramsey")), aes(label = name), size = 5, family = "AppleGothic")+
         labs(color = "Sample Result", x="", y="") +
         scale_color_manual(values=c('Above Health Action Level' = "#de2d26",'Below Health Action Level' = "goldenrod1",'Not Detected'  = "palegreen3"), drop = FALSE, guide = guide_legend(override.aes = list(shape = 19, size = 3) ) )+
         #guides(fill = guide_legend(override.aes = list(shape = 19, size = 3) ) ) +
@@ -448,7 +454,7 @@ server <- function(input, output) {
     
     output$pfaslevelsplot <- renderPlot(
       pfas_health_levels %>%
-        filter(commonName %in% c("PFHxS", "PFOA", "PFBA", "PFBS", "PFOS"),
+        filter(commonName %in% c("PFHxS", "PFOA", "PFBA", "PFBS", "PFOS", "PFHxA"),
           `FACILITY NAME` == input$location) %>%
         ggplot(aes(x = `SAMPLE DATE`, color = factor(above_level, levels = c("Not Detected", "Below Health Action Level", "Above Health Action Level")), fill = factor(above_level, levels = c("Not Detected", "Below Health Action Level", "Above Health Action Level")))) +
         geom_histogram(
