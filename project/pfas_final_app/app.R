@@ -84,6 +84,9 @@ ui <- fluidPage(theme = shinytheme("flatly"),
                         h3("What is an example of a superfund site in Minnesota?"),
                         p("The image below shows the 3M production facility in Cottage Grove (Washington County). 3M has used these grounds for years as a disposal site for chemical compounds, which are contaminating the Mississippi River. Photo Credit to MPR/Bill Alkofer."),
                         img(src = "threeM.jpg", height = 500, width = 500),
+                        h3("Sources"),
+                        p("https://www.pca.state.mn.us/air-water-land-climate/cleaning-up-minnesota-superfund-sites"),
+                        p("https://www.mprnews.org/story/2007/05/11/contamdeal"),
                         width = 6
                           ),
                         column(
@@ -97,11 +100,7 @@ ui <- fluidPage(theme = shinytheme("flatly"),
                         img(src = "limits.png", height = 300, width = 500),
                         width = 6
                         )
-                      ),
-      h3("Sources"),
-      p("https://www.pca.state.mn.us/air-water-land-climate/cleaning-up-minnesota-superfund-sites"),
-      p("https://www.mprnews.org/story/2007/05/11/contamdeal")
-                      
+                      )
                   ),
                   tabPanel(
                     "Research Questions & Data", tags$style(
@@ -130,8 +129,11 @@ ui <- fluidPage(theme = shinytheme("flatly"),
                     
                     HTML("<br>"),
       
-                    p("The following map shows all samples taken from superfund sites in Hennepin, Ramsey, and Washington counties. Please use the slider bar to show samples from a particular date range. Feel free to only show sites at a particular remediation stage - these stages are as listed on the MPCA website as of April 15, 2023. An additional filter that can be applied is to only show superfund sites where a particular contaminant is of interest. Please note that this does not show only samples for this contaminant, but all samples from that particular site as the goal of this map is to show general locations of superfund sites. With the filters you have chosen, the table below the map will update to match."),
-                    
+                    p("The following map shows all samples taken from superfund sites in Hennepin, Ramsey, and Washington counties. Please use the following filters: "), 
+                    p("1. The slider bar to show samples from a particular date range."), 
+                    p("2. Select boxes to show superfund sites at a particular remediation stage: these stages are as listed on the MPCA website as of April 15, 2023."), 
+                    p("3. Text box to show superfund sites where a particular contaminant is of interest. Please note that this does not show only samples for this contaminant, but all samples from that particular site as the goal of this map is to show general locations of superfund sites."), 
+                    p("With the filters you have chosen, the map and table with update accordingly."),
                     fluidRow(column(width = 1),column(width = 11,
                                                       sliderInput(
                                                         inputId = "year",
@@ -179,7 +181,11 @@ ui <- fluidPage(theme = shinytheme("flatly"),
       "),
                     h4("This following map provides additional information about the number of samples taken of different analyte groups across the superfund sites."),
       
-                    p("This map builds off of the previous tab to dive further into the quantities of particular chemicals that have been detected overtime. You are able to filter to show samples based on a few variables. First, was the chemical detected in the sample? Second, was the amount of chemical detected over the MDH health limit? Please note that a fair amount of analytes do not have an MDH health limit listed within the dataset. We are not sure why this is: it could be because the chemical does not cause enough harm to have one, because a limit was not recorded, or for another reason. Third, you can filter to show samples solely of a particular analyte group. Fourth, there is again a date range slider."),
+                    p("Use the following widgets to filter samples:"), 
+                    p("1. Select boxes to show samples in which the particular chemical was detected."),
+                    p("2. Select boxes to show samples in which the amount of chemical detected was over the MDH health limit. Please note that a fair amount of analytes do not have an MDH health limit listed within the dataset. We are not sure why this is: it could be because the chemical does not cause enough harm to have one, because a limit was not recorded, or for another reason."), 
+                    p("3. Drop down menu to filter to show samples solely of a particular analyte group."), 
+                    p("4. Date range slider to show samples within a particular time period"),
                       
                     fluidRow(
                       checkboxGroupInput(
@@ -363,7 +369,8 @@ server <- function(input, output) {
         ggplot()+
           geom_sf(data = counties_cropped, color = "navajowhite", fill = "ivory", size = 0.5)+
           geom_sf(data = dataInputMap() %>% st_jitter(amount = 0.02), aes(color = Site), alpha = 0.5, size = 0.8)+
-          labs(title = "Samples from superfund sites in Washington, Hennepin, and Ramsey Counties")+
+          geom_sf_text(data = counties_cropped %>% filter(name %in% c("Hennepin", "Washington", "Ramsey")), aes(label = name), size = 4)+
+          labs(title = "Samples from superfund sites in Washington, Hennepin, and Ramsey Counties", x="", y="")+
           theme_classic()+
           theme(legend.position = "none", 
                 axis.line = element_blank(), 
@@ -410,7 +417,8 @@ server <- function(input, output) {
       ggplot()+
         geom_sf(data = counties_cropped, color = "navajowhite", fill = "ivory", size = 0.5)+
         geom_sf(data = superfund_loc_points2, alpha = 0.5, aes(size = Samples, color = Site))+
-        labs(title = "Samples from superfund sites in Washington, Hennepin, and Ramsey Counties")+
+        geom_sf_text(data = counties_cropped %>% filter(name %in% c("Hennepin", "Washington", "Ramsey")), aes(label = name), size = 4)+
+        labs(title = "Samples from superfund sites in Washington, Hennepin, and Ramsey Counties", x="", y="")+
         theme_classic()+
         theme(legend.position = "none", 
               axis.line = element_blank(), 
@@ -424,7 +432,8 @@ server <- function(input, output) {
         geom_sf(data = counties_cropped, color = "navajowhite", fill = "ivory", size = 1)+
         geom_sf(data = (pfas_health_sf %>%
                           filter(commonName == input$Common_Name, year == input$Year)), aes(color = above_level), alpha = 0.4, size = 3) +
-        labs(color = "Sample Result") +
+        geom_sf_text(data = counties_cropped %>% filter(name %in% c("Hennepin", "Washington", "Ramsey")), aes(label = name), size = 4)+
+        labs(color = "Sample Result", x="", y="") +
         scale_color_manual(values=c('Above Health Action Level' = "#de2d26",'Below Health Action Level' = "goldenrod1",'Not Detected'  = "palegreen3"), drop = FALSE, guide = guide_legend(override.aes = list(shape = 19, size = 3) ) )+
         #guides(fill = guide_legend(override.aes = list(shape = 19, size = 3) ) ) +
         theme_classic() +
