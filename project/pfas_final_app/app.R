@@ -60,39 +60,41 @@ pfas_health_sf <- pfas_health_levels %>%
 ###############################################################################################
 
 ui <- fluidPage(theme = shinytheme("flatly"),
-                navbarPage("Contamination in the Twin Cities", tags$style(
+                navbarPage("Water Contamination near the Twin Cities", tags$style(
                   ".navbar-nav li a {
-        font-size: 20px;
+        font-size: 25px;
         font-weight: bold;
       }
       "),
                   tabPanel("Background: Superfund Sites & PFAS", tags$style(
                     ".navbar-nav li a {
-        font-size: 10px;
+        font-size: 15px;
         font-weight: normal;
       }
       "),
                     titlePanel("Water Contamination in the Twin Cities: A project by Vivian Powell and Erin Franke"),
                      
                         fluidRow(
-                        h2("Background Information: Superfund Sites & PFAS"),
                         column(
                         h3("What is a superfund site?"),
                         p("A ", strong("superfund site"), "is an area where where hazardous waste has been spilled or dumped and where contamination poses an actual or potential threat to public health or the environment."),
-                        h4("How does cleanup work?"),
+                        h3("How does cleanup work?"),
                         p("Responsible parties are legally responsible for the cleanup. These responsible parties can include past or present property owners, operators, waste haulers, and/or generators who dumped material on the site."),
                         p("When there is no responsible party to pay for cleanup, the site may be placed on the Minnesota Permanent List of Priorities, making it eligible for state cleanup dollars. Sites may recieve additional federal funding for cleanup if a successful request is made by the MPCA to list the site on the federal superfund", tags$a(href = "https://www.epa.gov/superfund/superfund-national-priorities-list-npl", "National Priorities List."), " Currently, Minnesota has 25 sites on this list."),
-                        h4("What is an example of a superfund site in Minnesota?"),
+                        h3("What is an example of a superfund site in Minnesota?"),
                         p("The image below shows the 3M production facility in Cottage Grove (Washington County). 3M has used these grounds for years as a disposal site for chemical compounds, which are contaminating the Mississippi River. Photo Credit to MPR/Bill Alkofer."),
-                        img(src = "threeM.jpg", height = 300, width = 300),
+                        img(src = "threeM.jpg", height = 500, width = 500),
                         width = 6
                           ),
                         column(
                         h3("What is PFAS?"),
                         p("PFAS is the umbrella term for a large group of over 1000 synthetic chemicals called per- and polyfluoroalkyl substances. PFAS are widely found in consumer products since the 1940s, most notably in nonstick cooking pans, food packaging, and water-repellent materials. PFAS from manufacturing and waste disposal do not break down in the environment; instead, PFAS travels through water and soil, leading to bioaccumulation in organisms."),
-                        h4("Why do PFAS matter?"),
+                        h3("Why do PFAS matter?"),
                         p("Recent studies have found that most people in the United States have been exposed to PFAS through sources like contaminated drinking water and the use of products containing PFAS. More research is needed to understand the specific health impacts of exposure to different levels of PFAS, but PFAS in blood is generally linked to immune problems, thyroid issues, delayed development, and increased risks of certain cancers."),
-                        img(src = "infographic.png", height = 300, width = 300),
+                        img(src = "infographic.png", height = 500, width = 500),
+                        h3("Which PFAS are of most concern?"),
+                        p("Although there are thousands of known PFAS, we have narrowed our analyses to five main PFAS of concern, which were chosen based on background research, the number of samples taken for that chemical, and the existence of an MDH health limit. These five PFAS and their MDH health limits are in the table below."),
+                        img(src = "limits.png", height = 300, width = 500),
                         width = 6
                         )
                       ),
@@ -104,7 +106,7 @@ ui <- fluidPage(theme = shinytheme("flatly"),
                   tabPanel(
                     "Research Questions & Data", tags$style(
                       ".navbar-nav li a {
-                  font-size: 10px;
+                  font-size: 15px;
                   font-weight: normal;
                   }
                   "),
@@ -119,7 +121,7 @@ ui <- fluidPage(theme = shinytheme("flatly"),
                   tabPanel(
                     "Locating Superfund Sites", tags$style(
                       ".navbar-nav li a {
-        font-size: 10px;
+        font-size: 15px;
         font-weight: normal;
       }
       "),
@@ -163,13 +165,15 @@ ui <- fluidPage(theme = shinytheme("flatly"),
                       dataTableOutput("siteTable")
                     ), 
                    HTML("<br>"),
-                  p("There are a few takeaways from these maps. First, samples taken from 3M Oakdale and Baytown Township superfund sites span a large portion of central Washington county.  Hennepin and Ramsey counties each have several superfund sites in which samples are more concentrated in location. Second, the superfund sites seem to be at various stages of their remediation. 11 sites are in the identification phase, 5 are in the investigation phase, 4 are in the response selected phase, 13 are in the response implemented phase, and 1 site (Bell Lumber & Pole Company) is in the complete phase. Third, as far as contaminants go, for the sites being so close in geographic location there is quite a range of primary problematic chemicals. The majority of the sites contain TCE and/or PCE. According to ", tags$a(html = "https://serc.carleton.edu/woburn/issues/tce_toxicity.html", "research by Carleton College,"), "TCE and PCE are toxic chlorinated hydrocarbons with TCE mainly being used as an effective solvent for a variety of organic materials and PCE for the dry cleaning of fabrics. Seven sites list PFAS as a major contaminant, with four of these sites being in Washington County. For a more in-depth discussion of PFAS, please visit the", strong("PFAS levels in Superfund sites"), "tab.")
+                  h3("Discussion"),
+                  p("There are a few takeaways from these maps. First, samples taken from 3M Oakdale and Baytown Township superfund sites span a large portion of central Washington county.  Hennepin and Ramsey counties each have several superfund sites in which samples are more concentrated in location. Second, the superfund sites seem to be at various stages of their remediation. 11 sites are in the identification phase, 5 are in the investigation phase, 4 are in the response selected phase, 13 are in the response implemented phase, and 1 site (Bell Lumber & Pole Company) is in the complete phase. Third, as far as contaminants go, for the sites being so close in geographic location there is quite a range of primary problematic chemicals. The majority of the sites contain TCE and/or PCE. According to ", tags$a(html = "https://serc.carleton.edu/woburn/issues/tce_toxicity.html", "research by Carleton College,"), "TCE and PCE are toxic chlorinated hydrocarbons with TCE mainly being used as an effective solvent for a variety of organic materials and PCE for the dry cleaning of fabrics. Seven sites list PFAS as a major contaminant, with four of these sites being in Washington County. For a more in-depth discussion of PFAS, please visit the", strong("PFAS levels in Superfund sites"), "tab."),
+                  HTML("<br>")
                   ),
 
                   tabPanel(
                     "Superfund Sample Information", tags$style(
                       ".navbar-nav li a {
-        font-size: 10px;
+        font-size: 15px;
         font-weight: normal;
       }
       "),
@@ -212,18 +216,29 @@ ui <- fluidPage(theme = shinytheme("flatly"),
                       plotlyOutput("contaminantPlot", height = "800px")         
                   ),
       HTML("<br>"),
+      h3("Discussion"),
       p("Given the number of available constraints a user can play with, this map can produce loads of information dependent on what you are interested in. Given that we are not water contamination experts and additionally did not collect this data, we largely want to avoid jumping to conclusions. However, there are a few very broad takeaways we feel comfortable stating. First, over the past decade, the majority of sites have had a sample over the MDH health limit for one chemical or another. While very general information, we feel this important information to share. We do not intend to cause concern with this information, but rather bring to light that superfund sites need cleaning. Second, in better news, try filtering to show samples for a particular analyte group of interest (e.g. PFAS) that did not have a chemical detected. It is clear that a large amount of samples do not have notable levels detected. While this could be in part due to the way in which the sample was taken, it is a good sign that not all samples and/or areas are turning up problematic for particular contaminant of interest."),
-      p("There are also limitations with this map. First, you may notice for particular sets of constraints that there are overlapping points, making it hard to see the number of samples in a particular location. Originally, we had rounded the latitude and longitude of each sample so that this would not occur. However, after talking with an expert at the MPCA, we understand that the precision with which the data is collected is incredibly important, and that aggregating samples could cause panic. Second, we learned from our expert that MDH health levels are always changing, usually becoming more strict (decreasing overtime) and will continue to change with additional research. Thus, we want to emphasize that the current data just provides a snapshot in time, and just because a particular site does not have samples with levels detected above the MDH limit, that does not mean cleanup is done. MDH health limits for PFAS will be further explored in the PFAS levels in Superfund sites tab. A third limitation is sampling bias. When viewing this map, it is important to remember that there is sampling bias! Sampling costs money, and the MPCA is likely going to only sample areas of concern for particular contaminants. Thus, we shouldn't necessarily use 'not detected' numbers to measure cleanup success.")
+      p("There are also limitations with this map. First, you may notice for particular sets of constraints that there are overlapping points, making it hard to see the number of samples in a particular location. Originally, we had rounded the latitude and longitude of each sample so that this would not occur. However, after talking with an expert at the MPCA, we understand that the precision with which the data is collected is incredibly important, and that aggregating samples could cause panic. Second, we learned from our expert that MDH health levels are always changing, usually becoming more strict (decreasing overtime) and will continue to change with additional research. Thus, we want to emphasize that the current data just provides a snapshot in time, and just because a particular site does not have samples with levels detected above the MDH limit, that does not mean cleanup is done. MDH health limits for PFAS will be further explored in the PFAS levels in Superfund sites tab. A third limitation is sampling bias. When viewing this map, it is important to remember that there is sampling bias! Sampling costs money, and the MPCA is likely going to only sample areas of concern for particular contaminants. Thus, we shouldn't necessarily use 'not detected' numbers to measure cleanup success."),
+      HTML("<br>")
 ),
 tabPanel(
   "PFAS levels in Superfund sites", tags$style(
     ".navbar-nav li a {
-        font-size: 20px;
+        font-size: 15px;
         font-weight: normal;
       }
       "),
   fluidRow(
-    h4("Please select a PFAS to view time series"),
+    column(width = 1),
+    column(width = 11,
+    h2("Temporal Analysis of PFAS Levels in Superfund Sites")
+    )
+  ),
+  HTML("<br>"),
+  fluidRow(
+    column(width = 1),
+    column(width = 3,
+    h4("Please select a PFAS"),
     selectInput(inputId = "Common_Name",
                 label = "Chemical Name",
                 choices = c("PFHxS","PFOA", "PFBA", "PFBS", "PFOS")),
@@ -239,14 +254,35 @@ tabPanel(
       animate = animationOptions(interval = 500, loop = TRUE, playButton = c("Play Animation"))
     )
     ),
+    column(width = 7, 
+           h4("PFAS Sampling from 2004 to 2022 in Twin-Cities Area Superfund Sites"),
+           HTML("<br>"),
+           p("As Superfund sites undergo cleanup efforts, how are PFAS concentrations changing? This interactive map shows all samples taken at Superfund sites in any given year for the selected PFAS. Keep in mind when using this tool that PFAS are 'forever chemicals', meaning that they aren't easily removed from soil and water, and that the MDH health limits used to create the sample categories are being updated each year as new research emerges (this visualization uses 2022 health levels). Therefore, it's important to treat this map as a tool to compare snapshots in time, but not to use it to evaluate cleanup efforts or determine a location's risk level.", )
+           ),
+    column(width = 1)
+    ),
+  HTML("<br>"),
   fluidRow(
     plotOutput(outputId = "pfasplottemporal",
                height = 600)
   ),
+  HTML("<br>"),
+  fluidRow(
+    column(width = 1),
+    column(width = 10,
+    h2("How are samples distributed over the past two decades at each sampling site?"),
+    HTML("<br>"),
+    p("This tool displays the samples taken at the selected site(s) aggregated to a 3-month period. It's important to note that the MDH health limits used to create the sample categories are being updated each year as new research emerges, and that this visualization uses the 2022 levels. Additionally, some sites show trends of fewer samples in recent years. This should not be taken to indicate that that cleanup is complete, but rather that MPCA may be between waves of sampling or entering a new phase of cleanup. This visualization is primarily intended to show how sampling frequency and the percent of samples above health limits have changed in the past two decades, and to allow users to explore each site's results. For more information on specific sampling sites, please see the 'Locating Superfund Sites' page of this project.")
+    ),
+    column(width = 1)
+  ),
+  HTML("<br>"),
+  HTML("<br>"),
+  HTML("<br>"),
   fluidRow(
     column(
       selectInput(inputId = "location",
-                  label = "Select a sampling site",
+                  label = "Select one or more sampling sites",
                   selected = c("East Metro PFAS"),
                   choices = c("3M Chemolite / Cottage Grove",
                               "3M Woodbury",
@@ -272,12 +308,13 @@ tabPanel(
   ),
   fluidRow(
     p("These data are collected and managed by the MPCA, and have been used with permission. More information can be found at https://www.pca.state.mn.us/air-water-land-climate/cleaning-up-minnesota-superfund-sites.")
-  )
+  ),
+  HTML("<br>")
 ),
 tabPanel(
-  "Results, Limitations, & Future Work", tags$style(
+  "Limitations & Future Work", tags$style(
     ".navbar-nav li a {
-                  font-size: 10px;
+                  font-size: 15px;
                   font-weight: normal;
                   }
                   "),
@@ -327,6 +364,7 @@ server <- function(input, output) {
           geom_sf(data = counties_cropped, color = "navajowhite", fill = "ivory", size = 0.5)+
           geom_sf(data = dataInputMap() %>% st_jitter(amount = 0.02), aes(color = Site), alpha = 0.5, size = 0.8)+
           labs(title = "Samples from superfund sites in Washington, Hennepin, and Ramsey Counties")+
+          theme_classic()+
           theme(legend.position = "none", 
                 axis.line = element_blank(), 
                 axis.text = element_blank(), 
@@ -373,6 +411,7 @@ server <- function(input, output) {
         geom_sf(data = counties_cropped, color = "navajowhite", fill = "ivory", size = 0.5)+
         geom_sf(data = superfund_loc_points2, alpha = 0.5, aes(size = Samples, color = Site))+
         labs(title = "Samples from superfund sites in Washington, Hennepin, and Ramsey Counties")+
+        theme_classic()+
         theme(legend.position = "none", 
               axis.line = element_blank(), 
               axis.text = element_blank(), 
@@ -385,7 +424,7 @@ server <- function(input, output) {
         geom_sf(data = counties_cropped, color = "navajowhite", fill = "ivory", size = 1)+
         geom_sf(data = (pfas_health_sf %>%
                           filter(commonName == input$Common_Name, year == input$Year)), aes(color = above_level), alpha = 0.4, size = 3) +
-        labs(color = "Sample Result", title = paste(input$Common_Name, "over time in Twin Cities Area Superfund sites")) +
+        labs(color = "Sample Result") +
         scale_color_manual(values=c('Above Health Action Level' = "#de2d26",'Below Health Action Level' = "goldenrod1",'Not Detected'  = "palegreen3"), drop = FALSE, guide = guide_legend(override.aes = list(shape = 19, size = 3) ) )+
         #guides(fill = guide_legend(override.aes = list(shape = 19, size = 3) ) ) +
         theme_classic() +
@@ -408,10 +447,10 @@ server <- function(input, output) {
         ) +
         scale_fill_manual(values=c('Above Health Action Level' = "#de2d26",'Below Health Action Level' = "goldenrod1",'Not Detected'  = "palegreen3"))+
         scale_color_manual(values=c('Above Health Action Level' = "#de2d26",'Below Health Action Level' = "goldenrod1",'Not Detected'  = "palegreen3"))+
-        labs(title = "Progression of 5 main PFAS over time",fill = "Sample Result", x = "Sample Date", y = "Number of Samples") +
+        labs(fill = "Sample Result", x = "Sample Date", y = "Number of Samples") +
         guides(color = "none") +
         theme_classic() +
-        theme(title = element_text(face = "bold", size = 18), axis.title = element_text(size = 14, face = "plain"),legend.title = element_text(face = "bold", size = 14), legend.text = element_text(size = 14),
+        theme(axis.title = element_text(size = 14, face = "plain"),legend.title = element_text(face = "plain", size = 14), legend.text = element_text(size = 14),
               text = element_text(family = "AppleGothic")),
       height = 600
       
