@@ -2,7 +2,7 @@ library(tidyverse)
 library(skimr)
 library(readxl)
 library(sf)
-library(USAboundaries)
+#library(USAboundaries)
 library(shiny)
 library(shinythemes)
 library(lubridate)
@@ -10,15 +10,20 @@ library(DT)
 library(plotly)
 library(dplyr)
 
+#install.packages("USAboundariesData", repos = "https://ropensci.r-universe.dev", type = "source")
+
 ###########################################################################################
 ## DATA LOADING 
 
-counties <- us_counties(resolution = "high", states = c("Minnesota", "Wisconsin")) %>%
-  st_transform(crs = 6783)
-rivers <- read_sf('../../data/shp_water_lakes_rivers') %>%
+#counties <- us_counties(resolution = "high", states = c("Minnesota", "Wisconsin")) %>%
+#  st_transform(crs = 6783)
+counties <- st_read("data/shp_bdry_counties_in_minnesota/mn_county_boundaries_500.shp")%>%
   st_transform(crs = 6783)
 
-load("../../data/superfund_site_data/superfund.rds")
+rivers <- read_sf('data/shp_water_lakes_rivers') %>%
+  st_transform(crs = 6783)
+
+load("data/superfund_site_data/superfund.rds")
 
 superfund_loc <- superfund %>%
    filter(!is.na(LATITUDE), !is.na(LONGITUDE), LATITUDE > 44, LATITUDE < 46, LONGITUDE < -92, LONGITUDE > -94) %>%
@@ -38,11 +43,11 @@ site_information <- superfund %>% distinct(site, county) %>%
         Link = map(Link, ~ gt::html(as.character(.x))))
 
 
-pfas7 <- read_csv("../../data/pfas7.csv")
+pfas7 <- read_csv("data/pfas7.csv")
 
 min_action_levels <- data.frame(commonName = c("PFHxS", "PFHxA", "PFOA", "PFBA", "PFBS", "PFOS", "PFPeA"), action_level = c(0.047, 0.2, 0.035, 7.000, 0.1, 0.015, NA))
 
-pfas_super <- read_csv("../../data/pfas_superfund.csv") %>%
+pfas_super <- read_csv("data/pfas_superfund.csv") %>%
   filter(LATITUDE != "NA", LONGITUDE != "NA") %>%
   st_as_sf(coords = c("LONGITUDE", "LATITUDE"), crs = 6783)
 
@@ -404,7 +409,7 @@ server <- function(input, output) {
         ggplot()+
           geom_sf(data = counties_cropped, color = "navajowhite", fill = "ivory", size = 0.5)+
           geom_sf(data = dataInputMap() %>% st_jitter(amount = 0.02), aes(color = Site), alpha = 0.5, size = 0.8)+
-          geom_sf_text(data = counties_cropped %>% filter(name %in% c("Hennepin", "Washington", "Ramsey")), aes(label = name), size = 4, family = "AppleGothic")+
+          geom_sf_text(data = counties_cropped %>% filter(CTY_NAME %in% c("Hennepin", "Washington", "Ramsey")), aes(label = CTY_NAME), size = 4, family = "AppleGothic")+
           labs(title = "Samples from superfund sites in Washington, Hennepin, and Ramsey Counties", x="", y="")+
           theme_classic()+
           theme(legend.position = "none", 
@@ -452,7 +457,7 @@ server <- function(input, output) {
       ggplot()+
         geom_sf(data = counties_cropped, color = "navajowhite", fill = "ivory", size = 0.5)+
         geom_sf(data = superfund_loc_points2, alpha = 0.5, aes(size = Samples, color = Site))+
-        geom_sf_text(data = counties_cropped %>% filter(name %in% c("Hennepin", "Washington", "Ramsey")), aes(label = name), size = 4, family = "AppleGothic")+
+        geom_sf_text(data = counties_cropped %>% filter(CTY_NAME %in% c("Hennepin", "Washington", "Ramsey")), aes(label = CTY_NAME), size = 4, family = "AppleGothic")+
         labs(title = "Samples from superfund sites in Washington, Hennepin, and Ramsey Counties", x="", y="")+
         theme_classic()+
         theme(legend.position = "none", 
@@ -467,7 +472,7 @@ server <- function(input, output) {
         geom_sf(data = counties_cropped, color = "navajowhite", fill = "ivory", size = 1)+
         geom_sf(data = (pfas_health_sf %>%
                           filter(commonName == input$Common_Name, year == input$Year)), aes(color = above_level), alpha = 0.4, size = 3) +
-        geom_sf_text(data = counties_cropped %>% filter(name %in% c("Hennepin", "Washington", "Ramsey")), aes(label = name), size = 5, family = "AppleGothic")+
+        geom_sf_text(data = counties_cropped %>% filter(CTY_NAME %in% c("Hennepin", "Washington", "Ramsey")), aes(label = CTY_NAME), size = 5, family = "AppleGothic")+
         labs(color = "Sample Result", x="", y="") +
         scale_color_manual(values=c('Above Health Action Level' = "#de2d26",'Below Health Action Level' = "goldenrod1",'Not Detected'  = "palegreen3"), drop = FALSE, guide = guide_legend(override.aes = list(shape = 19, size = 3) ) )+
         #guides(fill = guide_legend(override.aes = list(shape = 19, size = 3) ) ) +

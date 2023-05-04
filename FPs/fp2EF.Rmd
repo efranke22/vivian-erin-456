@@ -19,7 +19,7 @@ library(showtext)
 library(ggalt)
 font_add_google("Architects Daughter")
 showtext_auto()
-county_boundaries <- st_read("data/shp_bdry_counties_in_minnesota/mn_county_boundaries_500.shp")
+county_boundaries <- st_read("../data/shp_bdry_counties_in_minnesota/mn_county_boundaries_500.shp")
 roads <- st_read("data/tl_2019_27_prisecroads")
 ```
 

@@ -1,0 +1,13 @@
+name: pfas_final_app
+title: pfas_final_app
+username: vpowell@macalester.edu
+account: vpowell@macalester.edu
+server: rstudio-connect.macalester.edu
+hostUrl: https://rstudio-connect.macalester.edu/__api__
+appId: 15
+bundleId: 21
+url: https://rstudio-connect.macalester.edu/content/c4ff01db-4be2-4f89-aa39-bd9ce71c8181/
+when: 1683217997.36556
+lastSyncTime: 1683217997.36557
+asMultiple: FALSE
+asStatic: FALSE

@@ -20,7 +20,7 @@ library(gt)
 # LOAD DATA
 
 ```{r}
-load("../../data/superfund_site_data/superfund.rds")
+load("data/superfund_site_data/superfund.rds")
 
 counties <- us_counties(resolution = "high", states = c("Minnesota", "Wisconsin")) %>%
   st_transform(crs = 6783)
