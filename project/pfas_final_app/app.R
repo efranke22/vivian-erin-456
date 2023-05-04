@@ -37,7 +37,6 @@ site_information <- superfund %>% distinct(site, county) %>%
   mutate(Link = map(Link, ~ htmltools::a(href = .x, "Website")),
         Link = map(Link, ~ gt::html(as.character(.x))))
 
-############################################################################################# vivian data
 
 pfas7 <- read_csv("../../data/pfas7.csv")
 
@@ -50,7 +49,21 @@ pfas_super <- read_csv("../../data/pfas_superfund.csv") %>%
 pfas_health_levels <- pfas7 %>% 
   left_join(min_action_levels, by = "commonName") %>%
   mutate(result_num = ifelse(DETECT_FLAG == "Y" & UNIT == "ng/L", `RESULT NUMERIC`/1000, ifelse(DETECT_FLAG == "Y" & UNIT != "ng/L", `RESULT NUMERIC`, 0.00)), above_level = factor(ifelse(DETECT_FLAG == "Y" & result_num > action_level, "Above Health Action Level", ifelse(DETECT_FLAG == "Y" & result_num < action_level, "Below Health Action Level", "Not Detected"))), year = year(`SAMPLE DATE`)) %>%
-  filter(UNIT != "NA", `FACILITY TYPE` == "Superfund", LATITUDE != "NA", LONGITUDE != "NA", above_level != "NA")
+  filter(UNIT != "NA", `FACILITY TYPE` == "Superfund", LATITUDE != "NA", LONGITUDE != "NA", above_level != "NA") %>%
+  mutate(facility_name = case_when(
+    `FACILITY NAME` == "3M Chemolite / Cottage Grove" ~ "3M Chemolite / Cottage Grove",
+    `FACILITY NAME` == "Oakdale Dump Sites" ~ "Oakdale Dump Sites",
+    `FACILITY NAME` == "Baytown Twp Groundwater Cont" ~ "Baytown Township",
+    `FACILITY NAME` == "Pigs Eye Landfill" ~ "Pigs Eye Landfill",
+    `FACILITY NAME` == "Superior Plating Inc (SF)" ~ "Superior Plating",
+    `FACILITY NAME` == "Pine Street Dump (SF)" ~ "Pine Street Dump",
+    `FACILITY NAME` == "Precision Plating, Inc. (SF)" ~ "Precision Plating",
+    `FACILITY NAME` == "WAFTA/Nike MSP-70 (DERP FUDS No. E05MN007001)" ~ "Nike",
+    `FACILITY NAME` == "3M Woodbury" ~ "3M Woodbury",
+    `FACILITY NAME` == "Fish Hatchery Dump" ~ "Fish Hatchery Dump",
+    `FACILITY NAME` == "Universal Plating (SF)" ~ "Universal Plating",
+    `FACILITY NAME` == "East Metro PFAS" ~ "East Metro PFAS",
+  ))
 
 
 pfas_health_sf <- pfas_health_levels %>%
@@ -84,23 +97,38 @@ ui <- fluidPage(theme = shinytheme("flatly"),
                         h3("What is an example of a superfund site in Minnesota?"),
                         p("The image below shows the 3M production facility in Cottage Grove (Washington County). 3M has used these grounds for years as a disposal site for chemical compounds, which are contaminating the Mississippi River. Photo Credit to MPR/Bill Alkofer."),
                         img(src = "threeM.jpg", height = 500, width = 500),
-                        h3("Sources"),
-                        p("https://www.pca.state.mn.us/air-water-land-climate/cleaning-up-minnesota-superfund-sites"),
-                        p("https://www.mprnews.org/story/2007/05/11/contamdeal"),
+                        HTML("<br>"),
+                        HTML("<br>"),
+                        HTML("<br>"),
+                        h3("3M Contamination Spreads"),
+                        p("Below is a map showing the known spread of water contamination from 3M's facilities and dump sites in the East Metro area."),
+                        img(src = "plume.png", height = 700, width = 500),
                         width = 6
-                          ),
+                        ),
                         column(
                         h3("What is PFAS?"),
                         p("PFAS is the umbrella term for a large group of over 1000 synthetic chemicals called per- and polyfluoroalkyl substances. PFAS are widely found in consumer products since the 1940s, most notably in nonstick cooking pans, food packaging, and water-repellent materials. PFAS from manufacturing and waste disposal do not break down in the environment; instead, PFAS travels through water and soil, leading to bioaccumulation in organisms."),
                         h3("Why do PFAS matter?"),
                         p("Recent studies have found that most people in the United States have been exposed to PFAS through sources like contaminated drinking water and the use of products containing PFAS. More research is needed to understand the specific health impacts of exposure to different levels of PFAS, but PFAS in blood is generally linked to immune problems, thyroid issues, delayed development, and increased risks of certain cancers."),
                         img(src = "infographic.png", height = 500, width = 500),
+                        h3("PFAS in Minnesota"),
+                        p("Many communities in Minnesota have high levels of PFAS, largely as a result of chemicals produced by 3M and disposed on in unlined pits. While more research is needed to understand the health effects of PFAS on Minnesotans, towns in the East Metro area have spoken out about exceedingly high levels of childhood cancer and other health issues in their communities, which could be partially due to PFAS contamination in drinking water."),
                         h3("Which PFAS are of most concern?"),
                         p("Although there are thousands of known PFAS, we have narrowed our analyses to six main PFAS of concern, which were chosen based on background research, the number of samples taken for that chemical, and the existence of an MDH health limit. These six PFAS and their MDH health limits are in the table below."),
-                        img(src = "limits2.png", height = 300, width = 500),
+                        HTML("<br>"),
+                        img(src = "limits2.png", height = 250, width = 500),
+                        HTML("<br>"),
+                        HTML("<br>"),
+                        HTML("<br>"),
+                        h3("Sources"),
+                        p("https://www.pca.state.mn.us/air-water-land-climate/cleaning-up-minnesota-superfund-sites"),
+                        p("https://www.mprnews.org/story/2007/05/11/contamdeal"),
+                        p("https://minnesotareformer.com/2022/12/14/there-must-be-something-in-the-water/"),
+                        p("https://www.pca.state.mn.us/pollutants-and-contaminants/pfas"),
+                        p("https://www.atsdr.cdc.gov/pfas/health-effects/index.html"),
                         width = 6
                         )
-                      )
+                      ),
                   ),
                   tabPanel(
                     "Research Questions & Data", tags$style(
@@ -296,18 +324,19 @@ tabPanel(
       selectInput(inputId = "location",
                   label = "Select one or more sampling sites",
                   selected = c("East Metro PFAS"),
-                  choices = c("3M Chemolite / Cottage Grove",
-                              "3M Woodbury",
-                              "Baytown Twp Groundwater Cont",
-                              "East Metro PFAS",
-                              "Farmington Ground Water Plume",
-                              "Oakdale Dump Sites",
-                              "Pigs Eye Landfill",
-                              "Pine Street Dump (SF)",
-                              "Precision Plating, Inc. (SF)",
-                              "St. Louis Park Solvent Plume",
-                              "Superior Plating Inc (SF)",
-                              "Universal Plating (SF)"),
+                  choices = unique(pfas_health_levels$facility_name),
+                  # choices = c("3M Chemolite / Cottage Grove",
+                  #             "3M Woodbury",
+                  #             "Baytown Twp Groundwater Cont",
+                  #             "East Metro PFAS",
+                  #             "Farmington Ground Water Plume",
+                  #             "Oakdale Dump Sites",
+                  #             "Pigs Eye Landfill",
+                  #             "Pine Street Dump (SF)",
+                  #             "Precision Plating, Inc. (SF)",
+                  #             "St. Louis Park Solvent Plume",
+                  #             "Superior Plating Inc (SF)",
+                  #             "Universal Plating (SF)"),
                   multiple = TRUE
                   
       ),
@@ -330,13 +359,13 @@ tabPanel(
                   font-weight: normal;
                   }
                   "),
-  h3("Main Takeaways"),
-  p("insert results paragraph here"),
+  h3("Results and Importance"),
+  p("This analysis was primarily exploratory and informative, and not designed to persuade the reader of any specific result. However, we have shown that PFAS continues to be a persistent issue in Minnesota's superfund sites, and that cleanup efforts are important but not a standalone solution for 'forever chemicals' such as PFAS. In order to keep PFAS from potentially harming more Minnesotans, new PFAS production and contamination has to be prevented. In April 2023, the Minnesota House of Representatives passed an omnibus environmental bill that will prohibit the sale of many types of PFAS by 2025 and ban all non-essential use of PFAS by 2032, which is a massive step in the right direction."),
   h3(""),
   h3("Limitations"),
   p("Environmental data has some natural limitations that can make it tricky to work with. With our specific data, there were so many different variables to consider, such as sample type, chemical, location, medium, and date. As is often the case with water samples, not all observations were taken in the same units, and work had to be done to standardize units before analysis. Recording errors, such as issues with latitude, longitude, and county not matching, made some samples unusable. Additionally, we look at the change in PFAS concentrations over time, which is limited by the inconsistency of samples over the years. Some years a given chemical will have hundreds of samples taken, while other years there won't be any. This makes it difficult to make conclusions from our temporal analysis." ),
   h3("Future Work"),
-  p("More research is needed to understand the long-term health and environmental effects of PFAS. This knowledge would help similar projects to link their analyses to real issues and provide recommendations for future remediation efforts. Future research in this area could focus on the correlations between analyte concentrations, specifically in PFAS, to understand whether different types PFAS tend to co-occur or not. Additionally, it would be interesting to look into different mediums, such as soil, and understand how chemicals travel through soils as opposed to water. This analysis would benefit from more time, more consistent data, and a deeper look into the factors that determine where PFAS ends up highly concentrated."),
+  p("More research is needed to understand the long-term health and environmental effects of PFAS. This knowledge would help similar projects to link their analyses to real issues and provide recommendations for future remediation efforts. Future research in this area could focus on the correlations between analyte concentrations, specifically in PFAS, to understand whether different types PFAS tend to co-occur or not. Additionally, it would be interesting to look into differences between mediums, such as surface water, groundwater, and soil, and understand how chemicals travel and diffuse through each. This analysis would benefit from more time, more consistent data, and a deeper look into the factors that determine where PFAS ends up highly concentrated."),
 )
 )
 )
@@ -455,7 +484,7 @@ server <- function(input, output) {
     output$pfaslevelsplot <- renderPlot(
       pfas_health_levels %>%
         filter(commonName %in% c("PFHxS", "PFOA", "PFBA", "PFBS", "PFOS", "PFHxA"),
-          `FACILITY NAME` == input$location) %>%
+          facility_name == input$location) %>%
         ggplot(aes(x = `SAMPLE DATE`, color = factor(above_level, levels = c("Not Detected", "Below Health Action Level", "Above Health Action Level")), fill = factor(above_level, levels = c("Not Detected", "Below Health Action Level", "Above Health Action Level")))) +
         geom_histogram(
           binwidth = 92
@@ -463,6 +492,7 @@ server <- function(input, output) {
         scale_fill_manual(values=c('Above Health Action Level' = "#de2d26",'Below Health Action Level' = "goldenrod1",'Not Detected'  = "palegreen3"))+
         scale_color_manual(values=c('Above Health Action Level' = "#de2d26",'Below Health Action Level' = "goldenrod1",'Not Detected'  = "palegreen3"))+
         labs(fill = "Sample Result", x = "Sample Date", y = "Number of Samples") +
+        scale_x_date(limits = as.Date(c("2004-11-01","2022-12-31"))) +
         guides(color = "none") +
         theme_classic() +
         theme(axis.title = element_text(size = 14, face = "plain"),legend.title = element_text(face = "plain", size = 14), legend.text = element_text(size = 14),
